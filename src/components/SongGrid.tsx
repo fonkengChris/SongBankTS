@@ -1,6 +1,7 @@
 import { List, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
+import useSongs from "../hooks/useSongs";
 
 interface Song {
   id: number;
@@ -9,19 +10,7 @@ interface Song {
 }
 
 const SongGrid = () => {
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    apiClient
-      .get<Song[]>("/songs")
-      .then((res) => {
-        // console.log(res);
-        setSongs(res.data);
-      })
-      .catch((err) => setError(err.message));
-  });
-
+  const { songs, error } = useSongs();
   if (error) return <Text color="red">{error}</Text>;
 
   return (
