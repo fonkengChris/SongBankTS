@@ -4,6 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { Button, Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
+import SongGrid from "./components/SongGrid";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -25,7 +26,9 @@ function App() {
       <Show above="lg">
         <GridItem area="aside">Aside</GridItem>
       </Show>
-      <GridItem area="main">Main</GridItem>
+      <GridItem area="main">
+        <SongGrid />
+      </GridItem>
     </Grid>
   );
 }
