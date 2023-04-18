@@ -14,7 +14,7 @@ const SongGrid = () => {
   if (error) return <Text color="red">{error}</Text>;
 
   return (
-    <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} padding="10px" spacing={10}>
+    <SimpleGrid columns={{ sm: 1, md: 2, lg: 5 }} padding="10px" spacing={3}>
       {isLoading &&
         skeletons.map((skeleton) => (
           <SongCardContainer key={skeleton}>

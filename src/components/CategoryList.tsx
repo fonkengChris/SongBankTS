@@ -6,7 +6,16 @@ import {
   List,
   ListItem,
   Spinner,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
 // import getCroppedImageUrl from "../services/image-urls";
@@ -33,33 +42,31 @@ const CategoryList = () => {
       <Heading marginY={3} fontSize="2xl" textAlign="left">
         Categories
       </Heading>
-      <List>
-        {categories.map((category) => (
-          <ListItem key={category.id} paddingY="5px">
-            <HStack>
-              {/* <Image
-                boxSize="32px"
-                objectFit="cover"
-                borderRadius={8}
-                src={getCroppedImageUrl(genre.image_background)}
-              /> */}
-              <Button
-                whiteSpace="normal"
-                textAlign="left"
-                fontSize="lg"
-                fontWeight={
-                  "bold"
-                  // category.id === selectedCategory?.id ? "bold" : "normal"
-                }
-                // onClick={() => onSelectCategory(category)}
-                variant="link"
-              >
-                {category.title}
-              </Button>
-            </HStack>
-          </ListItem>
-        ))}
-      </List>
+      <TableContainer>
+        <Table size="sm" variant="simple">
+          <Tbody>
+            {categories.map((category) => (
+              <Tr key={category.id} paddingY="5px">
+                <Td>
+                  <Button
+                    whiteSpace="normal"
+                    textAlign="left"
+                    fontSize="lg"
+                    fontWeight={
+                      "bold"
+                      // category.id === selectedCategory?.id ? "bold" : "normal"
+                    }
+                    // onClick={() => onSelectCategory(category)}
+                    variant="link"
+                  >
+                    {category.title}
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </>
   );
 };
