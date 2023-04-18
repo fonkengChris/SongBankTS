@@ -5,6 +5,7 @@ import useSongs from "../hooks/useSongs";
 import SongCard from "./SongCard";
 import { Song } from "../hooks/useSongs";
 import SongCardSkeleton from "./SongCardSkeleton";
+import SongCardContainer from "./SongCardContainer";
 
 const SongGrid = () => {
   const { songs, error, isLoading } = useSongs();
@@ -15,9 +16,15 @@ const SongGrid = () => {
   return (
     <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} padding="10px" spacing={10}>
       {isLoading &&
-        skeletons.map((skeleton) => <SongCardSkeleton key={skeleton} />)}
+        skeletons.map((skeleton) => (
+          <SongCardContainer>
+            <SongCardSkeleton key={skeleton} />
+          </SongCardContainer>
+        ))}
       {songs.map((song) => (
-        <SongCard key={song.id} song={song} />
+        <SongCardContainer>
+          <SongCard key={song.id} song={song} />
+        </SongCardContainer>
       ))}
     </SimpleGrid>
   );

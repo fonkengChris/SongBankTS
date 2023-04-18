@@ -2,6 +2,7 @@ import React from "react";
 import { Song } from "../hooks/useSongs";
 import { Card, CardBody, HStack, Heading, Image, Text } from "@chakra-ui/react";
 import CriticScore from "./CriticScore";
+import SongCardContainer from "./SongCardContainer";
 // import PlatformIconList from "./PlatformIconList";
 // import CriticScore from "./CriticScore";
 // import getCroppedImageUrl from "../services/image-urls";
@@ -13,7 +14,7 @@ interface Props {
 
 const SongCard = ({ song }: Props) => {
   return (
-    <Card height="400px" width="300px" borderRadius={10} overflow="hidden">
+    <Card>
       <Image
         boxSize="300px"
         objectFit="cover"

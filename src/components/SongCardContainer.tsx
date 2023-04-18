@@ -5,12 +5,12 @@ interface Props {
   children: ReactNode;
 }
 
-const GameCardContainer = ({ children }: Props) => {
+const SongCardContainer = ({ children }: Props) => {
   return (
-    <Box borderRadius={10} overflow="hidden">
+    <Box height="400px" width="300px" borderRadius={10} overflow="hidden">
       {children}
     </Box>
   );
 };
 
-export default GameCardContainer;
+export default SongCardContainer;
