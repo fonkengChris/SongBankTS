@@ -13,9 +13,9 @@ interface Props {
 
 const SongCard = ({ song }: Props) => {
   return (
-    <Card boxSize="500px" borderRadius={10} overflow="hidden">
+    <Card height="400px" width="300px" borderRadius={10} overflow="hidden">
       <Image
-        boxSize="400px"
+        boxSize="300px"
         objectFit="cover"
         src={song.preview_image[0].preview_image}
       />
