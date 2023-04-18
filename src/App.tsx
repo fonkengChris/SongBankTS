@@ -5,6 +5,7 @@ import "./App.css";
 import { Button, Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import SongGrid from "./components/SongGrid";
+import CategoryList from "./components/GenreList";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -24,7 +25,9 @@ function App() {
         <NavBar />
       </GridItem>
       <Show above="lg">
-        <GridItem area="aside">Aside</GridItem>
+        <GridItem area="aside">
+          <CategoryList />
+        </GridItem>
       </Show>
       <GridItem area="main">
         <SongGrid />
