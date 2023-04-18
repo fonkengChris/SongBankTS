@@ -12,7 +12,9 @@ export interface Notation {
 export interface Song {
   id: number;
   title: string;
-  authora_name: string;
+  author_name: string;
+  preview_image: any[];
+  notation: { title: string };
 }
 
 const useSongs = () => {

@@ -1,24 +1,20 @@
-import { List, Text } from "@chakra-ui/react";
+import { List, SimpleGrid, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import useSongs from "../hooks/useSongs";
-
-interface Song {
-  id: number;
-  title: string;
-  authora_name: string;
-}
+import SongCard from "./SongCard";
+import { Song } from "../hooks/useSongs";
 
 const SongGrid = () => {
   const { songs, error } = useSongs();
   if (error) return <Text color="red">{error}</Text>;
 
   return (
-    <List>
+    <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} padding="10px" spacing={10}>
       {songs.map((song) => (
-        <li key={song.id}>{song.title}</li>
+        <SongCard key={song.id} song={song} />
       ))}
-    </List>
+    </SimpleGrid>
   );
 };
 
