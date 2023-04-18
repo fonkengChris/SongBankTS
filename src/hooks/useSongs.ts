@@ -15,6 +15,7 @@ export interface Song {
   author_name: string;
   preview_image: any[];
   notation: { title: string };
+  metacritic: number;
 }
 
 const useSongs = () => {
