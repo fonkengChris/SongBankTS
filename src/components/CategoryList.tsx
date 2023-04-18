@@ -8,8 +8,9 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import useGenres, { Category } from "../hooks/useCategories";
+import useCategories, { Category } from "../hooks/useCategories";
 // import getCroppedImageUrl from "../services/image-urls";
+import useData from "../hooks/useData";
 
 // interface Props {
 //   onSelectCategory: (category: Category) => void;
@@ -17,7 +18,11 @@ import useGenres, { Category } from "../hooks/useCategories";
 // }
 
 const CategoryList = () => {
-  const { categories, isLoading, error } = useGenres();
+  const {
+    data: categories,
+    isLoading,
+    error,
+  } = useData<Category>("/categories");
 
   if (error) return null;
 
@@ -26,7 +31,7 @@ const CategoryList = () => {
   return (
     <>
       <Heading marginY={3} fontSize="2xl" textAlign="left">
-        Genres
+        Categories
       </Heading>
       <List>
         {categories.map((category) => (

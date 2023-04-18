@@ -18,32 +18,33 @@ export interface Song {
   metacritic: number;
 }
 
-const useSongs = () => {
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [error, setError] = useState("");
-  const [isLoading, setLoading] = useState(false);
+const useSongs = () => useData<Song>("/songs");
+// const useSongs = () => {
+//   const [songs, setSongs] = useState<Song[]>([]);
+//   const [error, setError] = useState("");
+//   const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const controller = new AbortController();
+//   useEffect(() => {
+//     const controller = new AbortController();
 
-    setLoading(true);
-    apiClient
-      .get<Song[]>("/songs", { signal: controller.signal })
-      .then((res) => {
-        setSongs(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        setError(err.message);
-        setLoading(false);
-      });
+//     setLoading(true);
+//     apiClient
+//       .get<Song[]>("/songs", { signal: controller.signal })
+//       .then((res) => {
+//         setSongs(res.data);
+//         setLoading(false);
+//       })
+//       .catch((err) => {
+//         if (err instanceof CanceledError) return;
+//         setError(err.message);
+//         setLoading(false);
+//       });
 
-    return () => controller.abort();
-  }, []);
+//     return () => controller.abort();
+//   }, []);
 
-  return { songs, error, isLoading };
-};
+//   return { songs, error, isLoading };
+// };
 
 export default useSongs;
 

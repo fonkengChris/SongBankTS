@@ -5,7 +5,7 @@ import "./App.css";
 import { Button, Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import SongGrid from "./components/SongGrid";
-import CategoryList from "./components/GenreList";
+import CategoryList from "./components/CategoryList";
 
 function App() {
   const [count, setCount] = useState(0);
