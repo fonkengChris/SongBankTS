@@ -9,21 +9,19 @@ interface Props {
   selectedNotation: Notation | null;
 }
 
-// const NotationSelector = ({ onSelectNotation, selectedNotation }: Props) => {
-  const NotationSelector = () => {
+const NotationSelector = ({ onSelectNotation, selectedNotation }: Props) => {
   const { data: notations, error } = useNotations();
 
   if (error) return null;
   return (
     <Menu>
       <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-        {"Notations"}
-        {/* {selectedNotation?.title || "Notations"} */}
+        {selectedNotation?.title || "Notations"}
       </MenuButton>
       <MenuList>
         {notations.map((notation) => (
           <MenuItem
-            // onClick={() => onSelectNotation(notation)}
+            onClick={() => onSelectNotation(notation)}
             key={notation.id}
           >
             {notation.title}

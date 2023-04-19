@@ -1,21 +1,25 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { Button, Grid, GridItem, Show } from "@chakra-ui/react";
+import { Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import SongGrid from "./components/SongGrid";
 import CategoryList from "./components/CategoryList";
 import { Category } from "./hooks/useCategories";
 import NotationSelector from "./components/NotationSelector";
+import { Notation } from "./hooks/useSongs";
 
-interface SongQuery {
-  category: Category | null;
-}
+// interface SongQuery {
+//   category: Category | null;
+//   notation: Notation | null;
+// }
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [songQuery, setSongQuery] = useState<SongQuery>({} as SongQuery);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
+  const [selectedNotation, setSelectedNotation] = useState<Notation | null>(
+    null
+  );
 
   return (
     <Grid
@@ -34,16 +38,22 @@ function App() {
       <Show above="lg">
         <GridItem area="aside">
           <CategoryList
-            selectedCategory={songQuery.category}
+            selectedCategory={selectedCategory}
             onSelectCategory={(category) => {
-              setSongQuery({ ...songQuery, category });
+              setSelectedCategory(category);
             }}
           />
         </GridItem>
       </Show>
       <GridItem area="main">
-        <NotationSelector />
-        <SongGrid selectedCategory={songQuery.category} />
+        <NotationSelector
+          selectedNotation={selectedNotation}
+          onSelectNotation={(notation) => setSelectedNotation(notation)}
+        />
+        <SongGrid
+          selectedCategory={selectedCategory}
+          selectedNotation={selectedNotation}
+        />
       </GridItem>
     </Grid>
   );
