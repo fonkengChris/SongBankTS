@@ -14,6 +14,7 @@ export interface SongQuery {
   category: Category | null;
   notation: Notation | null;
   sortOrder: string;
+  searchText: string;
 }
 
 function App() {
@@ -60,7 +61,11 @@ function App() {
             }
           />
           <Box width="70%" marginRight={10}>
-            <SearchInput />
+            <SearchInput
+              onSearch={(searchText) =>
+                setSongQuery({ ...songQuery, searchText })
+              }
+            />
           </Box>
         </HStack>
         <SongGrid songQuery={songQuery} />

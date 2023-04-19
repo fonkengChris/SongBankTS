@@ -26,6 +26,7 @@ const useSongs = (songQuery: SongQuery) =>
         category: songQuery.category?.id,
         notation: songQuery.notation?.id,
         ordering: songQuery.sortOrder,
+        search: songQuery.searchText,
       },
     },
     [songQuery]
