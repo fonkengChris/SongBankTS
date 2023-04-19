@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { Grid, GridItem, HStack, Show } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import SongGrid from "./components/SongGrid";
 import CategoryList from "./components/CategoryList";
@@ -43,20 +43,22 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main">
-        <HStack spacing={5} paddingLeft={2} marginBottom={5}>
-          <NotationSelector
-            selectedNotation={songQuery?.notation}
-            onSelectNotation={(notation) =>
-              setSongQuery({ ...songQuery, notation })
-            }
-          />
+        <Flex paddingLeft={2} marginBottom={5}>
+          <Box marginRight={5}>
+            <NotationSelector
+              selectedNotation={songQuery?.notation}
+              onSelectNotation={(notation) =>
+                setSongQuery({ ...songQuery, notation })
+              }
+            />
+          </Box>
           <SortSelector
             sortOrder={songQuery.sortOrder}
             onSelectSortOrder={(sortOrder) =>
               setSongQuery({ ...songQuery, sortOrder })
             }
           />
-        </HStack>
+        </Flex>
         <SongGrid songQuery={songQuery} />
       </GridItem>
     </Grid>
