@@ -8,18 +8,13 @@ import { Category } from "./hooks/useCategories";
 import NotationSelector from "./components/NotationSelector";
 import { Notation } from "./hooks/useSongs";
 
-// interface SongQuery {
-//   category: Category | null;
-//   notation: Notation | null;
-// }
+export interface SongQuery {
+  category: Category | null;
+  notation: Notation | null;
+}
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
-  const [selectedNotation, setSelectedNotation] = useState<Notation | null>(
-    null
-  );
+  const [songQuery, setSongQuery] = useState<SongQuery>({} as SongQuery);
 
   return (
     <Grid
@@ -38,22 +33,21 @@ function App() {
       <Show above="lg">
         <GridItem area="aside">
           <CategoryList
-            selectedCategory={selectedCategory}
-            onSelectCategory={(category) => {
-              setSelectedCategory(category);
-            }}
+            selectedCategory={songQuery.category}
+            onSelectCategory={(category) =>
+              setSongQuery({ ...songQuery, category })
+            }
           />
         </GridItem>
       </Show>
       <GridItem area="main">
         <NotationSelector
-          selectedNotation={selectedNotation}
-          onSelectNotation={(notation) => setSelectedNotation(notation)}
+          selectedNotation={songQuery?.notation}
+          onSelectNotation={(notation) =>
+            setSongQuery({ ...songQuery, notation })
+          }
         />
-        <SongGrid
-          selectedCategory={selectedCategory}
-          selectedNotation={selectedNotation}
-        />
+        <SongGrid songQuery={songQuery} />
       </GridItem>
     </Grid>
   );

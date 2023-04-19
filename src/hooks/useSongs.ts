@@ -1,6 +1,7 @@
 import useData from "./useData";
 // import { GameQuery } from "../App";
 import { Category } from "./useCategories";
+import { SongQuery } from "../App";
 
 export interface Notation {
   id: number;
@@ -17,19 +18,16 @@ export interface Song {
   metacritic: number;
 }
 
-const useSongs = (
-  selectedCategory: Category | null,
-  selectedNotation: Notation | null
-) =>
+const useSongs = (songQuery: SongQuery) =>
   useData<Song>(
     "/songs",
     {
       params: {
-        category: selectedCategory?.id,
-        notation: selectedNotation?.id,
+        category: songQuery.category?.id,
+        notation: songQuery.notation?.id,
       },
     },
-    [selectedCategory?.id, selectedNotation?.id]
+    [songQuery]
   );
 export default useSongs;
 
