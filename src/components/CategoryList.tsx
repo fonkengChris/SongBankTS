@@ -18,15 +18,14 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
-// import getCroppedImageUrl from "../services/image-urls";
 import useData from "../hooks/useData";
 
-// interface Props {
-//   onSelectCategory: (category: Category) => void;
-//   selectedCategory: Category | null;
-// }
+interface Props {
+  onSelectCategory: (category: Category) => void;
+  selectedCategory: Category | null;
+}
 
-const CategoryList = () => {
+const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
   const {
     data: categories,
     isLoading,
@@ -53,10 +52,9 @@ const CategoryList = () => {
                     textAlign="left"
                     fontSize="lg"
                     fontWeight={
-                      "bold"
-                      // category.id === selectedCategory?.id ? "bold" : "normal"
+                      category.id === selectedCategory?.id ? "bold" : "normal"
                     }
-                    // onClick={() => onSelectCategory(category)}
+                    onClick={() => onSelectCategory(category)}
                     variant="link"
                   >
                     {category.title}

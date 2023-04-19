@@ -6,9 +6,14 @@ import SongCard from "./SongCard";
 import { Song } from "../hooks/useSongs";
 import SongCardSkeleton from "./SongCardSkeleton";
 import SongCardContainer from "./SongCardContainer";
+import { Category } from "../hooks/useCategories";
 
-const SongGrid = () => {
-  const { data: songs, error, isLoading } = useSongs();
+interface Props {
+  selectedCategory: Category | null;
+}
+
+const SongGrid = ({selectedCategory}: Props) => {
+  const { data: songs, error, isLoading } = useSongs(selectedCategory);
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   if (error) return <Text color="red">{error}</Text>;

@@ -6,9 +6,15 @@ import { Button, Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import SongGrid from "./components/SongGrid";
 import CategoryList from "./components/CategoryList";
+import { Category } from "./hooks/useCategories";
+
+interface SongQuery {
+  category: Category | null;
+}
 
 function App() {
   const [count, setCount] = useState(0);
+  const [songQuery, setSongQuery] = useState<SongQuery>({} as SongQuery);
 
   return (
     <Grid
@@ -26,11 +32,17 @@ function App() {
       </GridItem>
       <Show above="lg">
         <GridItem area="aside">
-          <CategoryList />
+          <CategoryList
+            selectedCategory={songQuery.category}
+            onSelectCategory={(category) => {
+              console.log(category.title);
+              setSongQuery({ ...songQuery, category });
+            }}
+          />
         </GridItem>
       </Show>
       <GridItem area="main">
-        <SongGrid />
+        <SongGrid selectedCategory={songQuery.category} />
       </GridItem>
     </Grid>
   );

@@ -3,6 +3,7 @@ import useData from "./useData";
 import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
 // import { GameQuery } from "../App";
+import { Category } from "./useCategories";
 
 export interface Notation {
   id: number;
@@ -18,7 +19,10 @@ export interface Song {
   metacritic: number;
 }
 
-const useSongs = () => useData<Song>("/songs");
+const useSongs = (selectedCategory: Category | null) =>
+  useData<Song>("/songs", { params: { category: selectedCategory?.id } }, [
+    selectedCategory?.id,
+  ]);
 // const useSongs = () => {
 //   const [songs, setSongs] = useState<Song[]>([]);
 //   const [error, setError] = useState("");

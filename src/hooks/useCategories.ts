@@ -1,9 +1,5 @@
 // import genres from "../data/genres";
 
-import { useEffect, useState } from "react";
-import apiClient from "../services/api-client";
-import { Song } from "./useSongs";
-import { CanceledError } from "axios";
 import useData from "./useData";
 
 export interface Category {
