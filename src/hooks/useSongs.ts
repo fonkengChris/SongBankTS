@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
 import useData from "./useData";
-import apiClient from "../services/api-client";
-import { CanceledError } from "axios";
 // import { GameQuery } from "../App";
 import { Category } from "./useCategories";
 
 export interface Notation {
   id: number;
   title: string;
+  slug: string;
 }
 
 export interface Song {

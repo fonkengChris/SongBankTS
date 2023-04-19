@@ -7,6 +7,7 @@ import NavBar from "./components/NavBar";
 import SongGrid from "./components/SongGrid";
 import CategoryList from "./components/CategoryList";
 import { Category } from "./hooks/useCategories";
+import NotationSelector from "./components/NotationSelector";
 
 interface SongQuery {
   category: Category | null;
@@ -41,6 +42,7 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main">
+        <NotationSelector />
         <SongGrid selectedCategory={songQuery.category} />
       </GridItem>
     </Grid>
