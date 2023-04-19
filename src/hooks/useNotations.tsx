@@ -1,4 +1,5 @@
-import useData from "./useData";
+import notations from "../data/notations";
+// import useData from "./useData";
 
 export interface Notation {
   id: number;
@@ -6,6 +7,7 @@ export interface Notation {
   slug: string;
 }
 
-const useNotations = () => useData<Notation>("/notations");
+const useNotations = () => ({ data: notations, error: false });
+// const useNotations = () => useData<Notation>("/notations");
 
 export default useNotations;
