@@ -16,6 +16,7 @@ import {
   Th,
   Thead,
   Tr,
+  color,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
 import useData from "../hooks/useData";
@@ -36,6 +37,10 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
 
   if (isLoading) return <Spinner />;
 
+  // const look = (button: Button) => {
+
+  // }
+
   return (
     <>
       <Heading marginY={3} fontSize="2xl" textAlign="left">
@@ -50,7 +55,8 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
                   whiteSpace="normal"
                   textAlign="left"
                   fontSize="lg"
-                  fontWeight={"bold"}
+                  // className=""
+                  fontWeight={"normal"}
                   onClick={() => onSelectCategory(null)}
                   variant="link"
                 >
@@ -64,7 +70,9 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
                   <Button
                     whiteSpace="normal"
                     textAlign="left"
-                    fontSize="lg"
+                    fontSize={
+                      category.id === selectedCategory?.id ? "xl" : "lg"
+                    }
                     fontWeight={
                       category.id === selectedCategory?.id ? "bold" : "normal"
                     }
