@@ -35,7 +35,6 @@ function App() {
           <CategoryList
             selectedCategory={songQuery.category}
             onSelectCategory={(category) => {
-              console.log(category.title);
               setSongQuery({ ...songQuery, category });
             }}
           />

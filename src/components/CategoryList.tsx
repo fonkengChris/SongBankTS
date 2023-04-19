@@ -21,7 +21,7 @@ import useCategories, { Category } from "../hooks/useCategories";
 import useData from "../hooks/useData";
 
 interface Props {
-  onSelectCategory: (category: Category) => void;
+  onSelectCategory: (category: Category | null) => void;
   selectedCategory: Category | null;
 }
 
@@ -44,6 +44,20 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
       <TableContainer>
         <Table size="sm" variant="simple">
           <Tbody>
+            <Tr>
+              <Td>
+                <Button
+                  whiteSpace="normal"
+                  textAlign="left"
+                  fontSize="lg"
+                  fontWeight={"bold"}
+                  onClick={() => onSelectCategory(null)}
+                  variant="link"
+                >
+                  All Categories
+                </Button>
+              </Td>
+            </Tr>
             {categories.map((category) => (
               <Tr key={category.id} paddingY="5px">
                 <Td>
