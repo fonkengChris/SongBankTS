@@ -9,6 +9,7 @@ import NotationSelector from "./components/NotationSelector";
 import { Notation } from "./hooks/useSongs";
 import SortSelector from "./components/SortSelector";
 import SearchInput from "./components/SearchInput";
+import SongHeading from "./components/SongHeading";
 
 export interface SongQuery {
   category: Category | null;
@@ -45,8 +46,11 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main">
+        <Box marginLeft={5}>
+          <SongHeading songQuery={songQuery} />
+        </Box>
         <HStack paddingLeft={2} marginBottom={5}>
-          <Box marginRight={5}>
+          <Box marginLeft={3} marginRight={5}>
             <NotationSelector
               selectedNotation={songQuery?.notation}
               onSelectNotation={(notation) =>
@@ -68,7 +72,9 @@ function App() {
             />
           </Box>
         </HStack>
-        <SongGrid songQuery={songQuery} />
+        <Box marginLeft={3}>
+          <SongGrid songQuery={songQuery} />
+        </Box>
       </GridItem>
     </Grid>
   );

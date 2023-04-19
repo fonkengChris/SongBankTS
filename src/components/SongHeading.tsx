@@ -1,15 +1,15 @@
 import { Heading } from "@chakra-ui/react";
 import React from "react";
-import { GameQuery } from "../App";
+import { SongQuery } from "../App";
 
 interface Props {
-  gameQuery: GameQuery;
+  songQuery: SongQuery;
 }
 
-const GameHeading = ({ gameQuery }: Props) => {
-  const heading = `${gameQuery.platform?.name || ""} ${
-    gameQuery.genre?.name || ""
-  } Games`;
+const SongHeading = ({ songQuery }: Props) => {
+  const heading = `${songQuery.notation?.title || ""} ${
+    songQuery.category?.title || ""
+  } Songs`;
   return (
     <Heading textAlign="left" marginY={5} fontSize="5xl" as="h1">
       {heading}
@@ -17,4 +17,4 @@ const GameHeading = ({ gameQuery }: Props) => {
   );
 };
 
-export default GameHeading;
+export default SongHeading;
