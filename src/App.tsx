@@ -10,6 +10,8 @@ import { Notation } from "./hooks/useSongs";
 import SortSelector from "./components/SortSelector";
 import SearchInput from "./components/SearchInput";
 import SongHeading from "./components/SongHeading";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 export interface SongQuery {
   category: Category | null;
