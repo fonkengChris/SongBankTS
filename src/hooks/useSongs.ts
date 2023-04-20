@@ -20,7 +20,7 @@ export interface Song {
 
 const useSongs = (songQuery: SongQuery) =>
   useData<Song>(
-    "/songs",
+    "/library/songs",
     {
       params: {
         category: songQuery.category?.id,

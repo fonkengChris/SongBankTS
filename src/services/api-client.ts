@@ -1,8 +1,11 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:8000/library",
+  baseURL: "http://localhost:8000/",
 });
+
+export const REGISTER_URL = "/auth/users/";
+export const CUSTOMER_URL = "/library/customers/";
 
 // const jwt_token = 'your_jwt_token';
 
