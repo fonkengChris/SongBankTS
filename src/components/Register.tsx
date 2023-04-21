@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios, { CUSTOMER_URL, REGISTER_URL } from "../services/api-client";
 import { useState, useEffect, useRef } from "react";
 import { AxiosError } from "axios";
+import countries from "../data/countries";
 
 const NAME_REGEX = /^[A-z][A-z0-9-_]{4,50}$/;
 const EMAIL_REGEX =
@@ -346,6 +347,9 @@ const Register = () => {
               onFocus={() => setMembershipFocus(true)}
               onBlur={() => setMembershipFocus(false)}
             >
+              <option disabled={true} value="">
+                --Choose between Gold(G), Silver(S) and Bronze(B)--
+              </option>
               <option value="G">G</option>
               <option value="S">S</option>
               <option value="B">B</option>
@@ -354,25 +358,24 @@ const Register = () => {
             <br />
 
             <label htmlFor="country">Country</label>
-            {/* <ReactFlagsSelect
-          id="country"
-          selected={selected}
-          onSelect={(code) => setSelected(code)}
-        /> */}
 
-            <input
+            <select
               id="country"
               name="country"
-              type="text"
-              ref={countryRef}
               autoComplete="off"
               onChange={(e) => setCountry(e.target.value)}
               value={country}
-              required
               onFocus={() => setCountryFocus(true)}
               onBlur={() => setCountryFocus(false)}
               placeholder="Enter Country ..."
-            />
+            >
+              <option disabled={true} value="">
+                --Select Country Name--
+              </option>
+              {countries.map((country) => (
+                <option key={country.code}>{country.name}</option>
+              ))}
+            </select>
 
             <br />
 
