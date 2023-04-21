@@ -27,11 +27,7 @@ interface Props {
 }
 
 const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
-  const {
-    data: categories,
-    isLoading,
-    error,
-  } = useData<Category>("/categories");
+  const { data: categories, isLoading, error } = useCategories();
 
   if (error) return null;
 

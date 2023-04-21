@@ -373,7 +373,7 @@ const Register = () => {
                 --Select Country Name--
               </option>
               {countries.map((country) => (
-                <option key={country.code}>{country.name}</option>
+                <option key={country.iso}>{country.name}</option>
               ))}
             </select>
 

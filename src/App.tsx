@@ -11,74 +11,32 @@ import SortSelector from "./components/SortSelector";
 import SearchInput from "./components/SearchInput";
 import SongHeading from "./components/SongHeading";
 import Register from "./components/Register";
-
-export interface SongQuery {
-  category: Category | null;
-  notation: Notation | null;
-  sortOrder: string;
-  searchText: string;
-}
+import { Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
+import Admin from "./components/common/Admin";
+import Editor from "./components/common/Editor";
+import Home from "./components/common/Home";
+import Layout from "./components/common/Layout";
+import Lounge from "./components/common/Lounge";
+import Missing from "./components/common/Missing";
+import RequireAuth from "./components/common/RequireAuth";
+import Unauthorized from "./components/common/Unauthorized";
+import HomePage from "./components/common/HomePage";
 
 function App() {
-  const [songQuery, setSongQuery] = useState<SongQuery>({} as SongQuery);
-
   return (
-    // <Grid
-    //   templateAreas={{
-    //     base: `"nav" "main"`,
-    //     lg: `"nav nav"  "aside main"`,
-    //   }}
-    //   templateColumns={{
-    //     base: "1fr",
-    //     lg: "200px 1fr",
-    //   }}
-    // >
-    //   <GridItem area="nav">
-    //     <NavBar />
-    //   </GridItem>
-    //   <Show above="lg">
-    //     <GridItem area="aside">
-    //       <CategoryList
-    //         selectedCategory={songQuery.category}
-    //         onSelectCategory={(category) =>
-    //           setSongQuery({ ...songQuery, category })
-    //         }
-    //       />
-    //     </GridItem>
-    //   </Show>
-    //   <GridItem area="main">
-    //     <Box marginLeft={5}>
-    //       <SongHeading songQuery={songQuery} />
-    //     </Box>
-    //     <HStack paddingLeft={2} marginBottom={5}>
-    //       <Box marginLeft={3} marginRight={5}>
-    //         <NotationSelector
-    //           selectedNotation={songQuery?.notation}
-    //           onSelectNotation={(notation) =>
-    //             setSongQuery({ ...songQuery, notation })
-    //           }
-    //         />
-    //       </Box>
-    //       <SortSelector
-    //         sortOrder={songQuery.sortOrder}
-    //         onSelectSortOrder={(sortOrder) =>
-    //           setSongQuery({ ...songQuery, sortOrder })
-    //         }
-    //       />
-    //       <Box width="70%" marginRight={10}>
-    //         <SearchInput
-    //           onSearch={(searchText) =>
-    //             setSongQuery({ ...songQuery, searchText })
-    //           }
-    //         />
-    //       </Box>
-    //     </HStack>
-    //     <Box marginLeft={3}>
-    //       <SongGrid songQuery={songQuery} />
-    //     </Box>
-    //   </GridItem>
-    // </Grid>
-    <Register />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {/* public routes */}
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="home" element={<HomePage />} />
+        <Route path="unauthorized" element={<Unauthorized />} />
+
+        {/* catch all */}
+        <Route path="*" element={<Missing />} />
+      </Route>
+    </Routes>
   );
 }
 
