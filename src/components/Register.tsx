@@ -373,7 +373,9 @@ const Register = () => {
                 --Select Country Name--
               </option>
               {countries.map((country) => (
-                <option key={country.iso}>{country.name}</option>
+                <option value={country.iso} key={country.iso}>
+                  {country.name}
+                </option>
               ))}
             </select>
 
@@ -483,17 +485,7 @@ const Register = () => {
 
             <br />
 
-            <Button
-              disabled={
-                validFirstName &&
-                validLastName &&
-                validUserName &&
-                validPassword &&
-                validMatch
-              }
-            >
-              Sign Up
-            </Button>
+            <button>Sign Up</button>
           </form>
           <p>
             Already registered?

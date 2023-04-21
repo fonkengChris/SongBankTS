@@ -14,4 +14,9 @@ export default [
     title: "Staff Notation",
     slug: "staff-notation",
   },
+  {
+    id: 6,
+    title: "Without Notation",
+    slug: "without-notation",
+  },
 ];
