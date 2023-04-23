@@ -1,7 +1,6 @@
-import useData from "./useData";
-// import { GameQuery } from "../App";
-import { Category } from "./useCategories";
-import { SongQuery } from "../App";
+import { useQuery } from "@tanstack/react-query";
+import { SongQuery } from "../components/common/HomePage";
+import apiClient from "../services/api-client";
 
 export interface Notation {
   id: number;
@@ -19,32 +18,18 @@ export interface Song {
 }
 
 const useSongs = (songQuery: SongQuery) =>
-  useData<Song>(
-    "/library/songs",
-    {
-      params: {
-        category: songQuery.category?.id,
-        notation: songQuery.notation?.id,
-        ordering: songQuery.sortOrder,
-        search: songQuery.searchText,
-      },
-    },
-    [songQuery]
-  );
+  useQuery<Song[], Error>({
+    queryKey: ["songs", songQuery],
+    queryFn: () =>
+      apiClient
+        .get<Song[]>("/library/songs", {
+          params: {
+            category: songQuery.category?.id,
+            notation: songQuery.notation?.id,
+            ordering: songQuery.sortOrder,
+            search: songQuery.searchText,
+          },
+        })
+        .then((res) => res.data),
+  });
 export default useSongs;
-
-// const useSongs = (gameQuery: GameQuery) =>
-//   useData<Game>(
-//     "/games",
-//     {
-//       params: {
-//         genres: gameQuery.genre?.id,
-//         platforms: gameQuery.platform?.id,
-//         ordering: gameQuery.sortOrder,
-//         search: gameQuery.seachText,
-//       },
-//     },
-//     [gameQuery]
-//   );
-
-// export default useSongs;
