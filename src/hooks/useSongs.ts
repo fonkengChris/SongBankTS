@@ -20,8 +20,8 @@ const useSongs = (songQuery: SongQuery) =>
     queryFn: () =>
       apiClient.getAll({
         params: {
-          category: songQuery.category?.id,
-          notation: songQuery.notation?.id,
+          category: songQuery.categoryId,
+          notation: songQuery.notationId,
           ordering: songQuery.sortOrder,
           search: songQuery.searchText,
         },

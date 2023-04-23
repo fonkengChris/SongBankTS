@@ -1,41 +1,26 @@
 import {
   Button,
-  HStack,
   Heading,
-  Image,
-  List,
-  ListItem,
   Spinner,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
-  Text,
-  Tfoot,
-  Th,
-  Thead,
   Tr,
-  color,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
 
-
 interface Props {
   onSelectCategory: (category: Category | null) => void;
-  selectedCategory: Category | null;
+  selectedCategoryId?: number;
 }
 
-const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
+const CategoryList = ({ onSelectCategory, selectedCategoryId }: Props) => {
   const { data: categories, isLoading, error } = useCategories();
 
   if (error) return null;
 
   if (isLoading) return <Spinner />;
-
-  // const look = (button: Button) => {
-
-  // }
 
   return (
     <>
@@ -65,11 +50,9 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
                   <Button
                     whiteSpace="normal"
                     textAlign="left"
-                    fontSize={
-                      category.id === selectedCategory?.id ? "xl" : "lg"
-                    }
+                    fontSize={category.id === selectedCategoryId ? "xl" : "lg"}
                     fontWeight={
-                      category.id === selectedCategory?.id ? "bold" : "normal"
+                      category.id === selectedCategoryId ? "bold" : "normal"
                     }
                     onClick={() => onSelectCategory(category)}
                     variant="link"

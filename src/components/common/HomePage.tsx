@@ -1,5 +1,5 @@
-import { Grid, GridItem, Show, HStack, Box } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Box, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
+import { useState } from "react";
 import CategoryList from "../CategoryList";
 import NavBar from "../NavBar";
 import NotationSelector from "../NotationSelector";
@@ -7,13 +7,10 @@ import SearchInput from "../SearchInput";
 import SongGrid from "../SongGrid";
 import SongHeading from "../SongHeading";
 import SortSelector from "../SortSelector";
-import { useState } from "react";
-import { Category } from "../../hooks/useCategories";
-import { Notation } from "../../hooks/useNotations";
 
 export interface SongQuery {
-  category: Category | null;
-  notation: Notation | null;
+  categoryId?: number;
+  notationId?: number;
   sortOrder: string;
   searchText: string;
 }
@@ -37,9 +34,9 @@ const HomePage = () => {
       <Show above="lg">
         <GridItem area="aside">
           <CategoryList
-            selectedCategory={songQuery.category}
+            selectedCategoryId={songQuery.categoryId}
             onSelectCategory={(category) =>
-              setSongQuery({ ...songQuery, category })
+              setSongQuery({ ...songQuery, categoryId: category?.id })
             }
           />
         </GridItem>
@@ -51,9 +48,9 @@ const HomePage = () => {
         <HStack paddingLeft={2} marginBottom={5}>
           <Box marginLeft={3} marginRight={5}>
             <NotationSelector
-              selectedNotation={songQuery?.notation}
+              selectedNotationId={songQuery?.notationId}
               onSelectNotation={(notation) =>
-                setSongQuery({ ...songQuery, notation })
+                setSongQuery({ ...songQuery, notationId: notation?.id })
               }
             />
           </Box>

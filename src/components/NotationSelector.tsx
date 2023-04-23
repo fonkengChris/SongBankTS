@@ -6,11 +6,12 @@ import { Notation } from "../hooks/useNotations";
 
 interface Props {
   onSelectNotation: (notation: Notation | null) => void;
-  selectedNotation: Notation | null;
+  selectedNotationId?: number;
 }
 
-const NotationSelector = ({ onSelectNotation, selectedNotation }: Props) => {
+const NotationSelector = ({ onSelectNotation, selectedNotationId }: Props) => {
   const { data: notations, error } = useNotations();
+  const selectedNotation = notations.find((n) => n.id === selectedNotationId);
 
   if (error) return null;
   return (
