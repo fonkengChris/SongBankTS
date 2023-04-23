@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { SongQuery } from "../components/common/HomePage";
-import apiClient from "../services/api-client";
+import APIClient from "../services/api-client";
+import { SONGS_ENDPOINT } from "../data/constants";
+
+const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
 
 export interface Song {
   id: number;
@@ -15,15 +18,13 @@ const useSongs = (songQuery: SongQuery) =>
   useQuery<Song[], Error>({
     queryKey: ["songs", songQuery],
     queryFn: () =>
-      apiClient
-        .get<Song[]>("/library/songs", {
-          params: {
-            category: songQuery.category?.id,
-            notation: songQuery.notation?.id,
-            ordering: songQuery.sortOrder,
-            search: songQuery.searchText,
-          },
-        })
-        .then((res) => res.data),
+      apiClient.getAll({
+        params: {
+          category: songQuery.category?.id,
+          notation: songQuery.notation?.id,
+          ordering: songQuery.sortOrder,
+          search: songQuery.searchText,
+        },
+      }),
   });
 export default useSongs;

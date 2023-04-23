@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import notations from "../data/notations";
-import apiClient from "../services/api-client";
+import APIClient from "../services/api-client";
 import ms from "ms";
-// import useData from "./useData";
+import { NOTATIONS_ENDPOINT } from "../data/constants";
+
+const apiClient = new APIClient<Notation>(NOTATIONS_ENDPOINT);
 
 export interface Notation {
   id: number;
@@ -13,8 +15,7 @@ export interface Notation {
 const useNotations = () =>
   useQuery({
     queryKey: ["notations"],
-    queryFn: () =>
-      apiClient.get<Notation[]>("/library/notations").then((res) => res.data),
+    queryFn: apiClient.getAll,
     staleTime: ms("24h"),
     initialData: notations,
   });

@@ -19,7 +19,7 @@ import {
   color,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
-import useData from "../hooks/useData";
+
 
 interface Props {
   onSelectCategory: (category: Category | null) => void;
@@ -51,7 +51,6 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
                   whiteSpace="normal"
                   textAlign="left"
                   fontSize="lg"
-                  // className=""
                   fontWeight={"normal"}
                   onClick={() => onSelectCategory(null)}
                   variant="link"

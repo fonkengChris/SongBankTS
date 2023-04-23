@@ -5,7 +5,7 @@ import useNotations from "../hooks/useNotations";
 import { Notation } from "../hooks/useNotations";
 
 interface Props {
-  onSelectNotation: (notation: Notation) => void;
+  onSelectNotation: (notation: Notation | null) => void;
   selectedNotation: Notation | null;
 }
 
@@ -19,6 +19,9 @@ const NotationSelector = ({ onSelectNotation, selectedNotation }: Props) => {
         {selectedNotation?.title || "Notations"}
       </MenuButton>
       <MenuList>
+        <MenuItem onClick={() => onSelectNotation(null)}>
+          All Notations
+        </MenuItem>
         {notations?.map((notation) => (
           <MenuItem
             onClick={() => onSelectNotation(notation)}

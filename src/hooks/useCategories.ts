@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import categories from "../data/categories";
-import apiClient from "../services/api-client";
+import APIClient from "../services/api-client";
 import ms from "ms";
+import { CATEGORIES_ENDPOINT } from "../data/constants";
 
-// import useData from "./useData";
+const apiClient = new APIClient<Category>(CATEGORIES_ENDPOINT);
 
 export interface Category {
   id: number;
@@ -13,8 +14,7 @@ export interface Category {
 const useCategories = () =>
   useQuery({
     queryKey: ["categories"],
-    queryFn: () =>
-      apiClient.get<Category[]>("/library/categories").then((res) => res.data),
+    queryFn: apiClient.getAll,
     staleTime: ms("24h"),
     initialData: categories,
   });

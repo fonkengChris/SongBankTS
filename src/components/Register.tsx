@@ -15,10 +15,12 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios, { CUSTOMER_URL, REGISTER_URL } from "../services/api-client";
+import axios from "axios";
+
 import { useState, useEffect, useRef } from "react";
 import { AxiosError } from "axios";
 import countries from "../data/countries";
+import { CUSTOMERS_ENDPOINT, REGISTER_ENDPOINT } from "../data/constants";
 
 const NAME_REGEX = /^[A-z][A-z0-9-_]{4,50}$/;
 const EMAIL_REGEX =
@@ -129,7 +131,7 @@ const Register = () => {
         first_name: firstname,
         last_name: lastname,
       });
-      const response = await axios.post(REGISTER_URL, {
+      const response = await axios.post(REGISTER_ENDPOINT, {
         username,
         password,
         email,
@@ -137,7 +139,7 @@ const Register = () => {
         last_name: lastname,
       });
 
-      const res = await axios.post(CUSTOMER_URL, {
+      const res = await axios.post(CUSTOMERS_ENDPOINT, {
         user_id: response.data.id,
         phone,
         country,

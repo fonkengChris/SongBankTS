@@ -1,16 +1,21 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
-export default axios.create({
+const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/",
 });
 
-export const REGISTER_URL = "/auth/users/";
-export const CUSTOMER_URL = "/library/customers/";
+class APIClient<T> {
+  endpoint: string;
 
-// const jwt_token = 'your_jwt_token';
+  constructor(endpoint: string) {
+    this.endpoint = endpoint;
+  }
 
-// axios.get('https://example.com/api/data', {
-//     headers: {
-//         'Authorization': `Bearer ${jwt_token}`
-//     }
-// })
+  getAll = (config: AxiosRequestConfig) => {
+    return axiosInstance
+      .get<T[]>(this.endpoint, config)
+      .then((res) => res.data);
+  };
+}
+
+export default APIClient;
