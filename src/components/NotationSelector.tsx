@@ -19,7 +19,7 @@ const NotationSelector = ({ onSelectNotation, selectedNotation }: Props) => {
         {selectedNotation?.title || "Notations"}
       </MenuButton>
       <MenuList>
-        {notations.map((notation) => (
+        {notations?.map((notation) => (
           <MenuItem
             onClick={() => onSelectNotation(notation)}
             key={notation.id}
