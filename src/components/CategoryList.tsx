@@ -60,7 +60,7 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
                 </Button>
               </Td>
             </Tr>
-            {categories.map((category) => (
+            {categories?.map((category) => (
               <Tr key={category.id} paddingY="5px">
                 <Td>
                   <Button
