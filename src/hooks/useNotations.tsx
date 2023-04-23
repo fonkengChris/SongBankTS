@@ -10,7 +10,6 @@ export interface Notation {
   slug: string;
 }
 
-// const useNotations = () => ({ data: notations, error: false });
 const useNotations = () =>
   useQuery({
     queryKey: ["notations"],

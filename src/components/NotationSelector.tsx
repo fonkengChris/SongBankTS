@@ -2,7 +2,7 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import React from "react";
 import { BsChevronDown } from "react-icons/bs";
 import useNotations from "../hooks/useNotations";
-import { Notation } from "../hooks/useSongs";
+import { Notation } from "../hooks/useNotations";
 
 interface Props {
   onSelectNotation: (notation: Notation) => void;

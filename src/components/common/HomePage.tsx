@@ -9,7 +9,7 @@ import SongHeading from "../SongHeading";
 import SortSelector from "../SortSelector";
 import { useState } from "react";
 import { Category } from "../../hooks/useCategories";
-import { Notation } from "../../hooks/useSongs";
+import { Notation } from "../../hooks/useNotations";
 
 export interface SongQuery {
   category: Category | null;

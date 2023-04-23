@@ -2,12 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { SongQuery } from "../components/common/HomePage";
 import apiClient from "../services/api-client";
 
-export interface Notation {
-  id: number;
-  title: string;
-  slug: string;
-}
-
 export interface Song {
   id: number;
   title: string;

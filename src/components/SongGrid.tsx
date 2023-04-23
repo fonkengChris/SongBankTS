@@ -1,5 +1,5 @@
 import { SimpleGrid, Text } from "@chakra-ui/react";
-import useSongs, { Notation } from "../hooks/useSongs";
+import useSongs from "../hooks/useSongs";
 import SongCard from "./SongCard";
 import SongCardSkeleton from "./SongCardSkeleton";
 import SongCardContainer from "./SongCardContainer";
