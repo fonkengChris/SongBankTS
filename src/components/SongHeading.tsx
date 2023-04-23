@@ -1,19 +1,15 @@
 import { Heading } from "@chakra-ui/react";
-import React from "react";
+import useCategory from "../hooks/useCategory";
+import useNotation from "../hooks/useNotation";
 import { SongQuery } from "./common/HomePage";
-import useCategories from "../hooks/useCategories";
-import useNotations from "../hooks/useNotations";
 
 interface Props {
   songQuery: SongQuery;
 }
 
 const SongHeading = ({ songQuery }: Props) => {
-  const { data: categories } = useCategories();
-  const category = categories.find((c) => c.id === songQuery.categoryId);
-
-  const { data: notations } = useNotations();
-  const notation = notations.find((n) => n.id === songQuery.notationId);
+  const category = useCategory(songQuery.categoryId);
+  const notation = useNotation(songQuery.notationId);
 
   const heading = `${notation?.title || ""} ${category?.title || ""} Songs`;
   return (
