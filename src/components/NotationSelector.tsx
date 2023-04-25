@@ -1,17 +1,14 @@
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import React from "react";
 import { BsChevronDown } from "react-icons/bs";
+import useSongQueryStore from "../Store";
 import useNotations from "../hooks/useNotations";
-import { Notation } from "../hooks/useNotations";
 
-interface Props {
-  onSelectNotation: (notation: Notation | null) => void;
-  selectedNotationId?: number;
-}
-
-const NotationSelector = ({ onSelectNotation, selectedNotationId }: Props) => {
+const NotationSelector = () => {
   const { data: notations, error } = useNotations();
+  const selectedNotationId = useSongQueryStore((s) => s.songQuery.notationId);
   const selectedNotation = notations.find((n) => n.id === selectedNotationId);
+
+  const setSelectedNotation = useSongQueryStore((s) => s.setNotationId);
 
   if (error) return null;
   return (
@@ -20,12 +17,12 @@ const NotationSelector = ({ onSelectNotation, selectedNotationId }: Props) => {
         {selectedNotation?.title || "Notations"}
       </MenuButton>
       <MenuList>
-        <MenuItem onClick={() => onSelectNotation(null)}>
+        <MenuItem onClick={() => setSelectedNotation(null)}>
           All Notations
         </MenuItem>
         {notations?.map((notation) => (
           <MenuItem
-            onClick={() => onSelectNotation(notation)}
+            onClick={() => setSelectedNotation(notation.id)}
             key={notation.id}
           >
             {notation.title}

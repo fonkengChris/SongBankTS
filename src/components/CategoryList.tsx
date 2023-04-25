@@ -8,15 +8,13 @@ import {
   Td,
   Tr,
 } from "@chakra-ui/react";
-import useCategories, { Category } from "../hooks/useCategories";
+import useSongQueryStore from "../Store";
+import useCategories from "../hooks/useCategories";
 
-interface Props {
-  onSelectCategory: (category: Category | null) => void;
-  selectedCategoryId?: number;
-}
-
-const CategoryList = ({ onSelectCategory, selectedCategoryId }: Props) => {
+const CategoryList = () => {
   const { data: categories, isLoading, error } = useCategories();
+  const selectedCategoryId = useSongQueryStore((s) => s.songQuery.categoryId);
+  const setSelectedCategory = useSongQueryStore((s) => s.setCategoryId);
 
   if (error) return null;
 
@@ -37,7 +35,7 @@ const CategoryList = ({ onSelectCategory, selectedCategoryId }: Props) => {
                   textAlign="left"
                   fontSize="lg"
                   fontWeight={"normal"}
-                  onClick={() => onSelectCategory(null)}
+                  onClick={() => setSelectedCategory(null)}
                   variant="link"
                 >
                   All Categories
@@ -54,7 +52,7 @@ const CategoryList = ({ onSelectCategory, selectedCategoryId }: Props) => {
                     fontWeight={
                       category.id === selectedCategoryId ? "bold" : "normal"
                     }
-                    onClick={() => onSelectCategory(category)}
+                    onClick={() => setSelectedCategory(category.id)}
                     variant="link"
                   >
                     {category.title}

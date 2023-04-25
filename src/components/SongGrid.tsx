@@ -3,16 +3,9 @@ import useSongs from "../hooks/useSongs";
 import SongCard from "./SongCard";
 import SongCardSkeleton from "./SongCardSkeleton";
 import SongCardContainer from "./SongCardContainer";
-import { SongQuery } from "./common/HomePage";
-// import { Category } from "../hooks/useCategories";
-// import { SongQuery } from "../App";
 
-interface Props {
-  songQuery: SongQuery;
-}
-
-const SongGrid = ({ songQuery }: Props) => {
-  const { data: songs, error, isLoading } = useSongs(songQuery);
+const SongGrid = () => {
+  const { data: songs, error, isLoading } = useSongs();
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   if (error) return <Text color="red">{error.message}</Text>;

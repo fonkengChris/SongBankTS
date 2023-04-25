@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { SongQuery } from "../components/common/HomePage";
-import APIClient from "../services/api-client";
+import useSongQueryStore from "../Store";
 import { SONGS_ENDPOINT } from "../data/constants";
+import APIClient from "../services/api-client";
 
 const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
 
@@ -14,8 +14,9 @@ export interface Song {
   metacritic: number;
 }
 
-const useSongs = (songQuery: SongQuery) =>
-  useQuery<Song[], Error>({
+const useSongs = () => {
+  const songQuery = useSongQueryStore((s) => s.songQuery);
+  return useQuery<Song[], Error>({
     queryKey: ["songs", songQuery],
     queryFn: () =>
       apiClient.getAll({
@@ -27,4 +28,5 @@ const useSongs = (songQuery: SongQuery) =>
         },
       }),
   });
+};
 export default useSongs;

@@ -8,15 +8,10 @@ import SongGrid from "../SongGrid";
 import SongHeading from "../SongHeading";
 import SortSelector from "../SortSelector";
 
-export interface SongQuery {
-  categoryId?: number;
-  notationId?: number;
-  sortOrder: string;
-  searchText: string;
-}
 
 const HomePage = () => {
-  const [songQuery, setSongQuery] = useState<SongQuery>({} as SongQuery);
+
+  
   return (
     <Grid
       templateAreas={{
@@ -33,43 +28,24 @@ const HomePage = () => {
       </GridItem>
       <Show above="lg">
         <GridItem area="aside">
-          <CategoryList
-            selectedCategoryId={songQuery.categoryId}
-            onSelectCategory={(category) =>
-              setSongQuery({ ...songQuery, categoryId: category?.id })
-            }
-          />
+          <CategoryList />
         </GridItem>
       </Show>
       <GridItem area="main">
         <Box marginLeft={5}>
-          <SongHeading songQuery={songQuery} />
+          <SongHeading />
         </Box>
         <HStack paddingLeft={2} marginBottom={5}>
           <Box marginLeft={3} marginRight={5}>
-            <NotationSelector
-              selectedNotationId={songQuery?.notationId}
-              onSelectNotation={(notation) =>
-                setSongQuery({ ...songQuery, notationId: notation?.id })
-              }
-            />
+            <NotationSelector />
           </Box>
-          <SortSelector
-            sortOrder={songQuery.sortOrder}
-            onSelectSortOrder={(sortOrder) =>
-              setSongQuery({ ...songQuery, sortOrder })
-            }
-          />
+          <SortSelector />
           <Box width="70%" marginRight={10}>
-            <SearchInput
-              onSearch={(searchText) =>
-                setSongQuery({ ...songQuery, searchText })
-              }
-            />
+            <SearchInput />
           </Box>
         </HStack>
         <Box marginLeft={3}>
-          <SongGrid songQuery={songQuery} />
+          <SongGrid />
         </Box>
       </GridItem>
     </Grid>
