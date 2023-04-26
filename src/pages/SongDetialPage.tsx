@@ -1,6 +1,13 @@
-import { Box, GridItem, Heading, SimpleGrid, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  GridItem,
+  Heading,
+  Img,
+  SimpleGrid,
+  Spinner,
+} from "@chakra-ui/react";
 import { Document } from "react-pdf";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ExpandableText from "../components/ExpandableText";
 import SongAttributes from "../components/SongAttributes";
 import useSong from "../hooks/useSong";
@@ -17,11 +24,14 @@ const SongDetialPage = () => {
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
       <GridItem>
         <Heading>{song.title}</Heading>
-        {song.document_files.map((file) => (
+        {song.preview_image.map((file) => (
           // <Document key={file.id} file={file.document_file}>
           //   {file.document_file}
           // </Document>
-          <DocumentFile key={file.id} url={file.document_file} />
+
+          <Link key={file.id} to={song.document_files[0].document_file}>
+            <Img src={file.preview_image} />
+          </Link>
         ))}
         <br />
         {song.audio_files.map((file) => (

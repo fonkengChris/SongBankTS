@@ -5,6 +5,8 @@ interface Props {
   url: URL;
 }
 
+const apiClient = new
+
 const DocumentFile = ({ url }: Props) => {
   const [numPages, setNumPages] = useState(2);
   const [pageNumber, setPageNumber] = useState(1);
@@ -13,14 +15,7 @@ const DocumentFile = ({ url }: Props) => {
   //     setNumPages(numPages);
   //   }
 
-  //   useEffect(() => {
-  //     // Fetch PDF file URL from backend API
-  //     // and update the `url` state variable
-  //     fetchPdfUrlFromBackend().then((pdfUrl) => {
-  //       setUrl(pdfUrl);
-  //     });
-  //   }, []);
-
+  
   return (
     <div>
       <Document file={url}>

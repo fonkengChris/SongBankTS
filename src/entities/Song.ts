@@ -8,9 +8,9 @@ export default interface Song {
   description: string;
   notation: Notation;
   category: Category;
-  document_files: { id: number; document_file: URL }[];
+  document_files: { id: number; document_file: string }[];
   audio_files: { id: number; audio_file: string }[];
   author_name: string;
-  preview_image: { preview_image: string }[];
+  preview_image: { id: number, preview_image: string }[];
   metacritic: number;
 }
