@@ -1,12 +1,7 @@
-import React from "react";
+import { Card, CardBody, HStack, Image, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import Song from "../entities/Song";
-import { Card, CardBody, HStack, Heading, Image, Text } from "@chakra-ui/react";
 import CriticScore from "./CriticScore";
-import SongCardContainer from "./SongCardContainer";
-// import PlatformIconList from "./PlatformIconList";
-// import CriticScore from "./CriticScore";
-// import getCroppedImageUrl from "../services/image-urls";
-// import Emoji from "./Emoji";
 
 interface Props {
   song: Song;
@@ -21,7 +16,7 @@ const SongCard = ({ song }: Props) => {
         src={song.preview_image[0].preview_image}
       />
       <CardBody>
-        <Heading fontSize="2xl">{song.title}</Heading>
+        <Link to={"/songs/" + song.id}>{song.title}</Link>
         <HStack justifyContent="space-between">
           <Text>{song.notation.title}</Text>
           <CriticScore score={song.metacritic} />

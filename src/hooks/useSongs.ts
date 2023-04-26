@@ -6,6 +6,7 @@ import Song from "../entities/Song";
 
 const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
 
+
 const useSongs = () => {
   const songQuery = useSongQueryStore((s) => s.songQuery);
   return useQuery<Song[], Error>({
