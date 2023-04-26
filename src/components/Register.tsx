@@ -5,20 +5,21 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
-
 import { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
-import { CUSTOMERS_ENDPOINT, REGISTER_ENDPOINT } from "../data/constants";
+import {
+  CUSTOMERS_ENDPOINT,
+  EMAIL_REGEX,
+  NAME_REGEX,
+  PWD_REGEX,
+  REGISTER_ENDPOINT,
+} from "../data/constants";
 import countries from "../data/countries";
 import APIClient from "../services/api-client";
 import User from "../entities/User";
 import Customer from "../entities/Customer";
 
-const NAME_REGEX = /^[A-z][A-z0-9-_]{4,50}$/;
-const EMAIL_REGEX =
-  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,50}$/;
+interface UserQuery {}
 
 const userApiClient = new APIClient<User>(REGISTER_ENDPOINT);
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
@@ -108,17 +109,8 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log("Submitted");
-    // if button enabled with JS hack
-    // const v1 = NAME_REGEX.test(firstname);
-    // const v2 = NAME_REGEX.test(lastname);
-    // const v3 = NAME_REGEX.test(username);
-    // const v4 = EMAIL_REGEX.test(email);
-    // const v5 = PWD_REGEX.test(password);
-    // if (!v1 || !v2 || !v3 || !v4 || !v5) {
-    //   setErrMsg("Invalid Entry");
-    //   return;
-    // }
+    // console.log("Submitted");
+
     try {
       const response = await userApiClient.post({
         id: 0,
@@ -137,7 +129,7 @@ const Register = () => {
         birth_date: birthDate,
         membership,
       });
-      console.log(response);
+      // console.log(response);
 
       // console.log(response?.accessToken);
       // console.log(JSON.stringify(response));
@@ -186,7 +178,7 @@ const Register = () => {
               {validFirstName === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
               )}
-              {(validFirstName === true || firstname !== "") && (
+              {validFirstName === false && firstname !== "" && (
                 <FontAwesomeIcon icon={faTimes} className="invalid" />
               )}
             </label>
@@ -226,7 +218,7 @@ const Register = () => {
               {validLastName === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
               )}
-              {(validLastName === true || lastname !== "") && (
+              {validLastName === false && lastname !== "" && (
                 <FontAwesomeIcon icon={faTimes} className="invalid" />
               )}
             </label>
@@ -265,7 +257,7 @@ const Register = () => {
               {validUserName === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
               )}
-              {(validUserName === true || username !== "") && (
+              {validUserName === false && username !== "" && (
                 <FontAwesomeIcon icon={faTimes} className="invalid" />
               )}
             </label>
@@ -303,7 +295,7 @@ const Register = () => {
               {validEmail === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
               )}
-              {(validEmail === true || email !== "") && (
+              {validEmail === false && email !== "" && (
                 <FontAwesomeIcon icon={faTimes} className="invalid" />
               )}
             </label>
