@@ -3,14 +3,9 @@ import notations from "../data/notations";
 import APIClient from "../services/api-client";
 import ms from "ms";
 import { NOTATIONS_ENDPOINT } from "../data/constants";
+import Notation from "../entities/Notation";
 
 const apiClient = new APIClient<Notation>(NOTATIONS_ENDPOINT);
-
-export interface Notation {
-  id: number;
-  title: string;
-  slug: string;
-}
 
 const useNotations = () =>
   useQuery({

@@ -1,5 +1,5 @@
 import React from "react";
-import { Song } from "../hooks/useSongs";
+import Song from "../entities/Song";
 import { Card, CardBody, HStack, Heading, Image, Text } from "@chakra-ui/react";
 import CriticScore from "./CriticScore";
 import SongCardContainer from "./SongCardContainer";
