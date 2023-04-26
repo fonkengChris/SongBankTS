@@ -1,31 +1,27 @@
-import {
-  Button,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  Select,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import {
   faCheck,
-  faTimes,
   faInfoCircle,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 
-import { useState, useEffect, useRef } from "react";
 import { AxiosError } from "axios";
-import countries from "../data/countries";
+import { useEffect, useRef, useState } from "react";
 import { CUSTOMERS_ENDPOINT, REGISTER_ENDPOINT } from "../data/constants";
+import countries from "../data/countries";
+import APIClient from "../services/api-client";
+import User from "../entities/User";
+import Customer from "../entities/Customer";
 
 const NAME_REGEX = /^[A-z][A-z0-9-_]{4,50}$/;
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,50}$/;
+
+const userApiClient = new APIClient<User>(REGISTER_ENDPOINT);
+const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
 const Register = () => {
   //defining ref hooks
@@ -124,14 +120,8 @@ const Register = () => {
     //   return;
     // }
     try {
-      console.log({
-        username,
-        password,
-        email,
-        first_name: firstname,
-        last_name: lastname,
-      });
-      const response = await axios.post(REGISTER_ENDPOINT, {
+      const response = await userApiClient.post({
+        id: 0,
         username,
         password,
         email,
@@ -139,14 +129,16 @@ const Register = () => {
         last_name: lastname,
       });
 
-      const res = await axios.post(CUSTOMERS_ENDPOINT, {
-        user_id: response.data.id,
+      const res = customerApiClient.post({
+        id: 0,
+        user_id: response.id,
         phone,
         country,
-        birthDate,
+        birth_date: birthDate,
         membership,
       });
-      console.log(response?.data);
+      console.log(response);
+
       // console.log(response?.accessToken);
       // console.log(JSON.stringify(response));
       setSuccess(true);
@@ -269,7 +261,7 @@ const Register = () => {
             <br />
 
             <label htmlFor="username">
-              First name:{" "}
+              Username:{" "}
               {validUserName === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
               )}
@@ -307,7 +299,7 @@ const Register = () => {
             <br />
 
             <label htmlFor="email">
-              First name:{" "}
+              Email:{" "}
               {validEmail === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
               )}
