@@ -4,6 +4,7 @@ import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import SongDetialPage from "./pages/SongDetialPage";
 import Register from "./components/Register";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "songs/:id", element: <SongDetialPage /> },
       { path: "register", element: <Register /> },
+      { path: "login", element: <Login /> },
     ],
   },
 ]);

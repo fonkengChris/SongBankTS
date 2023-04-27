@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "./Routes";
 import theme from "./theme";
+import { AuthProvider } from "./context/AuthProvider";
 
 const queryClient = new QueryClient();
 
@@ -17,7 +18,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       ></ColorModeScript>
 
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <AuthProvider >
+          <RouterProvider router={router} />
+        </AuthProvider>
         <ReactQueryDevtools />
       </QueryClientProvider>
     </ChakraProvider>
