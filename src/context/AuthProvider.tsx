@@ -5,8 +5,8 @@ interface Props {
 }
 
 export type AuthCridentials = {
-  auth: {};
-  setAuth: ({}) => void;
+  auth: Auth;
+  setAuth: (auth: Auth) => void;
 };
 
 const AuthContext = createContext<AuthCridentials>({} as AuthCridentials);
@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }: Props) => {
   const [auth, setAuth] = useState({});
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth: {} as Auth, setAuth }}>
       {children}
     </AuthContext.Provider>
   );

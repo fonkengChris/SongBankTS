@@ -1,7 +1,14 @@
 import axios, { AxiosRequestConfig } from "axios";
+const BASE_URL = "http://localhost:8000/";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: BASE_URL,
+});
+
+export const axiosPrivate = axios.create({
+  baseURL: BASE_URL,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
 });
 
 class APIClient<T> {
@@ -29,4 +36,3 @@ class APIClient<T> {
 }
 
 export default APIClient;
-

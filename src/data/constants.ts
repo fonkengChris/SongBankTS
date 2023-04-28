@@ -3,7 +3,10 @@ export const CUSTOMERS_ENDPOINT = "/library/customers/";
 export const CATEGORIES_ENDPOINT = "/library/categories/";
 export const SONGS_ENDPOINT = "/library/songs/";
 export const NOTATIONS_ENDPOINT = "/library/notations/";
-export const LOGIN_ENDPOINT = "/auth/jwt/create";
+export const LOGIN_ENDPOINT = "/auth/jwt/create/";
+export const REFRESH_TOKEN_ENDPOINT = "/auth/jwt/refresh/";
+export const ACCESS_TOKEN_ENDPOINT = "/%5Eapi-token-auth/";
+export const CURRENT_USER_ENDPOINT = "/auth/users/me/";
 
 export const NAME_REGEX = /^[A-z][A-z0-9-_]{4,50}$/;
 export const EMAIL_REGEX =

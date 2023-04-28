@@ -6,8 +6,13 @@ import SearchInput from "../components/SearchInput";
 import SongGrid from "../components/SongGrid";
 import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
+import jwtDecode from "jwt-decode";
+import { useState, useEffect } from "react";
 
 const HomePage = () => {
+
+  
+  
   return (
     <Grid
       templateAreas={{
