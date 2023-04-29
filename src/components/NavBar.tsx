@@ -77,7 +77,7 @@ const NavBar = ({ user }: Props) => {
             <Flex>
               <ListItem className="nav-item">
                 <NavLink className="nav-link" to="/profile">
-                  {user.email}
+                  {user.first_name} {user.last_name}
                 </NavLink>
               </ListItem>
               <ListItem className="nav-item">
