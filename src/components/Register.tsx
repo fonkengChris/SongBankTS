@@ -114,7 +114,6 @@ const Register = () => {
     try {
       const response = await userApiClient.post({
         id: 0,
-        username,
         password,
         email,
         first_name: firstname,
@@ -240,44 +239,6 @@ const Register = () => {
             {lastnameFocus === true &&
               lastname !== "" &&
               validLastName === false && (
-                <p id="uidnote" className={"instructions"}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  4 to 24 characters.
-                  <br />
-                  Must begin with a letter.
-                  <br />
-                  Letters, numbers, underscores, hyphens allowed.
-                </p>
-              )}
-
-            <br />
-
-            <label htmlFor="username">
-              Username:{" "}
-              {validUserName === true && (
-                <FontAwesomeIcon icon={faCheck} className="valid" />
-              )}
-              {validUserName === false && username !== "" && (
-                <FontAwesomeIcon icon={faTimes} className="invalid" />
-              )}
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              ref={usernameRef}
-              autoComplete="off"
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
-              required
-              onFocus={() => setUsernameFocus(true)}
-              onBlur={() => setUsernameFocus(false)}
-              aria-describedby="uidnote"
-              placeholder="Enter username..."
-            />
-            {usernameFocus === true &&
-              username !== "" &&
-              validUserName === false && (
                 <p id="uidnote" className={"instructions"}>
                   <FontAwesomeIcon icon={faInfoCircle} />
                   4 to 24 characters.

@@ -1,9 +1,9 @@
-export const REGISTER_ENDPOINT = "/auth/users/";
+export const REGISTER_ENDPOINT = "/user/users/";
 export const CUSTOMERS_ENDPOINT = "/library/customers/";
 export const CATEGORIES_ENDPOINT = "/library/categories/";
 export const SONGS_ENDPOINT = "/library/songs/";
 export const NOTATIONS_ENDPOINT = "/library/notations/";
-export const LOGIN_ENDPOINT = "/auth/jwt/create/";
+export const LOGIN_ENDPOINT = "/user/login/";
 export const REFRESH_TOKEN_ENDPOINT = "/auth/jwt/refresh/";
 export const ACCESS_TOKEN_ENDPOINT = "/%5Eapi-token-auth/";
 export const CURRENT_USER_ENDPOINT = "/auth/users/me/";

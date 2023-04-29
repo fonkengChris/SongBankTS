@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   HStack,
   Image,
@@ -29,51 +30,67 @@ const NavBar = ({ user }: Props) => {
             SongBank
           </Text>
         </Link>
+      </Flex>
 
+      <HStack justifyContent="space-between" padding={2}>
         <List className="navbar-nav">
-          <HStack padding={2}>
+          <Flex>
             <ListItem className="nav-item">
-              <NavLink className="nav-link" to="/">
-                About Us
-              </NavLink>
+              <Button>
+                <NavLink className="nav-link" to="/">
+                  About Us
+                </NavLink>
+              </Button>
             </ListItem>
             <ListItem className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Contact Us
-              </NavLink>
+              <Button>
+                <NavLink className="nav-link" to="/">
+                  Contact Us
+                </NavLink>
+              </Button>
             </ListItem>
-            {!user.user_id && (
-              <React.Fragment>
-                <ListItem className="nav-item">
+          </Flex>
+        </List>
+
+        {!user.user_id && (
+          <List>
+            <Flex>
+              <ListItem className="nav-item">
+                <Button>
                   <NavLink className="nav-link" to="/login">
                     Login
                   </NavLink>
-                </ListItem>
-                <ListItem className="nav-item">
+                </Button>
+              </ListItem>
+              <ListItem className="nav-item">
+                <Button>
                   <NavLink className="nav-link" to="/register">
                     Register
                   </NavLink>
-                </ListItem>
-              </React.Fragment>
-            )}
-            {user.user_id && (
-              <React.Fragment>
-                <ListItem className="nav-item">
-                  <NavLink className="nav-link" to="/profile">
-                    User_ {user.user_id}
-                  </NavLink>
-                </ListItem>
-                <ListItem className="nav-item">
+                </Button>
+              </ListItem>
+            </Flex>
+          </List>
+        )}
+        {user.user_id && (
+          <List>
+            <Flex>
+              <ListItem className="nav-item">
+                <NavLink className="nav-link" to="/profile">
+                  {user.email}
+                </NavLink>
+              </ListItem>
+              <ListItem className="nav-item">
+                <Button>
                   <NavLink className="nav-link" to="/logout">
                     Logout
                   </NavLink>
-                </ListItem>
-              </React.Fragment>
-            )}
-          </HStack>
-        </List>
-      </Flex>
-
+                </Button>
+              </ListItem>
+            </Flex>
+          </List>
+        )}
+      </HStack>
       <ColorModeSwitch />
     </HStack>
   );

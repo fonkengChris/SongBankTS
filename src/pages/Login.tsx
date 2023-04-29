@@ -29,7 +29,7 @@ const Login = () => {
 
     try {
       const response = await axiosInstance.post<any | Error>(LOGIN_ENDPOINT, {
-        username: user,
+        email: user,
         password: pwd,
       });
 
@@ -43,8 +43,9 @@ const Login = () => {
       setAuth({ user, pwd, access });
       setUser("");
       setPwd("");
-      console.log(auth);
+      // console.log(auth);
       navigate(from, { replace: true });
+      // window.location = "https://localhost:5173";
     } catch (err: Error) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -82,6 +83,7 @@ const Login = () => {
             value={user}
             required
           />
+          <br />
 
           <label htmlFor="password">Password: </label>
           <input
@@ -91,6 +93,8 @@ const Login = () => {
             value={pwd}
             required
           />
+
+          <br />
           <button>Sign In</button>
         </form>
         <p>

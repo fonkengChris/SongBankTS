@@ -1,12 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "./pages/Layout";
+import Logout from "./components/Logout";
+import Register from "./components/Register";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
-import SongDetialPage from "./pages/SongDetialPage";
-import Register from "./components/Register";
+import Layout from "./pages/Layout";
 import Login from "./pages/Login";
-import Protected from "./components/Protected";
-import TrialPage from "./components/common/TrialPage";
+import SongDetialPage from "./pages/SongDetialPage";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +17,7 @@ const router = createBrowserRouter([
       { path: "songs/:id", element: <SongDetialPage /> },
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
-      { path: "login", element: <TrialPage /> },
+      { path: "logout", element: <Logout /> },
     ],
   },
 ]);
