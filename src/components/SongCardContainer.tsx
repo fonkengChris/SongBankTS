@@ -12,7 +12,7 @@ const SongCardContainer = ({ children }: Props) => {
         transform: "scale(1.05)",
         transition: "transform .15s ease-in",
       }}
-      height="400px"
+      height="500px"
       width="300px"
       borderRadius={10}
       overflow="hidden"

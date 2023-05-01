@@ -6,11 +6,13 @@ export default interface Song {
   title: string;
   slug: string;
   description: string;
+  likes: number;
+  downloads: number;
   notation: Notation;
   category: Category;
   document_files: { id: number; document_file: string }[];
   audio_files: { id: number; audio_file: string }[];
   author_name: string;
-  preview_image: { id: number, preview_image: string }[];
+  preview_image: { id: number; preview_image: string }[];
   metacritic: number;
 }

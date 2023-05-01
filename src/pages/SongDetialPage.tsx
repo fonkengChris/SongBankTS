@@ -1,19 +1,13 @@
-import {
-  Box,
-  GridItem,
-  Heading,
-  Img,
-  SimpleGrid,
-  Spinner,
-} from "@chakra-ui/react";
-import { Document } from "react-pdf";
-import { Link, useParams } from "react-router-dom";
+import { GridItem, Heading, Img, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Link, Navigate, useParams } from "react-router-dom";
 import ExpandableText from "../components/ExpandableText";
 import SongAttributes from "../components/SongAttributes";
 import useSong from "../hooks/useSong";
-import DocumentFile from "../components/DocumentFile";
 
 const SongDetialPage = () => {
+  const jwt = localStorage.getItem("token");
+  if (!jwt) return <Navigate to="/login" />;
+
   const { id } = useParams();
   const { data: song, isLoading, error } = useSong(id!);
 
@@ -25,10 +19,6 @@ const SongDetialPage = () => {
       <GridItem>
         <Heading>{song.title}</Heading>
         {song.preview_image.map((file) => (
-          // <Document key={file.id} file={file.document_file}>
-          //   {file.document_file}
-          // </Document>
-
           <Link key={file.id} to={song.document_files[0].document_file}>
             <Img src={file.preview_image} />
           </Link>

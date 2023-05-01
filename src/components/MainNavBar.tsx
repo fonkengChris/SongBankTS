@@ -1,5 +1,7 @@
 import {
-  Box,
+  Avatar,
+  AvatarBadge,
+  AvatarGroup,
   Button,
   Flex,
   HStack,
@@ -7,18 +9,28 @@ import {
   List,
   ListItem,
   Text,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
 import ColorModeSwitch from "./ColorModeSwitch";
 
 interface Props {
-  user: CurrentUser;
+  user: CurrentUser | null;
 }
 
-const NavBar = ({ user }: Props) => {
-  console.log(user);
+const MainNavBar = ({ user }: Props) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenRef");
+
+    navigate("/logout");
+    navigate(0);
+  };
+
+  const fullname = `${user?.first_name} ${user?.last_name}`;
   return (
     <HStack justifyContent="space-between" padding="10px">
       <Flex>
@@ -26,24 +38,22 @@ const NavBar = ({ user }: Props) => {
           <Image src={logo} boxSize="60px" />
         </Link>
         <Link to="/">
-          <Text as="b" color="brown" fontSize="4xl">
+          <Text as="b" color="brown" fontSize="4xl" marginRight={3}>
             SongBank
           </Text>
         </Link>
-      </Flex>
 
-      <HStack justifyContent="space-between" padding={2}>
         <List className="navbar-nav">
           <Flex>
-            <ListItem className="nav-item">
-              <Button>
+            <ListItem className="nav-item" marginRight={3}>
+              <Button color={"cyan.400"}>
                 <NavLink className="nav-link" to="/">
                   About Us
                 </NavLink>
               </Button>
             </ListItem>
-            <ListItem className="nav-item">
-              <Button>
+            <ListItem className="nav-item" marginRight={3}>
+              <Button color={"cyan.400"}>
                 <NavLink className="nav-link" to="/">
                   Contact Us
                 </NavLink>
@@ -51,18 +61,20 @@ const NavBar = ({ user }: Props) => {
             </ListItem>
           </Flex>
         </List>
+      </Flex>
 
-        {!user.user_id && (
+      <HStack justifyContent="space-between" padding={2}>
+        {!user?.user_id && (
           <List>
             <Flex>
-              <ListItem className="nav-item">
+              <ListItem className="nav-item" marginRight={3}>
                 <Button>
                   <NavLink className="nav-link" to="/login">
                     Login
                   </NavLink>
                 </Button>
               </ListItem>
-              <ListItem className="nav-item">
+              <ListItem className="nav-item" marginRight={3}>
                 <Button>
                   <NavLink className="nav-link" to="/register">
                     Register
@@ -72,28 +84,30 @@ const NavBar = ({ user }: Props) => {
             </Flex>
           </List>
         )}
-        {user.user_id && (
+        {user?.user_id && (
           <List>
             <Flex>
-              <ListItem className="nav-item">
+              <ListItem className="nav-item" marginRight={3}>
                 <NavLink className="nav-link" to="/profile">
-                  {user.first_name} {user.last_name}
+                  <Wrap>
+                    <WrapItem>
+                      <Avatar name={fullname} />
+                    </WrapItem>{" "}
+                  </Wrap>
                 </NavLink>
               </ListItem>
-              <ListItem className="nav-item">
-                <Button>
-                  <NavLink className="nav-link" to="/logout">
-                    Logout
-                  </NavLink>
+              <ListItem className="nav-item" marginRight={3}>
+                <Button onClick={() => handleLogout()} color={"yellow.400"}>
+                  Logout
                 </Button>
               </ListItem>
             </Flex>
           </List>
         )}
+        <ColorModeSwitch />
       </HStack>
-      <ColorModeSwitch />
     </HStack>
   );
 };
 
-export default NavBar;
+export default MainNavBar;

@@ -2,12 +2,15 @@ import { Card, CardBody, HStack, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Song from "../entities/Song";
 import CriticScore from "./CriticScore";
+import Like from "./Like";
+import { useState } from "react";
 
 interface Props {
   song: Song;
 }
 
 const SongCard = ({ song }: Props) => {
+  const [liked, setLiked] = useState(false);
   return (
     <Card>
       <Image
@@ -20,6 +23,7 @@ const SongCard = ({ song }: Props) => {
         <HStack justifyContent="space-between">
           <Text>{song.notation.title}</Text>
           <CriticScore score={song.metacritic} />
+          <Like liked={liked} onLike={() => setLiked(!liked)}/>
         </HStack>
         {song.author_name !== "Unknown" && <Text>{song.author_name}</Text>}
       </CardBody>

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LOGIN_ENDPOINT } from "../data/constants";
 import useAuth from "../hooks/useAuth";
 import APIClient, { axiosInstance } from "../services/api-client";
+import index from "../App.css";
 
 const apiClient = new APIClient<Auth>(LOGIN_ENDPOINT);
 
@@ -44,7 +45,9 @@ const Login = () => {
       setUser("");
       setPwd("");
       // console.log(auth);
-      navigate(from, { replace: true });
+
+      navigate("/songs");
+      navigate(0);
       // window.location = "https://localhost:5173";
     } catch (err: Error) {
       if (!err?.response) {
@@ -73,36 +76,46 @@ const Login = () => {
         <h1>Sign In</h1>
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="username">Username: </label>
-          <input
-            type="text"
-            id="username"
-            ref={userRef}
-            autoComplete="off"
-            onChange={(e) => setUser(e.target.value)}
-            value={user}
-            required
-          />
-          <br />
+          <div className="form-group">
+            <label htmlFor="username" className="form-label">
+              Email Address:
+            </label>
+            <input
+              type="text"
+              id="username"
+              ref={userRef}
+              className="form-control"
+              autoComplete="off"
+              onChange={(e) => setUser(e.target.value)}
+              value={user}
+              required
+            />
+          </div>
 
-          <label htmlFor="password">Password: </label>
-          <input
-            type="password"
-            id="password"
-            onChange={(e) => setPwd(e.target.value)}
-            value={pwd}
-            required
-          />
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              Password:
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="form-control"
+              onChange={(e) => setPwd(e.target.value)}
+              value={pwd}
+              required
+            />
+          </div>
 
-          <br />
-          <button>Sign In</button>
+          <button type="submit" className="btn btn-primary">
+            Log In
+          </button>
         </form>
+
         <p>
           Need an Account?
           <br />
           <span className="line">
-            {/*put router link here */}
-            <a href="#">Sign Up</a>
+            <Link to="/register">Sign Up</Link>
           </span>
         </p>
       </section>

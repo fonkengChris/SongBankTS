@@ -1,6 +1,6 @@
-import { Box } from "@chakra-ui/react";
+import { Box, background } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import NavBar from "../components/NavBar";
+import MainNavBar from "../components/MainNavBar";
 import jwtDecode from "jwt-decode";
 import { useState, useEffect } from "react";
 
@@ -18,7 +18,15 @@ const Layout = () => {
   }, []);
   return (
     <>
-      <NavBar user={user} />
+      <div
+        style={
+          {
+            // backgroundImage: `url("https://hackaday.com/wp-content/uploads/2017/05/reading-music-for-machines-featured.jpg?w=800")`,
+          }
+        }
+      >
+        <MainNavBar user={user} />
+      </div>
       <Box padding={5}>
         <Outlet />
       </Box>

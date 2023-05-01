@@ -1,27 +1,24 @@
-import {
-  Box,
-  Grid,
-  GridItem,
-  HStack,
-  Heading,
-  Show,
-  Text,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
 import CategoryList from "../components/CategoryList";
-import MainNavBar from "../components/MainNavBar";
+// import MainNavBar from "../components/MainNavBar";
+import { Navigate } from "react-router-dom";
 import NotationSelector from "../components/NotationSelector";
 import SearchInput from "../components/SearchInput";
 import SongGrid from "../components/SongGrid";
 import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
+import useAuth from "../hooks/useAuth";
+import jwtDecode from "jwt-decode";
 
-const HomePage = () => {
+const SongsPage = () => {
+  const jwt = localStorage.getItem("token");
+  if (!jwt) return <Navigate to="/login" />;
+
   return (
     <Grid
       templateAreas={{
         base: `"nav" "main"`,
-        lg: `"nav nav"  "aside main" "foot foot"`,
+        lg: `"nav nav"  "aside main"`,
       }}
       templateColumns={{
         base: "1fr",
@@ -34,7 +31,9 @@ const HomePage = () => {
         </GridItem>
       </Show>
       <GridItem area="main">
-        <Box marginLeft={5}>{/* <SongHeading /> */}</Box>
+        <Box marginLeft={5}>
+          <SongHeading />
+        </Box>
         <HStack paddingLeft={2} marginBottom={5}>
           <Box marginLeft={3} marginRight={5}>
             <NotationSelector />
@@ -45,21 +44,11 @@ const HomePage = () => {
           </Box>
         </HStack>
         <Box marginLeft={3}>
-          {/* <SongGrid /> */}
-          <Heading>
-            Welcome to the central Song bank where you will find lots of songs
-            to suit your needs
-          </Heading>
-          <Text>Login to start exploring</Text>
-        </Box>
-      </GridItem>
-      <GridItem area="foot">
-        <Box>
-          <Text justifyContent="center">Nothing to show here guys</Text>
+          <SongGrid />
         </Box>
       </GridItem>
     </Grid>
   );
 };
 
-export default HomePage;
+export default SongsPage;

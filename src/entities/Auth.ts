@@ -1,5 +1,5 @@
 interface Auth {
-  username: string | null;
-  password: string | null;
+  user: string | null;
+  pwd: string | null;
   access: string | null;
 }

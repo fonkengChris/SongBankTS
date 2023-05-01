@@ -1,16 +1,14 @@
+import { Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Logout = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("tokenRef");
-
-    navigate("/");
-  }, []);
-  return <div>Logout</div>;
+  return (
+    <div>
+      <Text>You have successfully logged out</Text>
+      <Link to="/login">Sign In</Link>
+    </div>
+  );
 };
 
 export default Logout;

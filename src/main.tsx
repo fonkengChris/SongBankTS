@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       ></ColorModeScript>
 
       <QueryClientProvider client={queryClient}>
-        <AuthProvider >
+        <AuthProvider>
           <RouterProvider router={router} />
         </AuthProvider>
         <ReactQueryDevtools />
