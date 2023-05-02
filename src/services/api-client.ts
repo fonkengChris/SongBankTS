@@ -19,6 +19,7 @@ class APIClient<T> {
   }
 
   getAll = (config: AxiosRequestConfig) => {
+    console.log("get all fxn called");
     return axiosInstance
       .get<T[]>(this.endpoint, config)
       .then((res) => res.data);

@@ -74,7 +74,6 @@ const Register = () => {
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
   const [selected, setSelected] = useState("");
 
@@ -110,8 +109,6 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // console.log("Submitted");
-
     try {
       const response = await userApiClient.post({
         id: 0,
@@ -129,13 +126,7 @@ const Register = () => {
         birth_date: birthDate,
         membership,
       });
-      // console.log(response);
 
-      // console.log(response?.accessToken);
-      // console.log(JSON.stringify(response));
-      setSuccess(true);
-      //clear state and controlled inputs
-      //need value attrib on inputs for this
       setUsername("");
       setFirstName("");
       setLastName("");
@@ -156,311 +147,302 @@ const Register = () => {
 
   return (
     <>
-      {success ? (
-        <section>
-          <h1>Success!</h1>
-          <p>
-            <a href="#">Sign In</a>
-          </p>
-        </section>
-      ) : (
-        <section>
-          <form onSubmit={handleSubmit} className="form-horizontal" role="form">
-            {errMsg !== "" && (
-              <p ref={errRef} className={"errmsg"} aria-live="assertive">
-                {errMsg}
-              </p>
-            )}
+      <section>
+        <form onSubmit={handleSubmit} className="form-horizontal" role="form">
+          {errMsg !== "" && (
+            <p ref={errRef} className={"errmsg"} aria-live="assertive">
+              {errMsg}
+            </p>
+          )}
 
-            <Heading as="h1">Register</Heading>
-            <div className="form-group">
-              <label htmlFor="firstname" className="col-sm-2 control-label">
-                First name:{" "}
-                {validFirstName === true && (
-                  <FontAwesomeIcon icon={faCheck} className="valid" />
-                )}
-                {validFirstName === false && firstname !== "" && (
-                  <FontAwesomeIcon icon={faTimes} className="invalid" />
-                )}
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="firstname"
-                name="firstname"
-                ref={firstnameRef}
-                autoComplete="off"
-                onChange={(e) => setFirstName(e.target.value)}
-                value={firstname}
-                required
-                onFocus={() => setFirstNameFocus(true)}
-                onBlur={() => setFirstNameFocus(false)}
-                aria-describedby="uidnote"
-                aria-invalid={validFirstName ? "false" : "true"}
-                placeholder="Enter first name..."
-              />
-            </div>
-            {firstnameFocus === true &&
-              firstname !== "" &&
-              validFirstName === false && (
-                <p id="uidnote" className={"instructions"}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  4 to 24 characters.
-                  <br />
-                  Must begin with a letter.
-                  <br />
-                  Letters, numbers, underscores, hyphens allowed.
-                </p>
+          <Heading as="h1">Register</Heading>
+          <div className="form-group">
+            <label htmlFor="firstname" className="col-sm-2 control-label">
+              First name:{" "}
+              {validFirstName === true && (
+                <FontAwesomeIcon icon={faCheck} className="valid" />
               )}
-
-            <div className="form-group">
-              <label htmlFor="lastname" className="col-sm-2 control-label">
-                Last name:{" "}
-                {validLastName === true && (
-                  <FontAwesomeIcon icon={faCheck} className="valid" />
-                )}
-                {validLastName === false && lastname !== "" && (
-                  <FontAwesomeIcon icon={faTimes} className="invalid" />
-                )}
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="lastname"
-                name="lastname"
-                ref={lastnameRef}
-                autoComplete="off"
-                onChange={(e) => setLastName(e.target.value)}
-                value={lastname}
-                required
-                onFocus={() => setLastNameFocus(true)}
-                onBlur={() => setLastNameFocus(false)}
-                aria-describedby="uidnote"
-                placeholder="Enter last name..."
-              />
-            </div>
-            {lastnameFocus === true &&
-              lastname !== "" &&
-              validLastName === false && (
-                <p id="uidnote" className={"instructions"}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  4 to 24 characters.
-                  <br />
-                  Must begin with a letter.
-                  <br />
-                  Letters, numbers, underscores, hyphens allowed.
-                </p>
+              {validFirstName === false && firstname !== "" && (
+                <FontAwesomeIcon icon={faTimes} className="invalid" />
               )}
-
-            <div className="form-group">
-              <label htmlFor="email" className="col-sm-2 control-label">
-                Email:{" "}
-                {validEmail === true && (
-                  <FontAwesomeIcon icon={faCheck} className="valid" />
-                )}
-                {validEmail === false && email !== "" && (
-                  <FontAwesomeIcon icon={faTimes} className="invalid" />
-                )}
-              </label>
-              <input
-                className="form-control"
-                id="email"
-                name="email"
-                type="email"
-                ref={emailRef}
-                autoComplete="off"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                required
-                onFocus={() => setEmailFocus(true)}
-                onBlur={() => setEmailFocus(false)}
-                placeholder="Enter Email address ..."
-                aria-describedby="emailnote"
-              />
-            </div>
-            {emailFocus === true && email !== "" && validEmail === false && (
-              <p id="emailnote" className={"instructions"}>
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              id="firstname"
+              name="firstname"
+              ref={firstnameRef}
+              autoComplete="off"
+              onChange={(e) => setFirstName(e.target.value)}
+              value={firstname}
+              required
+              onFocus={() => setFirstNameFocus(true)}
+              onBlur={() => setFirstNameFocus(false)}
+              aria-describedby="uidnote"
+              aria-invalid={validFirstName ? "false" : "true"}
+              placeholder="Enter first name..."
+            />
+          </div>
+          {firstnameFocus === true &&
+            firstname !== "" &&
+            validFirstName === false && (
+              <p id="uidnote" className={"instructions"}>
                 <FontAwesomeIcon icon={faInfoCircle} />
                 4 to 24 characters.
                 <br />
                 Must begin with a letter.
                 <br />
-                Lowercase letters, numbers, special characters are allowed.
+                Letters, numbers, underscores, hyphens allowed.
               </p>
             )}
 
-            <div className="form-group">
-              <label htmlFor="membership" className="col-sm-2 control-label">
-                Membership Status
-              </label>
-              <select
-                className="form-control"
-                id="membership"
-                onChange={(e) => setMembership(e.target.value)}
-                onFocus={() => setMembershipFocus(true)}
-                onBlur={() => setMembershipFocus(false)}
-              >
-                <option disabled={true} value="">
-                  --Choose between Gold(G), Silver(S) and Bronze(B)--
-                </option>
-                <option value="G">G</option>
-                <option value="S">S</option>
-                <option value="B">B</option>
-              </select>
-            </div>
+          <div className="form-group">
+            <label htmlFor="lastname" className="col-sm-2 control-label">
+              Last name:{" "}
+              {validLastName === true && (
+                <FontAwesomeIcon icon={faCheck} className="valid" />
+              )}
+              {validLastName === false && lastname !== "" && (
+                <FontAwesomeIcon icon={faTimes} className="invalid" />
+              )}
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              id="lastname"
+              name="lastname"
+              ref={lastnameRef}
+              autoComplete="off"
+              onChange={(e) => setLastName(e.target.value)}
+              value={lastname}
+              required
+              onFocus={() => setLastNameFocus(true)}
+              onBlur={() => setLastNameFocus(false)}
+              aria-describedby="uidnote"
+              placeholder="Enter last name..."
+            />
+          </div>
+          {lastnameFocus === true &&
+            lastname !== "" &&
+            validLastName === false && (
+              <p id="uidnote" className={"instructions"}>
+                <FontAwesomeIcon icon={faInfoCircle} />
+                4 to 24 characters.
+                <br />
+                Must begin with a letter.
+                <br />
+                Letters, numbers, underscores, hyphens allowed.
+              </p>
+            )}
 
-            <div className="form-group">
-              <label htmlFor="country" className="col-sm-2 control-label">
-                Country
-              </label>
-              <select
-                className="form-control"
-                id="country"
-                name="country"
-                autoComplete="off"
-                onChange={(e) => setCountry(e.target.value)}
-                value={country}
-                onFocus={() => setCountryFocus(true)}
-                onBlur={() => setCountryFocus(false)}
-                placeholder="Enter Country ..."
-              >
-                <option disabled={true} value="">
-                  --Select Country Name--
+          <div className="form-group">
+            <label htmlFor="email" className="col-sm-2 control-label">
+              Email:{" "}
+              {validEmail === true && (
+                <FontAwesomeIcon icon={faCheck} className="valid" />
+              )}
+              {validEmail === false && email !== "" && (
+                <FontAwesomeIcon icon={faTimes} className="invalid" />
+              )}
+            </label>
+            <input
+              className="form-control"
+              id="email"
+              name="email"
+              type="email"
+              ref={emailRef}
+              autoComplete="off"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              required
+              onFocus={() => setEmailFocus(true)}
+              onBlur={() => setEmailFocus(false)}
+              placeholder="Enter Email address ..."
+              aria-describedby="emailnote"
+            />
+          </div>
+          {emailFocus === true && email !== "" && validEmail === false && (
+            <p id="emailnote" className={"instructions"}>
+              <FontAwesomeIcon icon={faInfoCircle} />
+              4 to 24 characters.
+              <br />
+              Must begin with a letter.
+              <br />
+              Lowercase letters, numbers, special characters are allowed.
+            </p>
+          )}
+
+          <div className="form-group">
+            <label htmlFor="membership" className="col-sm-2 control-label">
+              Membership Status
+            </label>
+            <select
+              className="form-control"
+              id="membership"
+              onChange={(e) => setMembership(e.target.value)}
+              onFocus={() => setMembershipFocus(true)}
+              onBlur={() => setMembershipFocus(false)}
+            >
+              <option disabled={true} value="">
+                --Choose between Gold(G), Silver(S) and Bronze(B)--
+              </option>
+              <option value="G">G</option>
+              <option value="S">S</option>
+              <option value="B">B</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="country" className="col-sm-2 control-label">
+              Country
+            </label>
+            <select
+              className="form-control"
+              id="country"
+              name="country"
+              autoComplete="off"
+              onChange={(e) => setCountry(e.target.value)}
+              value={country}
+              onFocus={() => setCountryFocus(true)}
+              onBlur={() => setCountryFocus(false)}
+              placeholder="Enter Country ..."
+            >
+              <option disabled={true} value="">
+                --Select Country Name--
+              </option>
+              {countries.map((country) => (
+                <option value={country.iso} key={country.iso}>
+                  {country.name}
                 </option>
-                {countries.map((country) => (
-                  <option value={country.iso} key={country.iso}>
-                    {country.name}
-                  </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="phone" className="col-sm-2 control-label">
+              Phone Number
+            </label>
+            <input
+              className="form-control"
+              id="phone"
+              name="phone"
+              type="tel"
+              ref={phoneRef}
+              autoComplete="off"
+              onChange={(e) => setPhone(e.target.value)}
+              value={phone}
+              required
+              onFocus={() => setPhoneFocus(true)}
+              onBlur={() => setPhoneFocus(false)}
+              placeholder="Enter Phone number ..."
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="birthDate" className="col-sm-2 control-label">
+              Date of birth
+            </label>
+            <input
+              className="form-control"
+              id="birthDate"
+              name="birthDate"
+              ref={phoneRef}
+              autoComplete="off"
+              type="date"
+              onChange={(e) => setBirthDate(e.target.value)}
+              value={birthDate}
+              required
+              onFocus={() => setBirthDateFocus(true)}
+              onBlur={() => setBirthDateFocus(false)}
+              placeholder="Date of birth"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password" className="col-sm-2 control-label">
+              Password:
+              {validPassword === true && (
+                <FontAwesomeIcon icon={faCheck} className={"valid"} />
+              )}
+              {validPassword !== true ||
+                (password === "" && (
+                  <FontAwesomeIcon icon={faTimes} className={"hide"} />
                 ))}
-              </select>
-            </div>
+            </label>
+            <input
+              className="form-control"
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              required
+              aria-invalid={validPassword ? "false" : "true"}
+              aria-describedby="pwdnote"
+              type="password"
+              placeholder="Enter password"
+            />
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="phone" className="col-sm-2 control-label">
-                Phone Number
-              </label>
-              <input
-                className="form-control"
-                id="phone"
-                name="phone"
-                type="tel"
-                ref={phoneRef}
-                autoComplete="off"
-                onChange={(e) => setPhone(e.target.value)}
-                value={phone}
-                required
-                onFocus={() => setPhoneFocus(true)}
-                onBlur={() => setPhoneFocus(false)}
-                placeholder="Enter Phone number ..."
-              />
-            </div>
+          {passwordFocus === true && validPassword === false && (
+            <p id="pwdnote" className={"instructions"}>
+              <FontAwesomeIcon icon={faInfoCircle} />
+              8 to 24 characters.
+              <br />
+              Must include uppercase and lowercase letters, a number and a
+              special character.
+              <br />
+              Allowed special characters:{" "}
+              <span aria-label="exclamation mark">!</span>{" "}
+              <span aria-label="at symbol">@</span>{" "}
+              <span aria-label="hashtag">#</span>{" "}
+              <span aria-label="dollar sign">$</span>{" "}
+              <span aria-label="percent">%</span>
+            </p>
+          )}
 
-            <div className="form-group">
-              <label htmlFor="birthDate" className="col-sm-2 control-label">
-                Date of birth
-              </label>
-              <input
-                className="form-control"
-                id="birthDate"
-                name="birthDate"
-                ref={phoneRef}
-                autoComplete="off"
-                type="date"
-                onChange={(e) => setBirthDate(e.target.value)}
-                value={birthDate}
-                required
-                onFocus={() => setBirthDateFocus(true)}
-                onBlur={() => setBirthDateFocus(false)}
-                placeholder="Date of birth"
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="confirm_pwd" className="col-sm-2 control-label">
+              Confirm Password:
+              {validMatch === true && matchPassword !== "" && (
+                <FontAwesomeIcon icon={faCheck} className={"valid"} />
+              )}
+              {validMatch === false ||
+                (matchPassword === "" && (
+                  <FontAwesomeIcon icon={faTimes} className={"hide"} />
+                ))}
+            </label>
+            <input
+              className="form-control"
+              type="password"
+              id="confirm_pwd"
+              onChange={(e) => setMatchPassword(e.target.value)}
+              value={matchPassword}
+              required
+              aria-invalid={validMatch ? "false" : "true"}
+              aria-describedby="confirmnote"
+              placeholder="Confirm password"
+            />
+          </div>
+          {matchFocus && !validMatch && (
+            <p id="confirmnote" className={"instructions"}>
+              <FontAwesomeIcon icon={faInfoCircle} />
+              Must match the first password input field.
+            </p>
+          )}
 
-            <div className="form-group">
-              <label htmlFor="password" className="col-sm-2 control-label">
-                Password:
-                {validPassword === true && (
-                  <FontAwesomeIcon icon={faCheck} className={"valid"} />
-                )}
-                {validPassword !== true ||
-                  (password === "" && (
-                    <FontAwesomeIcon icon={faTimes} className={"hide"} />
-                  ))}
-              </label>
-              <input
-                className="form-control"
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                required
-                aria-invalid={validPassword ? "false" : "true"}
-                aria-describedby="pwdnote"
-                type="password"
-                placeholder="Enter password"
-              />
-            </div>
-
-            {passwordFocus === true && validPassword === false && (
-              <p id="pwdnote" className={"instructions"}>
-                <FontAwesomeIcon icon={faInfoCircle} />
-                8 to 24 characters.
-                <br />
-                Must include uppercase and lowercase letters, a number and a
-                special character.
-                <br />
-                Allowed special characters:{" "}
-                <span aria-label="exclamation mark">!</span>{" "}
-                <span aria-label="at symbol">@</span>{" "}
-                <span aria-label="hashtag">#</span>{" "}
-                <span aria-label="dollar sign">$</span>{" "}
-                <span aria-label="percent">%</span>
-              </p>
-            )}
-
-            <div className="form-group">
-              <label htmlFor="confirm_pwd" className="col-sm-2 control-label">
-                Confirm Password:
-                {validMatch === true && matchPassword !== "" && (
-                  <FontAwesomeIcon icon={faCheck} className={"valid"} />
-                )}
-                {validMatch === false ||
-                  (matchPassword === "" && (
-                    <FontAwesomeIcon icon={faTimes} className={"hide"} />
-                  ))}
-              </label>
-              <input
-                className="form-control"
-                type="password"
-                id="confirm_pwd"
-                onChange={(e) => setMatchPassword(e.target.value)}
-                value={matchPassword}
-                required
-                aria-invalid={validMatch ? "false" : "true"}
-                aria-describedby="confirmnote"
-                placeholder="Confirm password"
-              />
-            </div>
-            {matchFocus && !validMatch && (
-              <p id="confirmnote" className={"instructions"}>
-                <FontAwesomeIcon icon={faInfoCircle} />
-                Must match the first password input field.
-              </p>
-            )}
-
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary">
-                Sign Up
-              </button>
-            </div>
-          </form>
-          <p>
-            Already registered?
-            <br />
-            <span className="line">
-              <Link to='/login'>Sign In</Link>
-            </span>
-          </p>
-        </section>
-      )}
+          <div className="form-group">
+            <button type="submit" className="btn btn-primary">
+              Sign Up
+            </button>
+          </div>
+        </form>
+        <p>
+          Already registered?
+          <br />
+          <span className="line">
+            <Link to="/login">Sign In</Link>
+          </span>
+        </p>
+      </section>
     </>
   );
 };

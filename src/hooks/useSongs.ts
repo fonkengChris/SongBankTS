@@ -1,15 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import useSongQueryStore from "../Store";
 import { SONGS_ENDPOINT } from "../data/constants";
-import APIClient from "../services/api-client";
+import APIClient, { axiosInstance } from "../services/api-client";
 import Song from "../entities/Song";
+import axios from "axios";
 
 const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
 
-
 const useSongs = () => {
   const songQuery = useSongQueryStore((s) => s.songQuery);
-  return useQuery<Song[], Error>({
+  console.log("songs hook called");
+  const songs = useQuery<Song[], Error>({
     queryKey: ["songs", songQuery],
     queryFn: () =>
       apiClient.getAll({
@@ -20,6 +21,10 @@ const useSongs = () => {
           search: songQuery.searchText,
         },
       }),
+    cacheTime: 0,
   });
+
+  console.log(songs);
+  return songs;
 };
 export default useSongs;
