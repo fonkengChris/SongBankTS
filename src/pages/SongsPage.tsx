@@ -9,6 +9,7 @@ import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
 import useAuth from "../hooks/useAuth";
 import jwtDecode from "jwt-decode";
+import UserProfile from "./UserProfile";
 
 const SongsPage = () => {
   const jwt = localStorage.getItem("token");
@@ -45,6 +46,7 @@ const SongsPage = () => {
         </HStack>
         <Box marginLeft={3}>
           <SongGrid />
+          <UserProfile />
         </Box>
       </GridItem>
     </Grid>

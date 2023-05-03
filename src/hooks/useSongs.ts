@@ -9,7 +9,7 @@ const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
 
 const useSongs = () => {
   const songQuery = useSongQueryStore((s) => s.songQuery);
-  console.log("songs hook called");
+  
   const songs = useQuery<Song[], Error>({
     queryKey: ["songs", songQuery],
     queryFn: () =>
@@ -24,7 +24,7 @@ const useSongs = () => {
     cacheTime: 0,
   });
 
-  console.log(songs);
+  // console.log(songs);
   return songs;
 };
 export default useSongs;

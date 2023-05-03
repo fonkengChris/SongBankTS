@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 
 interface UserQuery {}
 
-const userApiClient = new APIClient<User>(REGISTER_ENDPOINT);
+const userApiClient = new APIClient<{ user }>(REGISTER_ENDPOINT);
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
 const Register = () => {
@@ -118,9 +118,10 @@ const Register = () => {
         last_name: lastname,
       });
 
+      // console.log(response.);
       const res = customerApiClient.post({
         id: 0,
-        user_id: response.id,
+        user_id: response.user.id,
         phone,
         country,
         birth_date: birthDate,
