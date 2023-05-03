@@ -32,7 +32,6 @@ class APIClient<T> {
   };
 
   get_by_user_id = (id: number | string) => {
-    console.log("get by id called");
     return axiosInstance
       .get<T[]>(this.endpoint + "?user_id=" + id)
       .then((res) => res.data);

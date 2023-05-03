@@ -13,7 +13,7 @@ const Layout = () => {
       // console.log(access);
       const currentUser = jwtDecode<CurrentUser>(access!);
       setUser({ ...currentUser });
-      console.log(user);
+      // console.log(user);
     } catch (error) {}
   }, []);
   return (
