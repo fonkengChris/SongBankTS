@@ -10,10 +10,9 @@ const Layout = () => {
   useEffect(() => {
     try {
       const access = localStorage.getItem("token");
-      // console.log(access);
+
       const currentUser = jwtDecode<CurrentUser>(access!);
       setUser({ ...currentUser });
-      // console.log(user);
     } catch (error) {}
   }, []);
   return (

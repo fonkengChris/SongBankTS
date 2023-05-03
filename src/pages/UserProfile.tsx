@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-import useUserProfile from "../hooks/useUserProfile";
-import useCustomer from "../hooks/useCustomer";
-import Customer from "../entities/Customer";
-import JWT_User from "../entities/JWT_User";
 import { Heading } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import Customer from "../entities/Customer";
+import useCustomer from "../hooks/useCustomer";
+import useUserProfile from "../hooks/useUserProfile";
 
 const UserProfile = () => {
   const user = useUserProfile();
   const [customer, setCustomer] = useState<Customer | null>(null);
 
   useEffect(() => {
-    console.log("effect called");
     useCustomer(user.user_id).then((cus) => {
       setCustomer(cus[0]);
     });
