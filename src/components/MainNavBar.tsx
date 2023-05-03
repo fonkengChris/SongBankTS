@@ -1,13 +1,15 @@
 import {
   Avatar,
-  AvatarBadge,
-  AvatarGroup,
   Button,
   Flex,
   HStack,
   Image,
   List,
   ListItem,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Text,
   Wrap,
   WrapItem,
@@ -21,6 +23,11 @@ interface Props {
 }
 
 const MainNavBar = ({ user }: Props) => {
+  const ListOfActions = [
+    { value: "users/" + user?.user_id, label: "User Profile" },
+    { value: "(Link to chang pw)", label: "Change Password" },
+  ];
+
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -87,20 +94,25 @@ const MainNavBar = ({ user }: Props) => {
         {user?.user_id && (
           <List>
             <Flex>
-              <ListItem className="nav-item" marginRight={3}>
-                <NavLink className="nav-link" to="/profile">
+              <Menu>
+                <MenuButton>
                   <Wrap>
                     <WrapItem>
                       <Avatar name={fullname} />
                     </WrapItem>{" "}
                   </Wrap>
-                </NavLink>
-              </ListItem>
-              <ListItem className="nav-item" marginRight={3}>
-                <Button onClick={() => handleLogout()} color={"yellow.400"}>
-                  Logout
-                </Button>
-              </ListItem>
+                </MenuButton>
+                <MenuList>
+                  {ListOfActions.map((action) => (
+                    <MenuItem key={action.value}>
+                      <NavLink to={action.value}>{action.label}</NavLink>
+                    </MenuItem>
+                  ))}
+                  <MenuItem onClick={() => handleLogout()} marginRight={3}>
+                    <Text>Logout</Text>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
             </Flex>
           </List>
         )}

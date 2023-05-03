@@ -7,6 +7,7 @@ import Layout from "./pages/Layout";
 import Login from "./pages/Login";
 import SongDetialPage from "./pages/SongDetialPage";
 import HomePage from "./pages/HomePage";
+import UserProfile from "./pages/UserProfile";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
       { path: "logout", element: <Logout /> },
-      // { path: "users/:id", element: <UserProfile /> },
+      { path: "users/:id", element: <UserProfile /> },
       { path: "songs", element: <SongsPage /> },
       { path: "songs/:id", element: <SongDetialPage /> },
     ],

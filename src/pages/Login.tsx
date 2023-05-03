@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LOGIN_ENDPOINT } from "../data/constants";
 import useAuth from "../hooks/useAuth";
 import APIClient, { axiosInstance } from "../services/api-client";
-import index from "../App.css";
 
 const apiClient = new APIClient<Auth>(LOGIN_ENDPOINT);
 

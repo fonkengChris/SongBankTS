@@ -46,7 +46,6 @@ const SongsPage = () => {
         </HStack>
         <Box marginLeft={3}>
           <SongGrid />
-          <UserProfile />
         </Box>
       </GridItem>
     </Grid>
