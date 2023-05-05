@@ -1,4 +1,11 @@
-import { GridItem, Heading, Img, SimpleGrid, Spinner } from "@chakra-ui/react";
+import {
+  GridItem,
+  Heading,
+  Img,
+  SimpleGrid,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import ExpandableText from "../components/ExpandableText";
 import SongAttributes from "../components/SongAttributes";
@@ -10,6 +17,8 @@ const SongDetialPage = () => {
 
   const { id } = useParams();
   const { data: song, isLoading, error } = useSong(id!);
+
+  console.log(song);
 
   if (isLoading) return <Spinner />;
   if (error || !song) throw error;
@@ -27,9 +36,11 @@ const SongDetialPage = () => {
         {song.audio_files.map((file) => (
           <audio controls key={file.id} src={file.audio_file} />
         ))}
+        <ExpandableText>{song.description}</ExpandableText>
       </GridItem>
       <GridItem>
-        <ExpandableText>{song.description}</ExpandableText>
+        <Heading>Lyrics</Heading>
+        <Text>{song.lyrics}</Text>
         <SongAttributes song={song} />
       </GridItem>
     </SimpleGrid>

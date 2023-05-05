@@ -7,7 +7,8 @@ export default interface Song {
   slug: string;
   description: string;
   likes: number;
-  downloads: number;
+  lyrics: string;
+  views: number;
   notation: Notation;
   category: Category;
   document_files: { id: number; document_file: string }[];

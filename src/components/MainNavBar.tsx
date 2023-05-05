@@ -25,7 +25,7 @@ interface Props {
 const MainNavBar = ({ user }: Props) => {
   const ListOfActions = [
     { value: "users/" + user?.user_id, label: "User Profile" },
-    { value: "(Link to chang pw)", label: "Change Password" },
+    { value: "/change_password/", label: "Change Password" },
   ];
 
   const navigate = useNavigate();
@@ -41,10 +41,10 @@ const MainNavBar = ({ user }: Props) => {
   return (
     <HStack justifyContent="space-between" padding="10px">
       <Flex>
-        <Link to="/">
+        <Link to="/songs/">
           <Image src={logo} boxSize="60px" />
         </Link>
-        <Link to="/">
+        <Link to="/songs/">
           <Text as="b" color="brown" fontSize="4xl" marginRight={3}>
             SongBank
           </Text>

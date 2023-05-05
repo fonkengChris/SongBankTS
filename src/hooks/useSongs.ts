@@ -9,7 +9,7 @@ const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
 
 const useSongs = () => {
   const songQuery = useSongQueryStore((s) => s.songQuery);
-  
+
   const songs = useQuery<Song[], Error>({
     queryKey: ["songs", songQuery],
     queryFn: () =>

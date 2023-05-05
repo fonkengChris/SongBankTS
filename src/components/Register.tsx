@@ -347,7 +347,7 @@ const Register = () => {
               className="form-control"
               id="birthDate"
               name="birthDate"
-              ref={phoneRef}
+              // ref={phoneRef}
               autoComplete="off"
               type="date"
               onChange={(e) => setBirthDate(e.target.value)}

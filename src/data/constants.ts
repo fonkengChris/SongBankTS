@@ -7,7 +7,7 @@ export const LOGIN_ENDPOINT = "/user/login/";
 export const REFRESH_TOKEN_ENDPOINT = "/auth/jwt/refresh/";
 export const ACCESS_TOKEN_ENDPOINT = "/%5Eapi-token-auth/";
 export const CURRENT_USER_ENDPOINT = "/auth/users/me/";
-
+export const CHANGE_PASSWORD_ENDPOINT = "/user/change_password/"
 export const NAME_REGEX = /^[A-z][A-z0-9-_]{4,50}$/;
 export const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

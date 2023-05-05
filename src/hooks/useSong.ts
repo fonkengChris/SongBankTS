@@ -4,10 +4,11 @@ import Song from "../entities/Song";
 
 const apiClient = new APIClient<Song>("/library/songs");
 
-const useSong = (id: string) =>
+const useSong = (id: string) =>  
   useQuery({
     queryKey: ["songs", id],
     queryFn: () => apiClient.get(id),
   });
+
 
 export default useSong;
