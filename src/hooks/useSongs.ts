@@ -17,6 +17,7 @@ const useSongs = () => {
         params: {
           category: songQuery.categoryId,
           notation: songQuery.notationId,
+          language: songQuery.languageId,
           ordering: songQuery.sortOrder,
           search: songQuery.searchText,
         },

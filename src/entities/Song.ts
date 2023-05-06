@@ -8,6 +8,7 @@ export default interface Song {
   description: string;
   likes: number;
   lyrics: string;
+  language: string;
   views: number;
   notation: Notation;
   category: Category;

@@ -7,6 +7,7 @@ import SearchInput from "../components/SearchInput";
 import SongGrid from "../components/SongGrid";
 import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
+import LanguageSelector from "../components/LanguageSelector";
 
 const SongsPage = () => {
   const jwt = localStorage.getItem("token");
@@ -35,6 +36,9 @@ const SongsPage = () => {
         <HStack paddingLeft={2} marginBottom={5}>
           <Box marginLeft={3} marginRight={5}>
             <NotationSelector />
+          </Box>
+          <Box marginLeft={3} marginRight={5}>
+            <LanguageSelector />
           </Box>
           <SortSelector />
           <Box width="70%" marginRight={10}>

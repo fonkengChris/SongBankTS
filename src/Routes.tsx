@@ -10,6 +10,8 @@ import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import ChangePassword from "./components/ChangePassword";
 import EditProfile from "./pages/EditProfile";
+import Contact from "./pages/Contact";
+import UploadSong from "./pages/UploadSong";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,9 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
       { path: "logout", element: <Logout /> },
+      // { path: "about", element: <About /> },
+      { path: "contact", element: <Contact /> },
+      { path: "upload", element: <UploadSong /> },
       { path: "change_password", element: <ChangePassword /> },
       { path: "users/:id", element: <UserProfile /> },
       { path: "edit_profile", element: <EditProfile /> },

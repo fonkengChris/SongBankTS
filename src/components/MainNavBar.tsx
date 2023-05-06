@@ -55,14 +55,21 @@ const MainNavBar = ({ user }: Props) => {
           <Flex>
             <ListItem className="nav-item" marginRight={3}>
               <Button color={"cyan.400"}>
-                <NavLink className="nav-link" to="/">
+                <NavLink className="nav-link" to="/about">
                   About Us
                 </NavLink>
               </Button>
             </ListItem>
             <ListItem className="nav-item" marginRight={3}>
               <Button color={"cyan.400"}>
-                <NavLink className="nav-link" to="/">
+                <NavLink className="nav-link" to="/upload">
+                  Upload Song
+                </NavLink>
+              </Button>
+            </ListItem>
+            <ListItem className="nav-item" marginRight={3}>
+              <Button color={"cyan.400"}>
+                <NavLink className="nav-link" to="/contact">
                   Contact Us
                 </NavLink>
               </Button>

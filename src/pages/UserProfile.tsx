@@ -6,16 +6,14 @@ import {
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
-  Thead,
-  Tr,
+  Tr
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Customer from "../entities/Customer";
 import useCustomer from "../hooks/useCustomer";
 import useUserProfile from "../hooks/useUserProfile";
-import { Link } from "react-router-dom";
 
 const UserProfile = () => {
   const user = useUserProfile();
