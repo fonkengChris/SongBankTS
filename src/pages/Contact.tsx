@@ -7,11 +7,13 @@ import {
   Tr,
   Td,
   Thead,
+  Heading,
 } from "@chakra-ui/react";
 
 const Contact = () => {
   return (
     <div>
+      <Heading>Contact Us</Heading>
       <TableContainer>
         <Table variant="simple">
           <Thead>

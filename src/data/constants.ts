@@ -13,7 +13,7 @@ export const CURRENT_USER_ENDPOINT = "/auth/users/me/";
 export const CHANGE_PASSWORD_ENDPOINT = "/user/change_password/";
 
 //validation constants
-export const NAME_REGEX = /^[A-z][A-z0-9-_]{4,50}$/;
+export const NAME_REGEX = /^[A-z][A-z0-9-_]{3,50}$/;
 export const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 export const PWD_REGEX =

@@ -18,7 +18,7 @@ import countries from "../data/countries";
 import APIClient from "../services/api-client";
 import User from "../entities/User";
 import Customer from "../entities/Customer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface UserQuery {}
 
@@ -26,6 +26,8 @@ const userApiClient = new APIClient<{ user }>(REGISTER_ENDPOINT);
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
 const Register = () => {
+  const navigate = useNavigate();
+
   //defining ref hooks
   const firstnameRef = useRef<HTMLInputElement | null>(null);
   const lastnameRef = useRef<HTMLInputElement | null>(null);
@@ -44,10 +46,6 @@ const Register = () => {
   const [lastname, setLastName] = useState("");
   const [validLastName, setValidLastName] = useState(false);
   const [lastnameFocus, setLastNameFocus] = useState(false);
-
-  const [username, setUsername] = useState("");
-  const [validUserName, setValidUserName] = useState(false);
-  const [usernameFocus, setUsernameFocus] = useState(false);
 
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
@@ -75,8 +73,6 @@ const Register = () => {
 
   const [errMsg, setErrMsg] = useState("");
 
-  const [selected, setSelected] = useState("");
-
   useEffect(() => {
     firstnameRef.current?.focus();
   }, []);
@@ -100,7 +96,7 @@ const Register = () => {
 
   useEffect(() => {
     setErrMsg("");
-  }, [username, firstname, lastname, email, password, matchPassword]);
+  }, [firstname, lastname, email, password, matchPassword]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -124,11 +120,13 @@ const Register = () => {
         membership,
       });
 
-      setUsername("");
+      setEmail("");
       setFirstName("");
       setLastName("");
       setPassword("");
       setMatchPassword("");
+
+      navigate("/login");
     } catch (error) {
       const err = error as AxiosError;
       if (!err?.response) {
