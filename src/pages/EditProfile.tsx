@@ -6,27 +6,33 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AxiosError } from "axios";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CUSTOMERS_ENDPOINT,
   EMAIL_REGEX,
   NAME_REGEX,
-  PWD_REGEX,
   REGISTER_ENDPOINT,
 } from "../data/constants";
 import countries from "../data/countries";
+import Customer from "../entities/Customer";
+import useCustomer from "../hooks/useCustomer";
+import useUserProfile from "../hooks/useUserProfile";
 import APIClient from "../services/api-client";
 import User from "../entities/User";
-import Customer from "../entities/Customer";
-import { Link } from "react-router-dom";
 
-interface UserQuery {}
-
-const userApiClient = new APIClient<{ user }>(REGISTER_ENDPOINT);
+const userApiClient = new APIClient<User>(REGISTER_ENDPOINT);
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
-const Register = () => {
-  //defining ref hooks
+const EditProfile = () => {
+  const user = useUserProfile();
+  const [customer, setCustomer] = useState<Customer | null>(null);
+
+  useEffect(() => {
+    useCustomer(user.user_id).then((cus) => {
+      setCustomer(cus[0]);
+    });
+  }, []);
+
   const firstnameRef = useRef<HTMLInputElement | null>(null);
   const lastnameRef = useRef<HTMLInputElement | null>(null);
   const usernameRef = useRef<HTMLInputElement | null>(null);
@@ -36,7 +42,6 @@ const Register = () => {
   const membershipRef = useRef<HTMLInputElement | null>(null);
   const errRef = useRef<HTMLParagraphElement | null>(null);
 
-  //defining state hooks
   const [firstname, setFirstName] = useState("");
   const [validFirstName, setValidFirstName] = useState(false);
   const [firstnameFocus, setFirstNameFocus] = useState(false);
@@ -44,10 +49,6 @@ const Register = () => {
   const [lastname, setLastName] = useState("");
   const [validLastName, setValidLastName] = useState(false);
   const [lastnameFocus, setLastNameFocus] = useState(false);
-
-  const [username, setUsername] = useState("");
-  const [validUserName, setValidUserName] = useState(false);
-  const [usernameFocus, setUsernameFocus] = useState(false);
 
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
@@ -62,20 +63,10 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [phoneFocus, setPhoneFocus] = useState(false);
 
-  const [birthDate, setBirthDate] = useState("");
+  const [birth_date, setBirthDate] = useState("");
   const [birthDateFocus, setBirthDateFocus] = useState(false);
 
-  const [password, setPassword] = useState("");
-  const [validPassword, setValidPassword] = useState(false);
-  const [passwordFocus, setPasswordFocus] = useState(false);
-
-  const [matchPassword, setMatchPassword] = useState("");
-  const [validMatch, setValidMatch] = useState(false);
-  const [matchFocus, setMatchFocus] = useState(false);
-
   const [errMsg, setErrMsg] = useState("");
-
-  const [selected, setSelected] = useState("");
 
   useEffect(() => {
     firstnameRef.current?.focus();
@@ -94,41 +85,56 @@ const Register = () => {
   }, [email]);
 
   useEffect(() => {
-    setValidPassword(PWD_REGEX.test(password));
-    setValidMatch(password === matchPassword);
-  }, [password, matchPassword]);
-
-  useEffect(() => {
     setErrMsg("");
-  }, [username, firstname, lastname, email, password, matchPassword]);
+  }, [firstname, lastname, email]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await userApiClient.post({
-        id: 0,
-        password,
-        email,
-        first_name: firstname,
-        last_name: lastname,
-      });
+      if (email !== "" && validEmail === true) {
+        const response = await userApiClient.patch<User, string>(user.user_id, {
+          entity: email,
+        });
+      }
 
-      // console.log(response.);
-      const res = customerApiClient.post({
-        id: 0,
-        user_id: response.user.id,
-        phone,
-        country,
-        birth_date: birthDate,
-        membership,
-      });
+      if (firstname !== "" && validFirstName === true) {
+        const response = await userApiClient.patch<User, string>(user.user_id, {
+          entity: firstname,
+        });
+      }
+      if (lastname !== "" && validLastName === true) {
+        const response = await userApiClient.patch<User, string>(user.user_id, {
+          entity: lastname,
+        });
+      }
 
-      setUsername("");
+      if (phone !== "") {
+        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
+          entity: phone,
+        });
+      }
+
+      if (country !== "") {
+        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
+          entity: country,
+        });
+      }
+
+      if (birth_date !== "") {
+        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
+          entity: birth_date,
+        });
+      }
+
+      if (membership !== "") {
+        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
+          entity: membership,
+        });
+      }
+
       setFirstName("");
       setLastName("");
-      setPassword("");
-      setMatchPassword("");
     } catch (error) {
       const err = error as AxiosError;
       if (!err?.response) {
@@ -258,16 +264,6 @@ const Register = () => {
               aria-describedby="emailnote"
             />
           </div>
-          {emailFocus === true && email !== "" && validEmail === false && (
-            <p id="emailnote" className={"instructions"}>
-              <FontAwesomeIcon icon={faInfoCircle} />
-              4 to 24 characters.
-              <br />
-              Must begin with a letter.
-              <br />
-              Lowercase letters, numbers, special characters are allowed.
-            </p>
-          )}
 
           <div className="form-group">
             <label htmlFor="membership" className="col-sm-2 control-label">
@@ -343,11 +339,10 @@ const Register = () => {
               className="form-control"
               id="birthDate"
               name="birthDate"
-              // ref={phoneRef}
               autoComplete="off"
               type="date"
               onChange={(e) => setBirthDate(e.target.value)}
-              value={birthDate}
+              value={birth_date}
               required
               onFocus={() => setBirthDateFocus(true)}
               onBlur={() => setBirthDateFocus(false)}
@@ -356,92 +351,14 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password" className="col-sm-2 control-label">
-              Password:
-              {validPassword === true && (
-                <FontAwesomeIcon icon={faCheck} className={"valid"} />
-              )}
-              {validPassword !== true ||
-                (password === "" && (
-                  <FontAwesomeIcon icon={faTimes} className={"hide"} />
-                ))}
-            </label>
-            <input
-              className="form-control"
-              id="password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
-              aria-invalid={validPassword ? "false" : "true"}
-              aria-describedby="pwdnote"
-              type="password"
-              placeholder="Enter password"
-            />
-          </div>
-
-          {passwordFocus === true && validPassword === false && (
-            <p id="pwdnote" className={"instructions"}>
-              <FontAwesomeIcon icon={faInfoCircle} />
-              8 to 24 characters.
-              <br />
-              Must include uppercase and lowercase letters, a number and a
-              special character.
-              <br />
-              Allowed special characters:{" "}
-              <span aria-label="exclamation mark">!</span>{" "}
-              <span aria-label="at symbol">@</span>{" "}
-              <span aria-label="hashtag">#</span>{" "}
-              <span aria-label="dollar sign">$</span>{" "}
-              <span aria-label="percent">%</span>
-            </p>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="confirm_pwd" className="col-sm-2 control-label">
-              Confirm Password:
-              {validMatch === true && matchPassword !== "" && (
-                <FontAwesomeIcon icon={faCheck} className={"valid"} />
-              )}
-              {validMatch === false ||
-                (matchPassword === "" && (
-                  <FontAwesomeIcon icon={faTimes} className={"hide"} />
-                ))}
-            </label>
-            <input
-              className="form-control"
-              type="password"
-              id="confirm_pwd"
-              onChange={(e) => setMatchPassword(e.target.value)}
-              value={matchPassword}
-              required
-              aria-invalid={validMatch ? "false" : "true"}
-              aria-describedby="confirmnote"
-              placeholder="Confirm password"
-            />
-          </div>
-          {matchFocus && !validMatch && (
-            <p id="confirmnote" className={"instructions"}>
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Must match the first password input field.
-            </p>
-          )}
-
-          <div className="form-group">
             <button type="submit" className="btn btn-primary">
-              Sign Up
+              Update Profile
             </button>
           </div>
         </form>
-        <p>
-          Already registered?
-          <br />
-          <span className="line">
-            <Link to="/login">Sign In</Link>
-          </span>
-        </p>
       </section>
     </>
   );
 };
 
-export default Register;
+export default EditProfile;

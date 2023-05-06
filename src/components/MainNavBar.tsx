@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   HStack,
+  Heading,
   Image,
   List,
   ListItem,
@@ -94,6 +95,9 @@ const MainNavBar = ({ user }: Props) => {
         {user?.user_id && (
           <List>
             <Flex>
+              <Heading as="h3" paddingRight={5}>
+                Welcome: {fullname}
+              </Heading>
               <Menu>
                 <MenuButton>
                   <Wrap>

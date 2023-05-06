@@ -7,9 +7,6 @@ import SearchInput from "../components/SearchInput";
 import SongGrid from "../components/SongGrid";
 import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
-import useAuth from "../hooks/useAuth";
-import jwtDecode from "jwt-decode";
-import UserProfile from "./UserProfile";
 
 const SongsPage = () => {
   const jwt = localStorage.getItem("token");

@@ -1,9 +1,10 @@
-import { Card, CardBody, HStack, Image, Text } from "@chakra-ui/react";
+import { Card, CardBody, HStack, Icon, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Song from "../entities/Song";
 import CriticScore from "./CriticScore";
 import Like from "./Like";
 import { useState } from "react";
+import { BsHeartFill } from "react-icons/bs";
 
 interface Props {
   song: Song;
@@ -11,6 +12,13 @@ interface Props {
 
 const SongCard = ({ song }: Props) => {
   const [liked, setLiked] = useState(false);
+  const handleLike = () => {
+    // console.log("hanlde called");
+    console.log(liked);
+    setLiked(!liked);
+    console.log(liked);
+  };
+
   return (
     <Card>
       <Image
@@ -23,7 +31,7 @@ const SongCard = ({ song }: Props) => {
         <HStack justifyContent="space-between">
           <Text>{song.notation.title}</Text>
           <CriticScore score={song.metacritic} />
-          <Like liked={liked} onLike={() => setLiked(!liked)}/>
+          <Like liked={false} onLike={handleLike} />
         </HStack>
         {song.author_name !== "Unknown" && <Text>{song.author_name}</Text>}
       </CardBody>

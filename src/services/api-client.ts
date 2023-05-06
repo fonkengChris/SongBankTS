@@ -40,6 +40,18 @@ class APIClient<T> {
   post = (data: T) => {
     return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
   };
+
+  put = (id: number, data: T) => {
+    return axiosInstance
+      .put<T>(this.endpoint + "?user_id=" + id, data)
+      .then((res) => res.data);
+  };
+
+  patch = <T, E>(id: number, data: { entity: E }): Promise<T> => {
+    return axiosInstance
+      .patch<T>(this.endpoint + "?user_id=" + id, data)
+      .then((res) => res.data);
+  };
 }
 
 export default APIClient;

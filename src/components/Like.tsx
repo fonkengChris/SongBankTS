@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import { Icon } from "@chakra-ui/react";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
 
 interface Props {
   liked: boolean;
@@ -6,11 +7,11 @@ interface Props {
 }
 
 const Like = ({ liked, onLike }: Props) => {
-  let classes = "fa fa-heart";
-  if (!liked) classes += "-o";
+  let classes = liked === true ? BsHeartFill : BsHeart;
+
   return (
-    <i
-      className={classes}
+    <Icon
+      as={classes}
       onClick={onLike}
       style={{ cursor: "pointer" }}
       aria-hidden="true"

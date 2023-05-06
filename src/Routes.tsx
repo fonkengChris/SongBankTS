@@ -9,6 +9,7 @@ import SongDetialPage from "./pages/SongDetialPage";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import ChangePassword from "./components/ChangePassword";
+import EditProfile from "./pages/EditProfile";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { path: "logout", element: <Logout /> },
       { path: "change_password", element: <ChangePassword /> },
       { path: "users/:id", element: <UserProfile /> },
+      { path: "edit_profile", element: <EditProfile /> },
       { path: "songs", element: <SongsPage /> },
       { path: "songs/:id", element: <SongDetialPage /> },
     ],
