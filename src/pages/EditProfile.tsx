@@ -17,7 +17,7 @@ import countries from "../data/countries";
 import Customer from "../entities/Customer";
 import useCustomer from "../hooks/useCustomer";
 import useUserProfile from "../hooks/useUserProfile";
-import APIClient from "../services/api-client";
+import APIClient, { axiosInstance } from "../services/api-client";
 import User from "../entities/User";
 
 const userApiClient = new APIClient<User>(REGISTER_ENDPOINT);
@@ -35,11 +35,8 @@ const EditProfile = () => {
 
   const firstnameRef = useRef<HTMLInputElement | null>(null);
   const lastnameRef = useRef<HTMLInputElement | null>(null);
-  const usernameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const countryRef = useRef<HTMLInputElement | null>(null);
-  const phoneRef = useRef<HTMLInputElement | null>(null);
-  const membershipRef = useRef<HTMLInputElement | null>(null);
   const errRef = useRef<HTMLParagraphElement | null>(null);
 
   const [firstname, setFirstName] = useState("");
@@ -54,14 +51,8 @@ const EditProfile = () => {
   const [validEmail, setValidEmail] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
 
-  const [membership, setMembership] = useState("");
-  const [membershipFocus, setMembershipFocus] = useState(false);
-
   const [country, setCountry] = useState("");
   const [countryFocus, setCountryFocus] = useState(false);
-
-  const [phone, setPhone] = useState("");
-  const [phoneFocus, setPhoneFocus] = useState(false);
 
   const [birth_date, setBirthDate] = useState("");
   const [birthDateFocus, setBirthDateFocus] = useState(false);
@@ -92,46 +83,19 @@ const EditProfile = () => {
     e.preventDefault();
 
     try {
-      if (email !== "" && validEmail === true) {
-        const response = await userApiClient.patch<User, string>(user.user_id, {
-          entity: email,
-        });
-      }
+      // const userUpdate = axiosInstance.patch(U user?.user_id!, {
+      //   id: user.user_id,
+      //   first_name: firstname ? firstname : user.first_name,
+      //   last_name: lastname ? lastname : user.last_name,
+      //   email: email ? email : user.email,
+      // });
 
-      if (firstname !== "" && validFirstName === true) {
-        const response = await userApiClient.patch<User, string>(user.user_id, {
-          entity: firstname,
-        });
-      }
-      if (lastname !== "" && validLastName === true) {
-        const response = await userApiClient.patch<User, string>(user.user_id, {
-          entity: lastname,
-        });
-      }
-
-      if (phone !== "") {
-        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
-          entity: phone,
-        });
-      }
-
-      if (country !== "") {
-        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
-          entity: country,
-        });
-      }
-
-      if (birth_date !== "") {
-        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
-          entity: birth_date,
-        });
-      }
-
-      if (membership !== "") {
-        const res = customerApiClient.patch<Customer, string>(customer?.id!, {
-          entity: membership,
-        });
-      }
+      const res = customerApiClient.put(customer?.id!, {
+        id: customer?.id!,
+        user_id: customer?.user_id!,
+        country: country ? country : customer?.country!,
+        birth_date: birth_date ? birth_date : customer?.birth_date!,
+      });
 
       setFirstName("");
       setLastName("");
@@ -158,7 +122,7 @@ const EditProfile = () => {
             </p>
           )}
 
-          <Heading as="h1">Register</Heading>
+          <Heading as="h1">Edit Profile</Heading>
           <div className="form-group">
             <label htmlFor="firstname" className="col-sm-2 control-label">
               First name:{" "}
@@ -266,26 +230,6 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="membership" className="col-sm-2 control-label">
-              Membership Status
-            </label>
-            <select
-              className="form-control"
-              id="membership"
-              onChange={(e) => setMembership(e.target.value)}
-              onFocus={() => setMembershipFocus(true)}
-              onBlur={() => setMembershipFocus(false)}
-            >
-              <option disabled={true} value="">
-                --Choose between Gold(G), Silver(S) and Bronze(B)--
-              </option>
-              <option value="G">G</option>
-              <option value="S">S</option>
-              <option value="B">B</option>
-            </select>
-          </div>
-
-          <div className="form-group">
             <label htmlFor="country" className="col-sm-2 control-label">
               Country
             </label>
@@ -309,26 +253,6 @@ const EditProfile = () => {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="phone" className="col-sm-2 control-label">
-              Phone Number
-            </label>
-            <input
-              className="form-control"
-              id="phone"
-              name="phone"
-              type="tel"
-              ref={phoneRef}
-              autoComplete="off"
-              onChange={(e) => setPhone(e.target.value)}
-              value={phone}
-              required
-              onFocus={() => setPhoneFocus(true)}
-              onBlur={() => setPhoneFocus(false)}
-              placeholder="Enter Phone number ..."
-            />
           </div>
 
           <div className="form-group">

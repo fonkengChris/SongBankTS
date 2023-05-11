@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import Logout from "./components/Logout";
-import Register from "./components/Register";
+import Logout from "./pages/Logout";
+import Register from "./pages/Register";
 import ErrorPage from "./pages/ErrorPage";
 import SongsPage from "./pages/SongsPage";
 import Layout from "./pages/Layout";
@@ -23,7 +23,6 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "login", element: <Login /> },
       { path: "logout", element: <Logout /> },
-      // { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
       { path: "upload", element: <UploadSong /> },
       { path: "change_password", element: <ChangePassword /> },

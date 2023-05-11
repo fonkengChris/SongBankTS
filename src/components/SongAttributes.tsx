@@ -8,7 +8,7 @@ interface Props {
   song: Song;
 }
 
-const GameAttributes = ({ song }: Props) => {
+const SongAttributes = ({ song }: Props) => {
   return (
     <SimpleGrid columns={2} as="dl">
       <DefinitionItem term={"Notation"}>
@@ -18,13 +18,14 @@ const GameAttributes = ({ song }: Props) => {
         <CriticScore score={song.metacritic} />
       </DefinitionItem>
       <DefinitionItem term="Category">
-        <Text>{song.notation.title}</Text>
+        <Text>{song.category.title}</Text>
       </DefinitionItem>
       <DefinitionItem term="Author">
         <Text>{song.author_name}</Text>
       </DefinitionItem>
+      
     </SimpleGrid>
   );
 };
 
-export default GameAttributes;
+export default SongAttributes;

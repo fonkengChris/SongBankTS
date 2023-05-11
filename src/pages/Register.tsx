@@ -7,6 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AxiosError } from "axios";
 import { useEffect, useRef, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   CUSTOMERS_ENDPOINT,
   EMAIL_REGEX,
@@ -15,23 +16,21 @@ import {
   REGISTER_ENDPOINT,
 } from "../data/constants";
 import countries from "../data/countries";
-import APIClient from "../services/api-client";
-import User from "../entities/User";
 import Customer from "../entities/Customer";
-import { Link, useNavigate } from "react-router-dom";
-
-interface UserQuery {}
+import APIClient from "../services/api-client";
 
 const userApiClient = new APIClient<{ user }>(REGISTER_ENDPOINT);
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
 const Register = () => {
+  const jwt = localStorage.getItem("token");
+  if (jwt) return <Navigate to="/songs" />;
+
   const navigate = useNavigate();
 
   //defining ref hooks
   const firstnameRef = useRef<HTMLInputElement | null>(null);
   const lastnameRef = useRef<HTMLInputElement | null>(null);
-  const usernameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const countryRef = useRef<HTMLInputElement | null>(null);
   const phoneRef = useRef<HTMLInputElement | null>(null);
@@ -51,14 +50,8 @@ const Register = () => {
   const [validEmail, setValidEmail] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
 
-  const [membership, setMembership] = useState("");
-  const [membershipFocus, setMembershipFocus] = useState(false);
-
   const [country, setCountry] = useState("");
   const [countryFocus, setCountryFocus] = useState(false);
-
-  const [phone, setPhone] = useState("");
-  const [phoneFocus, setPhoneFocus] = useState(false);
 
   const [birthDate, setBirthDate] = useState("");
   const [birthDateFocus, setBirthDateFocus] = useState(false);
@@ -114,10 +107,8 @@ const Register = () => {
       const res = customerApiClient.post({
         id: 0,
         user_id: response.user.id,
-        phone,
         country,
         birth_date: birthDate,
-        membership,
       });
 
       setEmail("");
@@ -268,26 +259,6 @@ const Register = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="membership" className="col-sm-2 control-label">
-              Membership Status
-            </label>
-            <select
-              className="form-control"
-              id="membership"
-              onChange={(e) => setMembership(e.target.value)}
-              onFocus={() => setMembershipFocus(true)}
-              onBlur={() => setMembershipFocus(false)}
-            >
-              <option disabled={true} value="">
-                --Choose between Gold(G), Silver(S) and Bronze(B)--
-              </option>
-              <option value="G">G</option>
-              <option value="S">S</option>
-              <option value="B">B</option>
-            </select>
-          </div>
-
-          <div className="form-group">
             <label htmlFor="country" className="col-sm-2 control-label">
               Country
             </label>
@@ -311,26 +282,6 @@ const Register = () => {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="phone" className="col-sm-2 control-label">
-              Phone Number
-            </label>
-            <input
-              className="form-control"
-              id="phone"
-              name="phone"
-              type="tel"
-              ref={phoneRef}
-              autoComplete="off"
-              onChange={(e) => setPhone(e.target.value)}
-              value={phone}
-              required
-              onFocus={() => setPhoneFocus(true)}
-              onBlur={() => setPhoneFocus(false)}
-              placeholder="Enter Phone number ..."
-            />
           </div>
 
           <div className="form-group">

@@ -1,6 +1,6 @@
 export default [
   {
-    id: 5,
+    id: 3,
     title: "Gregorian Notation",
     slug: "gregorian-notation",
   },
@@ -10,12 +10,17 @@ export default [
     slug: "solfa-notation",
   },
   {
-    id: 4,
+    id: 2,
     title: "Staff Notation",
     slug: "staff-notation",
   },
   {
-    id: 6,
+    id: 4,
+    title: "Byzantine Notation",
+    slug: "byzantine-notation",
+  },
+  {
+    id: 5,
     title: "Without Notation",
     slug: "without-notation",
   },

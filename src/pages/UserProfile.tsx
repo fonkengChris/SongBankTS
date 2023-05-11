@@ -7,7 +7,7 @@ import {
   Tbody,
   Td,
   Th,
-  Tr
+  Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -50,19 +50,13 @@ const UserProfile = () => {
               <Th>Date of Birth: </Th>
               <Td>{customer?.birth_date}</Td>
             </Tr>
-            <Tr>
-              <Th>Phone Number:</Th>
-              <Td>{customer?.phone}</Td>
-            </Tr>
-            <Tr>
-              <Th>Membership status:</Th>
-              <Td>{customer?.membership}</Td>
-            </Tr>
           </Tbody>
         </Table>
       </TableContainer>
 
-      <Link to="/edit_profile"><Button>Edit Profile</Button></Link>
+      <Link to="/edit_profile">
+        <Button>Edit Profile</Button>
+      </Link>
     </div>
   );
 };

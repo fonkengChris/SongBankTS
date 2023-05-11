@@ -6,7 +6,7 @@ export default interface Song {
   title: string;
   slug: string;
   description: string;
-  likes: number;
+  likes_count: number;
   lyrics: string;
   language: string;
   views: number;

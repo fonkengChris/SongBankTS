@@ -18,7 +18,7 @@ const LanguageSelector = () => {
       </MenuButton>
       <MenuList>
         <MenuItem onClick={() => setSelectedLanguage(null)}>
-          All Notations
+          All Languages
         </MenuItem>
         {languages?.map((language) => (
           <MenuItem

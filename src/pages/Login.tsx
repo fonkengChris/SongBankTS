@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { LOGIN_ENDPOINT } from "../data/constants";
 import useAuth from "../hooks/useAuth";
 import APIClient, { axiosInstance } from "../services/api-client";
@@ -7,6 +7,9 @@ import APIClient, { axiosInstance } from "../services/api-client";
 const apiClient = new APIClient<Auth>(LOGIN_ENDPOINT);
 
 const Login = () => {
+  const jwt = localStorage.getItem("token");
+  if (jwt) return <Navigate to="/songs" />;
+
   const { auth, setAuth } = useAuth();
 
   const navigate = useNavigate();
