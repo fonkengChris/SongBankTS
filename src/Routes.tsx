@@ -5,7 +5,7 @@ import ErrorPage from "./pages/ErrorPage";
 import SongsPage from "./pages/SongsPage";
 import Layout from "./pages/Layout";
 import Login from "./pages/Login";
-import SongDetialPage from "./pages/SongDetialPage";
+import SongDetailPage from "./pages/SongDetailPage";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import ChangePassword from "./components/ChangePassword";
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "register", element: <Register /> },
-      { path: "login", element: <Login /> },
+      { path: "auth", element: <Login /> },
       { path: "logout", element: <Logout /> },
       { path: "contact", element: <Contact /> },
       { path: "upload", element: <UploadSong /> },
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
       { path: "users/:id", element: <UserProfile /> },
       { path: "edit_profile", element: <EditProfile /> },
       { path: "songs", element: <SongsPage /> },
-      { path: "songs/:id", element: <SongDetialPage /> },
+      { path: "songs/:id", element: <SongDetailPage /> },
     ],
   },
 ]);

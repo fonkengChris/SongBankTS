@@ -77,7 +77,7 @@ const MainNavBar = ({ user }: Props) => {
             <Flex>
               <ListItem className="nav-item" marginRight={3}>
                 <Button>
-                  <NavLink className="nav-link" to="/login">
+                  <NavLink className="nav-link" to="/auth">
                     Login
                   </NavLink>
                 </Button>

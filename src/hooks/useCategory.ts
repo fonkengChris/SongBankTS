@@ -1,8 +1,8 @@
 import useCategories from "./useCategories";
 
-const useCategory = (id?: number | null) => {
+const useCategory = (id?: string | null) => {
   const { data: categories } = useCategories();
-  return categories.find((c) => c.id === id);
+  return categories!.find((c) => c._id === id);
 };
 
 export default useCategory;

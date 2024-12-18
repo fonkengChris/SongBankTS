@@ -1,6 +1,5 @@
 export default interface Language {
-  id: number;
+  _id: string;
   name: string;
-  slug: string;
   code: string;
 }

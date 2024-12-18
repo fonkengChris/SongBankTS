@@ -9,8 +9,9 @@ const SongGrid = () => {
   const { data: songs, error, isLoading } = useSongs();
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const [songId, setSongId] = useState(0);
-  
+
   if (error) return <Text color="red">{error.message}</Text>;
+  // console.log(songs);
 
   return (
     <SimpleGrid columns={{ sm: 1, md: 2, lg: 5 }} padding="10px" spacing={3}>
@@ -21,7 +22,7 @@ const SongGrid = () => {
           </SongCardContainer>
         ))}
       {songs?.map((song) => (
-        <SongCardContainer key={song.id}>
+        <SongCardContainer key={song._id}>
           <SongCard song={song} />
         </SongCardContainer>
       ))}

@@ -6,7 +6,7 @@ import useNotations from "../hooks/useNotations";
 const NotationSelector = () => {
   const { data: notations, error } = useNotations();
   const selectedNotationId = useSongQueryStore((s) => s.songQuery.notationId);
-  const selectedNotation = notations.find((n) => n.id === selectedNotationId);
+  const selectedNotation = notations.find((n) => n._id === selectedNotationId);
 
   const setSelectedNotation = useSongQueryStore((s) => s.setNotationId);
 
@@ -22,8 +22,8 @@ const NotationSelector = () => {
         </MenuItem>
         {notations?.map((notation) => (
           <MenuItem
-            onClick={() => setSelectedNotation(notation.id)}
-            key={notation.id}
+            onClick={() => setSelectedNotation(notation._id)}
+            key={notation._id}
           >
             {notation.title}
           </MenuItem>

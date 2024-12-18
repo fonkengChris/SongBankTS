@@ -1,8 +1,9 @@
 import Category from "./Category";
-import Notation from "./Notation";
+import SongAudio from "./SongAudio";
+import SongDocument from "./SongDocument";
 
 export default interface Song {
-  id: number;
+  _id: string;
   title: string;
   slug: string;
   description: string;
@@ -10,11 +11,9 @@ export default interface Song {
   lyrics: string;
   language: string;
   views: number;
-  notation: Notation;
   category: Category;
-  document_files: { id: number; document_file: string }[];
-  audio_files: { id: number; audio_file: string }[];
+  documentFiles: SongDocument[];
+  audioFile: SongAudio;
   author_name: string;
-  preview_image: { id: number; preview_image: string }[];
   metacritic: number;
 }

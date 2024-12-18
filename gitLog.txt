@@ -1,0 +1,58 @@
+b06bccb added likes and views to song details
+d555596 Fix register
+3b379e3 Added Laguage filter, Upload and Contact pages
+18e57a9 Added User Profile Edit page
+fc913bb Display Lyrics on song details page
+dfce4d3 Implement user profile menu
+bd64ecf remove console logs
+0126690 Display Customer profile
+b82c1be fixed register form
+a8ddd82 Repaired useQuery hook by adding cacheTime
+5f6bf55 Refactor: Improve login, logout, protected routes
+cbda54f display current user's full names on navbar
+300f9b2 display current user on navbar
+c66f659 login with jwt (with bugs)
+55de2e9 Implement login first
+170e03b Rework displaying error messages for register
+5ef9b55 use Api client with regiter page
+c24fc18 Display contents on song details page
+163e342 Added Song detail page
+ef5511f isolated entity interfaces and routing
+7a77776 Refactor: Manage state with Zustand
+476b60a Refactor: create custom lookup hooks
+a25b5b4 Refactor: Simplify query object
+4723a41 Refactor: Create generic APIClient
+481a4bb Refactor: Removed duplicate Notation interface
+06f006d Fetch songs with reactQuery
+1c0cf0a Same for fateching notations
+71708d5 Refactor: fetch categories with useQuery
+b83c040 A few fixes on register
+0e99a16 Added Register and login pages
+1d0d14f Edited country and membership select options
+8fc0659 Cleaned up the register component
+41caaba Register users and customers
+1e0575e Built login and register pages
+5e1a345 Shipped categories and notations
+7e8fb7e Added dynamic page heading
+d2b12db implement searching
+75054f1 Built search input
+be34275 Fixed issue with chakra menus
+2419e2d Implement sorting for songs
+2ddd343 Refactor: Extract a query object
+0aa8e58 Implemented selection by notation
+11e443a Built notaions drop-down menu
+368c522 Highlight selected category
+c20f74b Include all genres in filter
+2d6cf3b FIltered by category
+1755b94 Displaying Genres
+cf7a557 Implement usedata hook 4 songs and categories
+5566269 Fetch the Categories
+793d683 Refactor: removed duplicated styles
+f6ba47e Added loading image skeletons
+d14b090 Displaying critic score
+6bf00cd Display Author Name
+db2ff1a Created custom hook to fetch Songs
+bbdee2b Fetch songs from database
+413a352 Built basic nav-bar
+60734bd Design grid layout
+aeae71f Initial Commit

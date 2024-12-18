@@ -9,10 +9,12 @@ interface Props {
 }
 
 const SongAttributes = ({ song }: Props) => {
+  
   return (
     <SimpleGrid columns={2} as="dl">
       <DefinitionItem term={"Notation"}>
-        <Text>{song.notation.title}</Text>
+        {/* I need to call the particular document file dynamically */}
+        <Text>{song.documentFiles[0].notation.title}</Text>
       </DefinitionItem>
       <DefinitionItem term="MetaScore">
         <CriticScore score={song.metacritic} />
@@ -23,7 +25,6 @@ const SongAttributes = ({ song }: Props) => {
       <DefinitionItem term="Author">
         <Text>{song.author_name}</Text>
       </DefinitionItem>
-      
     </SimpleGrid>
   );
 };

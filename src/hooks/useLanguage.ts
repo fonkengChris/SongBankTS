@@ -1,8 +1,8 @@
 import useLanguages from "./useLanguages";
 
-const useLanguage = (id?: number | null) => {
+const useLanguage = (id?: string | null) => {
   const { data: languages } = useLanguages();
-  return languages.find((l) => l.id === id);
+  return languages!.find((l) => l._id === id);
 };
 
 export default useLanguage;

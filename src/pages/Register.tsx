@@ -19,7 +19,20 @@ import countries from "../data/countries";
 import Customer from "../entities/Customer";
 import APIClient from "../services/api-client";
 
-const userApiClient = new APIClient<{ user }>(REGISTER_ENDPOINT);
+type UserPayload = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+type UserResponse = {
+  _id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+};
+
+const userApiClient = new APIClient<UserResponse>(REGISTER_ENDPOINT);
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
 const Register = () => {
@@ -32,9 +45,7 @@ const Register = () => {
   const firstnameRef = useRef<HTMLInputElement | null>(null);
   const lastnameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
-  const countryRef = useRef<HTMLInputElement | null>(null);
   const phoneRef = useRef<HTMLInputElement | null>(null);
-  const membershipRef = useRef<HTMLInputElement | null>(null);
   const errRef = useRef<HTMLParagraphElement | null>(null);
 
   //defining state hooks
@@ -53,6 +64,9 @@ const Register = () => {
   const [country, setCountry] = useState("");
   const [countryFocus, setCountryFocus] = useState(false);
 
+  const [phone, setPhone] = useState("");
+  const [phoneFocus, setPhoneFocus] = useState(false);
+
   const [birthDate, setBirthDate] = useState("");
   const [birthDateFocus, setBirthDateFocus] = useState(false);
 
@@ -63,6 +77,8 @@ const Register = () => {
   const [matchPassword, setMatchPassword] = useState("");
   const [validMatch, setValidMatch] = useState(false);
   const [matchFocus, setMatchFocus] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
 
@@ -94,20 +110,23 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setLoading(true);
     try {
-      const response = await userApiClient.post({
-        id: 0,
-        password,
-        email,
-        first_name: firstname,
-        last_name: lastname,
-      });
+      const userPayload: UserPayload = {
+        name: firstname + " " + lastname,
+        email: email,
+        password: password,
+      };
 
-      // console.log(response.);
-      const res = customerApiClient.post({
-        id: 0,
-        user_id: response.user.id,
-        country,
+      const response = await userApiClient.post(userPayload);
+
+      const userId = response._id;
+
+      console.log(response);
+      const res = await customerApiClient.post({
+        user: userId,
+        country: country,
+        phone_number: phone,
         birth_date: birthDate,
       });
 
@@ -116,8 +135,11 @@ const Register = () => {
       setLastName("");
       setPassword("");
       setMatchPassword("");
+      setCountry("");
+      setPhone("");
+      setBirthDate("");
 
-      navigate("/login");
+      navigate("/auth");
     } catch (error) {
       const err = error as AxiosError;
       if (!err?.response) {
@@ -259,6 +281,32 @@ const Register = () => {
           )}
 
           <div className="form-group">
+            <label htmlFor="phone" className="col-sm-2 control-label">
+              Phone Number:
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              id="phone"
+              name="phone"
+              ref={phoneRef}
+              autoComplete="off"
+              onChange={(e) => setPhone(e.target.value)}
+              value={phone}
+              required
+              onFocus={() => setPhoneFocus(true)}
+              onBlur={() => setPhoneFocus(false)}
+              placeholder="Enter phone number..."
+            />
+          </div>
+          {phoneFocus && phone !== "" && (
+            <p className="instructions">
+              <FontAwesomeIcon icon={faInfoCircle} />
+              Enter a valid phone number.
+            </p>
+          )}
+
+          <div className="form-group">
             <label htmlFor="country" className="col-sm-2 control-label">
               Country
             </label>
@@ -292,7 +340,6 @@ const Register = () => {
               className="form-control"
               id="birthDate"
               name="birthDate"
-              // ref={phoneRef}
               autoComplete="off"
               type="date"
               onChange={(e) => setBirthDate(e.target.value)}
@@ -310,10 +357,9 @@ const Register = () => {
               {validPassword === true && (
                 <FontAwesomeIcon icon={faCheck} className={"valid"} />
               )}
-              {validPassword !== true ||
-                (password === "" && (
-                  <FontAwesomeIcon icon={faTimes} className={"hide"} />
-                ))}
+              {(validPassword !== true || password === "") && (
+                <FontAwesomeIcon icon={faTimes} className={"hide"} />
+              )}
             </label>
             <input
               className="form-control"
@@ -376,8 +422,12 @@ const Register = () => {
           )}
 
           <div className="form-group">
-            <button type="submit" className="btn btn-primary">
-              Sign Up
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
           </div>
         </form>

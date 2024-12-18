@@ -6,7 +6,7 @@ import useLanguages from "../hooks/useLanguages";
 const LanguageSelector = () => {
   const { data: languages, error } = useLanguages();
   const selectedLanguageId = useSongQueryStore((s) => s.songQuery.languageId);
-  const selectedLanguage = languages.find((n) => n.id === selectedLanguageId);
+  const selectedLanguage = languages.find((n) => n._id === selectedLanguageId);
 
   const setSelectedLanguage = useSongQueryStore((s) => s.setLanguageId);
 
@@ -22,8 +22,8 @@ const LanguageSelector = () => {
         </MenuItem>
         {languages?.map((language) => (
           <MenuItem
-            onClick={() => setSelectedLanguage(language.id)}
-            key={language.id}
+            onClick={() => setSelectedLanguage(language._id)}
+            key={language._id}
           >
             {language.name}
           </MenuItem>

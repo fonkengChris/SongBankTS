@@ -1,8 +1,18 @@
 import axios, { AxiosRequestConfig } from "axios";
-const BASE_URL = "http://localhost:8000/";
+
+const BASE_URL = "http://localhost:3000/";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
+});
+
+export const axiosLikeInstance = axios.create({
+  baseURL: BASE_URL + "library/songs/",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "JWT " + localStorage.getItem("token"),
+  },
+  withCredentials: true,
 });
 
 export const axiosPrivate = axios.create({
@@ -19,10 +29,13 @@ class APIClient<T> {
   }
 
   getAll = (config: AxiosRequestConfig) => {
-    console.log("get all fxn called");
-    return axiosInstance
+    // console.log("get all fxn called");
+    const result = axiosInstance
       .get<T[]>(this.endpoint, config)
       .then((res) => res.data);
+
+    // result.then((res) => console.log(res));
+    return result;
   };
 
   get = (id: number | string) => {

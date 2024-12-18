@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { LOGIN_ENDPOINT } from "../data/constants";
 import useAuth from "../hooks/useAuth";
 import APIClient, { axiosInstance } from "../services/api-client";
+import Cookies from "js-cookie";
 
 const apiClient = new APIClient<Auth>(LOGIN_ENDPOINT);
 
@@ -36,21 +37,24 @@ const Login = () => {
         password: pwd,
       });
 
-      console.log(response);
-      const access = response?.data?.access;
+      // Retrieve the access token from response body
+      const access = response?.data?.accessToken;
       localStorage.setItem("token", access);
 
-      const refresh = response?.data?.refresh;
-      localStorage.setItem("tokenRef", refresh);
+      // Retrieve the refresh token from cookies
+      const refresh = Cookies.get("csrftoken");
+      if (refresh) {
+        localStorage.setItem("tokenRef", refresh);
+      }
+
 
       setAuth({ user, pwd, access });
       setUser("");
       setPwd("");
-      // console.log(auth);
 
       navigate("/songs");
       navigate(0);
-      // window.location = "https://localhost:5173";
+    
     } catch (err: Error) {
       if (!err?.response) {
         setErrMsg("No Server Response");

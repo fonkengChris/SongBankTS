@@ -1,5 +1,5 @@
 export default interface Notation {
-  id: number;
+  _id: string;
   title: string;
   slug: string;
 }

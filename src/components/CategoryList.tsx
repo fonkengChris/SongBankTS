@@ -43,16 +43,16 @@ const CategoryList = () => {
               </Td>
             </Tr>
             {categories?.map((category) => (
-              <Tr key={category.id} paddingY="5px">
+              <Tr key={category._id} paddingY="5px">
                 <Td>
                   <Button
                     whiteSpace="normal"
                     textAlign="left"
-                    fontSize={category.id === selectedCategoryId ? "xl" : "lg"}
+                    fontSize={category._id === selectedCategoryId ? "xl" : "lg"}
                     fontWeight={
-                      category.id === selectedCategoryId ? "bold" : "normal"
+                      category._id === selectedCategoryId ? "bold" : "normal"
                     }
-                    onClick={() => setSelectedCategory(category.id)}
+                    onClick={() => setSelectedCategory(category._id)}
                     variant="link"
                   >
                     {category.title}
