@@ -7,13 +7,13 @@ export default interface Song {
   title: string;
   slug: string;
   description: string;
-  likes_count: number;
+  likesCount: number;
   lyrics: string;
   language: string;
   views: number;
   category: Category;
   documentFiles: SongDocument[];
   audioFile: SongAudio;
-  author_name: string;
+  authorName: string;
   metacritic: number;
 }

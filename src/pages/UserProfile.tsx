@@ -9,46 +9,64 @@ import {
   Th,
   Tr,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Customer from "../entities/Customer";
 import useCustomer from "../hooks/useCustomer";
-import useUserProfile from "../hooks/useUserProfile";
+import jwtDecode from "jwt-decode";
 
 const UserProfile = () => {
-  const user = useUserProfile();
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  // Decode token and extract user ID
+  const userToken = localStorage.getItem("token");
 
-  useEffect(() => {
-    useCustomer(user.user_id).then((cus) => {
-      setCustomer(cus[0]);
-    });
-  }, []);
+  // Define the shape of the decoded token
+  interface DecodedToken {
+    _id: string;
+    name?: string;
+    email?: string;
+  }
+
+  // Initialize user attributes
+  let userId: string | null = null;
+  let userName: string | null = null;
+  let userEmail: string | null = null;
+
+  if (userToken) {
+    try {
+      const decodedToken: DecodedToken = jwtDecode(userToken);
+      userId = decodedToken._id;
+      userName = decodedToken.name || null;
+      userEmail = decodedToken.email || null;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  }
+  // Fetch the customer using the useCustomer hook
+  const { data: customer, error, isLoading } = useCustomer(userId!);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching customer data: {error.message}</p>;
 
   return (
     <div>
       <Heading>UserProfile</Heading>
       <TableContainer>
         <Table variant="simple">
-          <TableCaption>Profile details for {user.first_name}</TableCaption>
+          <TableCaption>Profile details for {userName}</TableCaption>
           <Tbody>
             <Tr>
               <Th>Full Name:</Th>
-              <Td>
-                {user.first_name} {user.last_name}
-              </Td>
+              <Td>{userName}</Td>
             </Tr>
             <Tr>
               <Th>Email Address:</Th>
-              <Td>{user.email}</Td>
+              <Td>{userEmail}</Td>
             </Tr>
             <Tr>
               <Th>Nationality:</Th>
-              <Td>{customer?.country}</Td>
+              <Td>{customer?.country || "N/A"}</Td>
             </Tr>
             <Tr>
-              <Th>Date of Birth: </Th>
-              <Td>{customer?.birth_date}</Td>
+              <Th>Date of Birth:</Th>
+              <Td>{customer?.birth_date || "N/A"}</Td>
             </Tr>
           </Tbody>
         </Table>

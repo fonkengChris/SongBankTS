@@ -12,6 +12,7 @@ const Layout = () => {
       const access = localStorage.getItem("token");
 
       const currentUser = jwtDecode<CurrentUser>(access!);
+
       setUser({ ...currentUser });
     } catch (error) {}
   }, []);

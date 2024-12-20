@@ -6,11 +6,24 @@ export const axiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 
+// Add an interceptor to attach the JWT token dynamically to each request
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers["x-auth-token"] = token;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export const axiosLikeInstance = axios.create({
-  baseURL: BASE_URL + "library/songs/",
+  baseURL: BASE_URL + "api/songs/",
   headers: {
     "Content-Type": "application/json",
-    Authorization: "JWT " + localStorage.getItem("token"),
   },
   withCredentials: true,
 });
@@ -28,25 +41,20 @@ class APIClient<T> {
     this.endpoint = endpoint;
   }
 
-  getAll = (config: AxiosRequestConfig) => {
-    // console.log("get all fxn called");
-    const result = axiosInstance
-      .get<T[]>(this.endpoint, config)
-      .then((res) => res.data);
-
-    // result.then((res) => console.log(res));
-    return result;
+  getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
+    const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
+    return axiosInstance.get<T[]>(url, config).then((res) => res.data);
   };
 
   get = (id: number | string) => {
     return axiosInstance
-      .get<T>(this.endpoint + "/" + id)
+      .get<T>(`${this.endpoint}/${id}`)
       .then((res) => res.data);
   };
 
   get_by_user_id = (id: number | string) => {
     return axiosInstance
-      .get<T[]>(this.endpoint + "?user_id=" + id)
+      .get<T[]>(`${this.endpoint}?user_id=${id}`)
       .then((res) => res.data);
   };
 
@@ -54,15 +62,15 @@ class APIClient<T> {
     return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
   };
 
-  put = (id: number, data: T) => {
+  put = (id: string, data: Partial<T>) => {
     return axiosInstance
-      .put<T>(this.endpoint + "?user_id=" + id, data)
+      .put<T>(`${this.endpoint}/${id}`, data)
       .then((res) => res.data);
   };
 
-  patch = <T, E>(id: number, data: { entity: E }): Promise<T> => {
+  patch = <T, E>(id: string, data: { entity: E }): Promise<T> => {
     return axiosInstance
-      .patch<T>(this.endpoint + "?user_id=" + id, data)
+      .patch<T>(`${this.endpoint}?user_id=${id}`, data)
       .then((res) => res.data);
   };
 }

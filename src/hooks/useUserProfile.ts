@@ -4,7 +4,7 @@ import useCustomer from "./useCustomer";
 import JWT_User from "../entities/JWT_User";
 
 const useUserProfile = () => {
-  const user = jwtDecode<JWT_User>(localStorage.getItem("token")!);
+  const user = jwtDecode<CurrentUser>(localStorage.getItem("token")!);
   //   console.log(user);
   return user;
 };

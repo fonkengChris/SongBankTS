@@ -18,14 +18,17 @@ import {
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
 import ColorModeSwitch from "./ColorModeSwitch";
+import jwtDecode from "jwt-decode";
 
 interface Props {
   user: CurrentUser | null;
 }
 
 const MainNavBar = ({ user }: Props) => {
+  const userToken = localStorage.getItem("token");
+
   const ListOfActions = [
-    { value: "users/" + user?.user_id, label: "User Profile" },
+    { value: "users/" + user?._id, label: "User Profile" },
     { value: "/change_password/", label: "Change Password" },
   ];
 
@@ -38,7 +41,7 @@ const MainNavBar = ({ user }: Props) => {
     navigate(0);
   };
 
-  const fullname = `${user?.first_name} ${user?.last_name}`;
+  // const fullname = `${user?.first_name} ${user?.last_name}`;
   return (
     <HStack justifyContent="space-between" padding="10px">
       <Flex>
@@ -72,7 +75,7 @@ const MainNavBar = ({ user }: Props) => {
       </Flex>
 
       <HStack justifyContent="space-between" padding={2}>
-        {!user?.user_id && (
+        {!user?._id && (
           <List>
             <Flex>
               <ListItem className="nav-item" marginRight={3}>
@@ -92,17 +95,17 @@ const MainNavBar = ({ user }: Props) => {
             </Flex>
           </List>
         )}
-        {user?.user_id && (
+        {user?._id && (
           <List>
             <Flex>
               <Heading as="h3" paddingRight={5}>
-                Welcome: {fullname}
+                Welcome: {user.name}
               </Heading>
               <Menu>
                 <MenuButton>
                   <Wrap>
                     <WrapItem>
-                      <Avatar name={fullname} />
+                      <Avatar name={user.name} />
                     </WrapItem>{" "}
                   </Wrap>
                 </MenuButton>

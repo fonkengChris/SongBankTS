@@ -2,6 +2,7 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import useSongQueryStore from "../Store";
 import useLanguages from "../hooks/useLanguages";
+import { useEffect } from "react";
 
 const LanguageSelector = () => {
   const { data: languages, error } = useLanguages();

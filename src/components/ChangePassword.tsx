@@ -6,13 +6,16 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { CHANGE_PASSWORD_ENDPOINT, PWD_REGEX } from "../data/constants";
-import { axiosInstance } from "../services/api-client";
+import APIClient, { axiosInstance } from "../services/api-client";
 import jwtDecode from "jwt-decode";
-import JWT_User from "../entities/JWT_User";
 
 const ChangePassword = () => {
-  const user = jwtDecode<JWT_User>(localStorage.getItem("token")!);
-  const endpoint = CHANGE_PASSWORD_ENDPOINT + user.user_id + "/";
+  const user = jwtDecode<CurrentUser>(localStorage.getItem("token")!);
+  const apiClient = new APIClient<{ old_password: String; password: String }>(
+    CHANGE_PASSWORD_ENDPOINT
+  );
+
+  const endpoint = CHANGE_PASSWORD_ENDPOINT + user._id + "/";
 
   const [old_password, setOldPassword] = useState("");
   const [validOldPassword, setValidOldPassword] = useState(false);
@@ -29,6 +32,10 @@ const ChangePassword = () => {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
+    setValidOldPassword(PWD_REGEX.test(old_password));
+  }, [password]);
+
+  useEffect(() => {
     setValidPassword(PWD_REGEX.test(password));
     setValidMatch(password === matchPassword);
   }, [password, matchPassword]);
@@ -41,10 +48,9 @@ const ChangePassword = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.put(endpoint, {
+      const response = await axiosInstance.post(endpoint, {
         old_password,
         password,
-        password2: matchPassword,
       });
       console.log(response);
     } catch (error) {}
@@ -75,7 +81,7 @@ const ChangePassword = () => {
           placeholder="Enter Old password"
         />
       </div>{" "}
-      {passwordFocus === true && validPassword === false && (
+      {oldPasswordFocus === true && validPassword === false && (
         <p id="pwdnote" className={"instructions"}>
           <FontAwesomeIcon icon={faInfoCircle} />
           8 to 24 characters.

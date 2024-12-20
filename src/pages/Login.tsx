@@ -47,14 +47,13 @@ const Login = () => {
         localStorage.setItem("tokenRef", refresh);
       }
 
-
       setAuth({ user, pwd, access });
+      console.log(auth);
       setUser("");
       setPwd("");
 
       navigate("/songs");
       navigate(0);
-    
     } catch (err: Error) {
       if (!err?.response) {
         setErrMsg("No Server Response");

@@ -4,7 +4,6 @@ import { SONGS_ENDPOINT } from "../data/constants";
 import APIClient from "../services/api-client";
 import Song from "../entities/Song";
 
-
 const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
 
 const useSongs = () => {
@@ -17,8 +16,9 @@ const useSongs = () => {
         params: {
           category: songQuery.categoryId,
           language: songQuery.languageId,
-          ordering: songQuery.sortOrder,
-          search: songQuery.searchText,
+          notation: songQuery.notationId,
+          sortOrder: songQuery.sortOrder,
+          searchText: songQuery.searchText,
         },
       }),
     cacheTime: 0,
