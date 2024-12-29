@@ -1,18 +1,18 @@
 import { SimpleGrid, Text } from "@chakra-ui/react";
-// import Song from "../entities/Song";
 import CriticScore from "./CriticScore";
 import DefinitionItem from "./DefinitionItem";
-import Song from "../entities/Song";
 import useCategory from "../hooks/useCategory";
 import useNotation from "../hooks/useNotation";
+import SongMedia from "../entities/SongMedia";
 
 interface Props {
-  song: Song;
+  mediaFile: SongMedia;
 }
 
-const SongAttributes = ({ song }: Props) => {
+const SongAttributes = ({ mediaFile }: Props) => {
+  const song = mediaFile.song;
   const category = useCategory(song.category);
-  const notation = useNotation(song.documentFiles[0].notation);
+  const notation = useNotation(mediaFile.notation);
 
   // console.log();
   return (

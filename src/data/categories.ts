@@ -26,7 +26,7 @@ export default [
   },
   {
     _id: "675e0aa22680f38fd2291d8a",
-    title: "Blessed virgin Mary",
+    title: "Blessed Virgin Mary",
     __v: 0,
   },
   {

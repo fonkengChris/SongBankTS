@@ -6,7 +6,7 @@ const Logout = () => {
   return (
     <div>
       <Text>You have successfully logged out</Text>
-      <Link to="/login">Sign In</Link>
+      <Link to="/auth">Sign In</Link>
     </div>
   );
 };

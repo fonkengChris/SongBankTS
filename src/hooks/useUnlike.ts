@@ -8,17 +8,16 @@ interface Props {
   id: string;
 }
 
-export const useLike = (id: string) => {
+export const useUnlike = (id: string) => {
   const { song } = useSong(id); // Get the song details using the hook
 
-  const likeSong = async () => {
+  const unLikeSong = async () => {
     if (!song) {
       console.error("Song not found");
       return;
     }
     try {
-      // console.log(`Fetched song ${song.title}`);
-      const updatedLikesCount = song.likesCount + 1;
+      const updatedLikesCount = song.likesCount - 1;
 
       const response = await axios.patch(
         `${SONGS_ENDPOINT}/${id}`,
@@ -27,7 +26,6 @@ export const useLike = (id: string) => {
         },
         {
           headers: {
-            "Content-Type": "application/json",
             "x-auth-token": `${localStorage.getItem("token")}`,
           },
         }
@@ -39,7 +37,7 @@ export const useLike = (id: string) => {
     }
   };
 
-  return { likeSong };
+  return { unLikeSong };
 };
 
-export default useLike;
+export default useUnlike;

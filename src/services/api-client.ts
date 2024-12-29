@@ -41,9 +41,24 @@ class APIClient<T> {
     this.endpoint = endpoint;
   }
 
+  // getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
+  //   const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
+  //   console.log(url);
+  //   return axiosInstance.get<T[]>(url, config).then((res) => res.data);
+  // };
+
   getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
     const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
-    return axiosInstance.get<T[]>(url, config).then((res) => res.data);
+
+    return axiosInstance
+      .get<T[]>(url, config)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        console.error("Error fetching documents:", error);
+        throw error;
+      });
   };
 
   get = (id: number | string) => {

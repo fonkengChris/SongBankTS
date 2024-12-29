@@ -1,18 +1,9 @@
 import { Icon } from "@chakra-ui/react";
 import { BsEye, BsEyeFill } from "react-icons/bs";
 
-interface Props {
-  onView: () => void;
-}
-
-const Views = ({ onView }: Props) => {
+const Views = () => {
   return (
-    <Icon
-      as={BsEyeFill}
-      onClick={onView}
-      style={{ cursor: "pointer" }}
-      aria-hidden="true"
-    />
+    <Icon as={BsEyeFill} style={{ cursor: "pointer" }} aria-hidden="true" />
   );
 };
 

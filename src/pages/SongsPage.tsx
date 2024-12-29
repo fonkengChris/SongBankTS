@@ -9,12 +9,9 @@ import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
 import LanguageSelector from "../components/LanguageSelector";
 
-
 const SongsPage = () => {
   const jwt = localStorage.getItem("token");
-  if (!jwt) return <Navigate to="/login" />;
-
-  
+  if (!jwt) return <Navigate to="/auth" />;
 
   return (
     <Grid

@@ -1,6 +1,5 @@
 import Category from "./Category";
-import SongAudio from "./SongAudio";
-import SongDocument from "./SongDocument";
+import SongMedia from "./SongMedia";
 
 export default interface Song {
   _id: string;
@@ -12,8 +11,7 @@ export default interface Song {
   language: string;
   views: number;
   category: Category;
-  documentFiles: SongDocument[];
-  audioFile: SongAudio;
+  mediaFiles: SongMedia[];
   authorName: string;
   metacritic: number;
 }

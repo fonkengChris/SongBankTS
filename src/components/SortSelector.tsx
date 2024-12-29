@@ -5,7 +5,7 @@ import useSongQueryStore from "../Store";
 const SortSelector = () => {
   const sortOrders = [
     { value: "", label: "Relevance" },
-    { value: "-last_update", label: "Latest Update" },
+    { value: "-lastUpdate", label: "Latest Update" },
     { value: "title", label: "Title" },
     { value: "-metacritic", label: "Popularity" },
   ];

@@ -14,7 +14,7 @@ const ErrorPage = () => {
             ? "Sorry this page does not exist"
             : "Sorry, an unexpected error has occurred."}
         </p>
-        <Link to="/login">Sign In</Link>
+        <Link to="/auth">Sign In</Link>
       </Box>
     </>
   );
