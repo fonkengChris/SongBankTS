@@ -1,7 +1,7 @@
 //api endpoints
 
 export const MEDIA_BASE_URL = "http://localhost:3000";
-export const REGISTER_ENDPOINT = "/api/users/";
+export const USERS_ENDPOINT = "/api/users/";
 export const CUSTOMERS_ENDPOINT = "/api/customers/";
 export const CATEGORIES_ENDPOINT = "/api/categories/";
 export const SONGS_ENDPOINT = "/api/songs/";
@@ -18,7 +18,7 @@ export const CHANGE_PASSWORD_ENDPOINT = "/api/change_password/";
 
 //validation constants
 
-export const NAME_REGEX = /^[A-z][A-z0-9-_]{3,50}$/;
+export const NAME_REGEX = /^[A-z][A-z0-9-_ ]{3,50}$/;
 export const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 export const PHONE_NUMBER_REGEX =

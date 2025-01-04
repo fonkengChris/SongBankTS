@@ -1,6 +1,5 @@
 import React from "react";
-import { MEDIA_BASE_URL, SONGS_ENDPOINT } from "../data/constants";
-import Song from "../entities/Song";
+import { SONGS_ENDPOINT } from "../data/constants";
 import useSong from "./useSong";
 import axios from "axios";
 

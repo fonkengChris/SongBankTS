@@ -1,8 +1,5 @@
-import { Box, Grid, GridItem, HStack, Heading, Text } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 import { Navigate } from "react-router-dom";
-import NotationSelector from "../components/NotationSelector";
-import SearchInput from "../components/SearchInput";
-import SortSelector from "../components/SortSelector";
 
 const HomePage = () => {
   const jwt = localStorage.getItem("token");

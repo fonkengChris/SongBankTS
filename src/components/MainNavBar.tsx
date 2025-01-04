@@ -18,14 +18,14 @@ import {
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
 import ColorModeSwitch from "./ColorModeSwitch";
-import jwtDecode from "jwt-decode";
+import CurrentUser from "../entities/CurrentUser";
 
 interface Props {
   user: CurrentUser | null;
 }
 
 const MainNavBar = ({ user }: Props) => {
-  const userToken = localStorage.getItem("token");
+  // const userToken = localStorage.getItem("token");
 
   const ListOfActions = [
     { value: "users/" + user?._id, label: "User Profile" },
@@ -40,6 +40,8 @@ const MainNavBar = ({ user }: Props) => {
     navigate("/logout");
     navigate(0);
   };
+
+  console.log(user);
 
   // const fullname = `${user?.first_name} ${user?.last_name}`;
   return (
@@ -70,6 +72,15 @@ const MainNavBar = ({ user }: Props) => {
                 </NavLink>
               </Button>
             </ListItem>
+            {(user?.role === "admin" || user?.role === "superAdmin") && (
+              <ListItem className="nav-item" marginRight={3}>
+                <Button color={"cyan.400"}>
+                  <NavLink className="nav-link" to="/admin">
+                    Admin Panel
+                  </NavLink>
+                </Button>
+              </ListItem>
+            )}
           </Flex>
         </List>
       </Flex>
@@ -98,7 +109,7 @@ const MainNavBar = ({ user }: Props) => {
         {user?._id && (
           <List>
             <Flex>
-              <Heading as="h3" paddingRight={5}>
+              <Heading as="h2" paddingRight={5} size="lg">
                 Welcome: {user.name}
               </Heading>
               <Menu>

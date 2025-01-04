@@ -21,7 +21,6 @@ const useSong = (id: string) => {
           }
         );
         setSong(response.data);
-        console.log(song);
       } catch (err) {
         setError("Failed to load the document. Please try again.");
       } finally {
@@ -30,12 +29,10 @@ const useSong = (id: string) => {
     };
 
     if (id) {
-      console.log("Fetched song ID:", id);
       fetchSong();
     }
   }, [id]);
 
-  // console.log(song);
   return { song, loading, error };
 };
 

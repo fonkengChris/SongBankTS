@@ -14,5 +14,5 @@ const useCategories = () =>
     staleTime: ms("24h"),
     initialData: categories,
   });
-// const useCategories = () => useData<Category>("/categories");
+
 export default useCategories;

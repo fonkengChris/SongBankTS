@@ -2,13 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { Heading } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import jwtDecode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
-import { CUSTOMERS_ENDPOINT, PHONE_NUMBER_REGEX } from "../data/constants";
+import { CUSTOMERS_ENDPOINT } from "../data/constants";
 import countries from "../data/countries";
 import useCustomer from "../hooks/useCustomer";
 import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
-import { useNavigate } from "react-router-dom";
 
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
@@ -77,8 +79,8 @@ const EditProfile = () => {
 
   return (
     <>
-      <section>
-        <form onSubmit={handleSubmit} className="form-horizontal" role="form">
+      <section className="login-container">
+        <form onSubmit={handleSubmit} className="login-form" role="form">
           {errMsg && (
             <p ref={errRef} className="errmsg" aria-live="assertive">
               {errMsg}
@@ -88,9 +90,7 @@ const EditProfile = () => {
           <Heading as="h1">Edit Profile</Heading>
 
           <div className="form-group">
-            <label htmlFor="country" className="col-sm-2 control-label">
-              Country
-            </label>
+            <label htmlFor="country">Country</label>
             <select
               className="form-control"
               id="country"
@@ -112,9 +112,7 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone" className="col-sm-2 control-label">
-              Phone Number:
-            </label>
+            <label htmlFor="phone">Phone Number:</label>
             <input
               className="form-control"
               type="text"
@@ -130,9 +128,7 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="birthDate" className="col-sm-2 control-label">
-              Date of Birth
-            </label>
+            <label htmlFor="birthDate">Date of Birth</label>
             <input
               className="form-control"
               id="birthDate"
@@ -144,8 +140,20 @@ const EditProfile = () => {
             />
           </div>
 
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
+          <div className="form-group" style={{ display: "flex", gap: "1rem" }}>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => navigate(`/users/${customer?._id}`)}
+              style={{ flex: 1 }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ flex: 1 }}
+            >
               Update Profile
             </button>
           </div>

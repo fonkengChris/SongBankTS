@@ -4,6 +4,7 @@ import { LOGIN_ENDPOINT } from "../data/constants";
 import useAuth from "../hooks/useAuth";
 import APIClient, { axiosInstance } from "../services/api-client";
 import Cookies from "js-cookie";
+import "../index.css";
 
 const apiClient = new APIClient<Auth>(LOGIN_ENDPOINT);
 
@@ -70,7 +71,7 @@ const Login = () => {
 
   return (
     <>
-      <section>
+      <section className="login-container">
         <p
           ref={errRef}
           className={errMsg ? "errMsg" : "offscreen"}
@@ -80,7 +81,7 @@ const Login = () => {
         </p>
         <h1>Sign In</h1>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="username" className="form-label">
               Email Address:

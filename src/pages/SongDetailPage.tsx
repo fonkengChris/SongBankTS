@@ -26,37 +26,57 @@ const SongDetailPage = () => {
   if (!jwt) return <Navigate to="/auth" />;
 
   const { id } = useParams();
+  if (!id) return <Text color="red.500">Invalid ID.</Text>;
+
   const {
     media: mediaFile,
     loading: mediaLoading,
     error: mediaError,
   } = useMedia(id!);
 
-  const [likesCount, setLikesCount] = useState(
-    mediaFile?.song?.likesCount || 0
-  );
-  const [liked, setLiked] = useState(false);
+  const [likeState, setLikeState] = useState({
+    liked: false,
+    likesCount: 0,
+  });
 
-  // Assuming useLike and useUnlike are hooks that return functions
+  // Synchronize likesCount with mediaFile when it loads
+  useEffect(() => {
+    if (mediaFile?.song) {
+      setLikeState((prevState) => ({
+        ...prevState,
+        likesCount: mediaFile.song.likesCount || 0,
+      }));
+    }
+  }, [mediaFile]);
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   const { likeSong } = useLike(mediaFile?.song._id!); // Returns a function to like the song
   const { unLikeSong } = useUnlike(mediaFile?.song._id!); // Returns a function to unlike the song
 
   const handleLike = async () => {
     try {
-      if (!liked) {
-        setLiked(true);
-        setLikesCount((prevLikes) => prevLikes + 1); // Optimistic update
-        await likeSong(); // Call the function returned by the hook
+      setLikeState((prevState) => {
+        const newLiked = !prevState.liked;
+        return {
+          liked: newLiked,
+          likesCount: prevState.likesCount + (newLiked ? 1 : -1),
+        };
+      });
+
+      if (!likeState.liked) {
+        await likeSong();
       } else {
-        setLiked(false);
-        setLikesCount((prevLikes) => prevLikes - 1); // Optimistic update
-        await unLikeSong(); // Call the function returned by the hook
+        await unLikeSong();
       }
     } catch (error) {
       console.error("Error toggling like status:", error);
-      // Revert optimistic update in case of an error
-      setLiked((prevLiked) => !prevLiked);
-      setLikesCount((prevLikes) => (liked ? prevLikes - 1 : prevLikes + 1));
+      // Revert state in case of an error
+      setLikeState((prevState) => ({
+        liked: !prevState.liked,
+        likesCount: prevState.likesCount + (prevState.liked ? -1 : 1),
+      }));
+      setErrorMessage("Failed to update like status. Please try again.");
     }
   };
 
@@ -69,27 +89,33 @@ const SongDetailPage = () => {
   if (!mediaFile) return <Text>No document found.</Text>;
   if (!mediaFile.song) return <Text>No song data found in document.</Text>;
 
-  const song = mediaFile.song;
+  const { song, documentFile, previewImage, audioFile } = mediaFile;
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
       {/* First Column */}
       <GridItem>
-        <Heading>{mediaFile!.song.title}</Heading>
-        <Link to={MEDIA_BASE_URL + mediaFile!.documentFile}>
+        <Heading>{song.title}</Heading>
+        <Link to={MEDIA_BASE_URL + documentFile}>
           <Img
-            src={MEDIA_BASE_URL + mediaFile!.previewImage}
+            src={MEDIA_BASE_URL + previewImage}
             boxSize="700px"
             objectFit="cover"
+            alt={`Preview image for ${song?.title || "song"}`}
           />
         </Link>
         <br />
-        {mediaFile?.audioFile && (
+        {audioFile ? (
           <>
-            <audio controls src={MEDIA_BASE_URL + mediaFile!.audioFile} />
+            <audio controls src={MEDIA_BASE_URL + audioFile}>
+              Your browser does not support the audio element.
+            </audio>
             <br />
           </>
+        ) : (
+          <Text>No audio available for this song.</Text>
         )}
+
         <br />
 
         <Heading>Background</Heading>
@@ -109,8 +135,9 @@ const SongDetailPage = () => {
           <DefinitionItem term="Likes">
             <Box>
               <HStack>
-                <Like liked={liked} onLike={handleLike} />
-                <Text padding={2}>{song!.likesCount}</Text>
+                <Like liked={likeState.liked} onLike={handleLike} />
+                <Text padding={2}>{likeState.likesCount}</Text>
+                {errorMessage && <Text color="red.500">{errorMessage}</Text>}
               </HStack>
             </Box>
           </DefinitionItem>

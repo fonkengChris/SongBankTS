@@ -4,6 +4,11 @@ const BASE_URL = "http://localhost:3000/";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true, // Include credentials
+  headers: {
+    "Content-Type": "application/json", // Ensure headers are correct
+    Origin: "http://127.0.0.1:5173",
+  },
 });
 
 // Add an interceptor to attach the JWT token dynamically to each request
@@ -11,13 +16,11 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers["x-auth-token"] = token;
+      config.headers["x-auth-token"] = token; // Attach token if available
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export const axiosLikeInstance = axios.create({
@@ -40,12 +43,6 @@ class APIClient<T> {
   constructor(endpoint: string) {
     this.endpoint = endpoint;
   }
-
-  // getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
-  //   const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
-  //   console.log(url);
-  //   return axiosInstance.get<T[]>(url, config).then((res) => res.data);
-  // };
 
   getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
     const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
@@ -83,10 +80,22 @@ class APIClient<T> {
       .then((res) => res.data);
   };
 
-  patch = <T, E>(id: string, data: { entity: E }): Promise<T> => {
+  patch = (id: string, data: T, config?: AxiosRequestConfig) => {
+    const endpoint = this.endpoint.endsWith("/")
+      ? this.endpoint.slice(0, -1)
+      : this.endpoint;
+
     return axiosInstance
-      .patch<T>(`${this.endpoint}?user_id=${id}`, data)
-      .then((res) => res.data);
+      .patch<T>(`${endpoint}/${id}`, data, config)
+      .then((res) => res.data)
+      .catch((error) => {
+        console.error("PATCH request error:", error.response || error);
+        throw error;
+      });
+  };
+
+  delete = (id: string) => {
+    return axiosInstance.delete(`${this.endpoint}/${id}`);
   };
 }
 

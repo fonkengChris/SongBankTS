@@ -13,9 +13,9 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider>
-      <ColorModeScript
-        initialColorMode={theme.config.initialColorMode}
-      ></ColorModeScript>
+        <ColorModeScript
+          initialColorMode={theme.config.initialColorMode}
+        ></ColorModeScript>
 
       <QueryClientProvider client={queryClient}>
         <AuthProvider>

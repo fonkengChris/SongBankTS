@@ -12,6 +12,8 @@ import ChangePassword from "./components/ChangePassword";
 import EditProfile from "./pages/EditProfile";
 import Contact from "./pages/Contact";
 import UploadSong from "./pages/UploadSong";
+import AdminPage from "./pages/AdminPage";
+import adminRoutes from "./AdminRoutes"; // Import the admin router
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,11 @@ const router = createBrowserRouter([
       { path: "songs", element: <SongsPage /> },
       { path: "/media_files/:id", element: <SongDetailPage /> },
     ],
+  },
+  {
+    path: "/admin",
+    element: <AdminPage />,
+    children: adminRoutes, // Use the children property for nested routes
   },
 ]);
 

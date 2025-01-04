@@ -1,4 +1,4 @@
-import { Box, background } from "@chakra-ui/react";
+import { Box, background, useColorModeValue } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import MainNavBar from "../components/MainNavBar";
 import jwtDecode from "jwt-decode";
@@ -6,30 +6,28 @@ import { useState, useEffect } from "react";
 
 const Layout = () => {
   const [user, setUser] = useState({} as CurrentUser);
+  const bgColor = useColorModeValue("white", "gray.900");
 
   useEffect(() => {
     try {
       const access = localStorage.getItem("token");
-
       const currentUser = jwtDecode<CurrentUser>(access!);
-
       setUser({ ...currentUser });
     } catch (error) {}
   }, []);
   return (
     <>
       <div
-        style={
-          {
-            // backgroundImage: `url("https://hackaday.com/wp-content/uploads/2017/05/reading-music-for-machines-featured.jpg?w=800")`,
-          }
-        }
+        style={{
+          backgroundColor: `var(--chakra-colors-${bgColor.replace(".", "-")})`,
+          minHeight: "100vh",
+        }}
       >
         <MainNavBar user={user} />
+        <Box padding={5} bg={bgColor}>
+          <Outlet />
+        </Box>
       </div>
-      <Box padding={5}>
-        <Outlet />
-      </Box>
     </>
   );
 };

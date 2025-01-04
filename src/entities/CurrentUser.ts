@@ -1,7 +1,7 @@
-interface CurrentUser {
+export default interface CurrentUser {
   _id: string;
   name: string;
   email: string;
-  isAdmin: boolean;
+  role: "regular" | "admin" | "superAdmin";
   token_type: string;
 }

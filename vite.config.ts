@@ -10,6 +10,12 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:3000",
         changeOrigin: true,
+        secure: false,
+        configure: (proxy, _options) => {
+          proxy.on("proxyReq", (proxyReq) => {
+            proxyReq.setHeader("Access-Control-Allow-Credentials", "true");
+          });
+        },
       },
     },
   },

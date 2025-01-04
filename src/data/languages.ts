@@ -13,7 +13,7 @@ export default [
   },
   {
     _id: "675e0737969aa4c60942465c",
-    name: "Italian",
+    name: "Italiano",
     code: "IT",
     __v: 0,
   },

@@ -12,7 +12,7 @@ const useCustomer = (userId: string) => {
     queryFn: async () => {
       if (!userId) throw new Error("User ID is required");
       const customers = await apiClient.getAll();
-      return customers.find((c) => c.user === userId);
+      return customers.find((c) => c?.user?._id === userId);
     },
     enabled: !!userId, // Only run the query if userId is present
     staleTime: ms("24h"),

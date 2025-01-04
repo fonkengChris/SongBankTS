@@ -13,11 +13,12 @@ import {
   EMAIL_REGEX,
   NAME_REGEX,
   PWD_REGEX,
-  REGISTER_ENDPOINT,
+  USERS_ENDPOINT,
 } from "../data/constants";
 import countries from "../data/countries";
 import Customer from "../entities/Customer";
 import APIClient from "../services/api-client";
+import "../index.css";
 
 type UserPayload = {
   name: string;
@@ -32,7 +33,7 @@ type UserResponse = {
   isAdmin: boolean;
 };
 
-const userApiClient = new APIClient<UserResponse>(REGISTER_ENDPOINT);
+const userApiClient = new APIClient<UserResponse>(USERS_ENDPOINT);
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
 const Register = () => {
@@ -155,8 +156,8 @@ const Register = () => {
 
   return (
     <>
-      <section>
-        <form onSubmit={handleSubmit} className="form-horizontal" role="form">
+      <section className="login-container">
+        <form onSubmit={handleSubmit} className="login-form" role="form">
           {errMsg !== "" && (
             <p ref={errRef} className={"errmsg"} aria-live="assertive">
               {errMsg}
@@ -165,7 +166,7 @@ const Register = () => {
 
           <Heading as="h1">Register</Heading>
           <div className="form-group">
-            <label htmlFor="firstname" className="col-sm-2 control-label">
+            <label htmlFor="firstname">
               First name:{" "}
               {validFirstName === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
@@ -205,7 +206,7 @@ const Register = () => {
             )}
 
           <div className="form-group">
-            <label htmlFor="lastname" className="col-sm-2 control-label">
+            <label htmlFor="lastname">
               Last name:{" "}
               {validLastName === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
@@ -244,7 +245,7 @@ const Register = () => {
             )}
 
           <div className="form-group">
-            <label htmlFor="email" className="col-sm-2 control-label">
+            <label htmlFor="email">
               Email:{" "}
               {validEmail === true && (
                 <FontAwesomeIcon icon={faCheck} className="valid" />
@@ -281,9 +282,7 @@ const Register = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="phone" className="col-sm-2 control-label">
-              Phone Number:
-            </label>
+            <label htmlFor="phone">Phone Number:</label>
             <input
               className="form-control"
               type="text"
@@ -307,9 +306,7 @@ const Register = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="country" className="col-sm-2 control-label">
-              Country
-            </label>
+            <label htmlFor="country">Country</label>
             <select
               className="form-control"
               id="country"
@@ -333,9 +330,7 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="birthDate" className="col-sm-2 control-label">
-              Date of birth
-            </label>
+            <label htmlFor="birthDate">Date of birth</label>
             <input
               className="form-control"
               id="birthDate"
@@ -352,7 +347,7 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password" className="col-sm-2 control-label">
+            <label htmlFor="password">
               Password:
               {validPassword === true && (
                 <FontAwesomeIcon icon={faCheck} className={"valid"} />
@@ -392,7 +387,7 @@ const Register = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="confirm_pwd" className="col-sm-2 control-label">
+            <label htmlFor="confirm_pwd">
               Confirm Password:
               {validMatch === true && matchPassword !== "" && (
                 <FontAwesomeIcon icon={faCheck} className={"valid"} />
@@ -435,7 +430,7 @@ const Register = () => {
           Already registered?
           <br />
           <span className="line">
-            <Link to="/login">Sign In</Link>
+            <Link to="/auth">Sign In</Link>
           </span>
         </p>
       </section>
