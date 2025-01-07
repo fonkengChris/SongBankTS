@@ -7,22 +7,27 @@ import { RouterProvider } from "react-router-dom";
 import router from "./Routes";
 import theme from "./theme";
 import { AuthProvider } from "./context/AuthProvider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
 
+console.log("Client ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
+      <ChakraProvider>
         <ColorModeScript
           initialColorMode={theme.config.initialColorMode}
         ></ColorModeScript>
 
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </ChakraProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </ChakraProvider>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );

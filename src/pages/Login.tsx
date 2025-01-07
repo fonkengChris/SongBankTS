@@ -5,6 +5,10 @@ import useAuth from "../hooks/useAuth";
 import APIClient, { axiosInstance } from "../services/api-client";
 import Cookies from "js-cookie";
 import "../index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
 
 const apiClient = new APIClient<Auth>(LOGIN_ENDPOINT);
 
@@ -24,6 +28,7 @@ const Login = () => {
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     userRef.current?.focus();
@@ -33,7 +38,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post<any | Error>(LOGIN_ENDPOINT, {
+      const response = await axiosInstance.post<any | Error>("/api/auth/", {
         email: user,
         password: pwd,
       });
@@ -64,6 +69,40 @@ const Login = () => {
         setErrMsg("Unauthorized");
       } else {
         setErrMsg("Login Failed");
+      }
+      errRef.current?.focus();
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    try {
+      const decoded: any = jwtDecode(credentialResponse.credential);
+      console.log("Google response:", {
+        credential: credentialResponse.credential,
+        decoded,
+      });
+
+      const response = await axiosInstance.post(
+        "api/auth/google/google-login",
+        {
+          token: credentialResponse.credential,
+        }
+      );
+
+      const access = response?.data?.accessToken;
+      localStorage.setItem("token", access);
+
+      setAuth({ user: decoded.email, pwd: "", access });
+      navigate("/songs");
+      navigate(0);
+    } catch (err: any) {
+      console.error("Google login error:", err);
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Google Authentication Failed");
+      } else {
+        setErrMsg(`Login Failed: ${err.message}`);
       }
       errRef.current?.focus();
     }
@@ -102,20 +141,39 @@ const Login = () => {
             <label htmlFor="password" className="form-label">
               Password:
             </label>
-            <input
-              type="password"
-              id="password"
-              className="form-control"
-              onChange={(e) => setPwd(e.target.value)}
-              value={pwd}
-              required
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                className="form-control"
+                onChange={(e) => setPwd(e.target.value)}
+                value={pwd}
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </button>
+            </div>
           </div>
 
           <button type="submit" className="btn btn-primary">
             Log In
           </button>
         </form>
+
+        <div className="social-login">
+          <p>Or sign in with:</p>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              setErrMsg("Google Login Failed");
+            }}
+          />
+        </div>
 
         <p>
           Need an Account?

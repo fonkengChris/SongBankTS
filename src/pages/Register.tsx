@@ -3,6 +3,8 @@ import {
   faCheck,
   faInfoCircle,
   faTimes,
+  faEye,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AxiosError } from "axios";
@@ -17,8 +19,10 @@ import {
 } from "../data/constants";
 import countries from "../data/countries";
 import Customer from "../entities/Customer";
-import APIClient from "../services/api-client";
+import APIClient, { axiosInstance } from "../services/api-client";
 import "../index.css";
+import { GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
 
 type UserPayload = {
   name: string;
@@ -82,6 +86,9 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     firstnameRef.current?.focus();
@@ -149,6 +156,35 @@ const Register = () => {
         setErrMsg("Username Taken");
       } else {
         setErrMsg("Registration Failed");
+      }
+      errRef.current?.focus();
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    try {
+      const decoded: any = jwtDecode(credentialResponse.credential);
+      console.log("Google response:", {
+        credential: credentialResponse.credential,
+        decoded,
+      });
+
+      const response = await axiosInstance.post(
+        "api/auth/google/google-register",
+        {
+          token: credentialResponse.credential,
+        }
+      );
+
+      navigate("/auth");
+    } catch (err: any) {
+      console.error("Google registration error:", err);
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 409) {
+        setErrMsg("Account Already Exists");
+      } else {
+        setErrMsg(`Registration Failed: ${err.message}`);
       }
       errRef.current?.focus();
     }
@@ -356,17 +392,26 @@ const Register = () => {
                 <FontAwesomeIcon icon={faTimes} className={"hide"} />
               )}
             </label>
-            <input
-              className="form-control"
-              id="password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
-              aria-invalid={validPassword ? "false" : "true"}
-              aria-describedby="pwdnote"
-              type="password"
-              placeholder="Enter password"
-            />
+            <div className="password-input-wrapper">
+              <input
+                className="form-control"
+                id="password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                required
+                aria-invalid={validPassword ? "false" : "true"}
+                aria-describedby="pwdnote"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </button>
+            </div>
           </div>
 
           {passwordFocus === true && validPassword === false && (
@@ -397,17 +442,28 @@ const Register = () => {
                   <FontAwesomeIcon icon={faTimes} className={"hide"} />
                 ))}
             </label>
-            <input
-              className="form-control"
-              type="password"
-              id="confirm_pwd"
-              onChange={(e) => setMatchPassword(e.target.value)}
-              value={matchPassword}
-              required
-              aria-invalid={validMatch ? "false" : "true"}
-              aria-describedby="confirmnote"
-              placeholder="Confirm password"
-            />
+            <div className="password-input-wrapper">
+              <input
+                className="form-control"
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirm_pwd"
+                onChange={(e) => setMatchPassword(e.target.value)}
+                value={matchPassword}
+                required
+                aria-invalid={validMatch ? "false" : "true"}
+                aria-describedby="confirmnote"
+                placeholder="Confirm password"
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <FontAwesomeIcon
+                  icon={showConfirmPassword ? faEyeSlash : faEye}
+                />
+              </button>
+            </div>
           </div>
           {matchFocus && !validMatch && (
             <p id="confirmnote" className={"instructions"}>
@@ -433,6 +489,17 @@ const Register = () => {
             <Link to="/auth">Sign In</Link>
           </span>
         </p>
+        <div className="social-login">
+          <p>Or create a new account with:</p>
+          <GoogleLogin
+            text="signup_with"
+            shape="rectangular"
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              setErrMsg("Google Sign Up Failed");
+            }}
+          />
+        </div>
       </section>
     </>
   );

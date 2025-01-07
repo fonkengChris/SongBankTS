@@ -13,16 +13,13 @@ import {
   useColorModeValue,
   Text,
   Flex,
-  CloseButton,
-  Image,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import APIClient from "../services/api-client";
 import Song from "../entities/Song";
 import useCategories from "../hooks/useCategories";
 import useSong from "../hooks/useSong";
-import useNotations from "../hooks/useNotations";
-import SongMedia from "../entities/SongMedia";
+import useMediaFiles from "../hooks/useMediaFiles";
 
 const SongFormPage = () => {
   const { id } = useParams();
@@ -30,7 +27,7 @@ const SongFormPage = () => {
   const toast = useToast();
   const { data: categories } = useCategories();
   const { song } = useSong(id || "");
-  const { data: notations } = useNotations();
+  const { mediaFiles, loading: mediaLoading } = useMediaFiles();
 
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");
@@ -46,12 +43,20 @@ const SongFormPage = () => {
     mediaFiles: [],
   });
 
-  const [currentMediaFile, setCurrentMediaFile] = useState<Partial<SongMedia>>({
-    documentFile: "",
-    audioFile: "",
-    previewImage: "",
-    notation: undefined,
-  });
+  const handleMediaSelect = (mediaId: string) => {
+    if (!mediaId) return;
+
+    const updatedMediaFiles = formData.mediaFiles || [];
+    const index = updatedMediaFiles.indexOf(mediaId);
+
+    if (index === -1) {
+      updatedMediaFiles.push(mediaId);
+    } else {
+      updatedMediaFiles.splice(index, 1);
+    }
+
+    setFormData({ ...formData, mediaFiles: updatedMediaFiles });
+  };
 
   useEffect(() => {
     if (id && song) {
@@ -63,6 +68,7 @@ const SongFormPage = () => {
         language: song.language,
         authorName: song.authorName,
         category: song.category,
+        mediaFiles: [],
       });
     }
   }, [id, song]);
@@ -72,132 +78,53 @@ const SongFormPage = () => {
     const apiClient = new APIClient<Song>("/api/songs");
 
     try {
+      const payload = {
+        ...formData,
+        mediaFiles: formData.mediaFiles || [],
+        category: formData.category?._id,
+      };
+
       if (id) {
-        await apiClient.put(id, formData);
-        toast({ title: "Song updated successfully", status: "success" });
+        await apiClient.put(id, payload);
+        toast({
+          title: "Song updated successfully",
+          status: "success",
+        });
       } else {
-        await apiClient.post(formData as Song);
-        toast({ title: "Song created successfully", status: "success" });
+        await apiClient.post(payload);
+        toast({
+          title: "Song created successfully",
+          status: "success",
+        });
       }
       navigate("/admin/songs");
     } catch (error) {
       toast({
         title: "Error saving song",
-        description: "Please try again",
+        description:
+          error instanceof Error ? error.message : "An error occurred",
         status: "error",
       });
     }
   };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fileType: string
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Update the current media file being built
-    setCurrentMediaFile((prev) => ({
-      ...prev,
-      [fileType === "document"
-        ? "documentFile"
-        : fileType === "audio"
-        ? "audioFile"
-        : "previewImage"]: `/media/${fileType}s/${file.name}`,
-    }));
+  const generateSlug = (title: string): string => {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-");
   };
 
-  const handleAddMediaFile = () => {
-    if (
-      !currentMediaFile.documentFile &&
-      !currentMediaFile.audioFile &&
-      !currentMediaFile.previewImage
-    )
-      return;
-
-    const newMediaFile: SongMedia = {
-      _id: Date.now().toString(),
-      song: formData as Song,
-      documentFile: currentMediaFile.documentFile || "",
-      audioFile: currentMediaFile.audioFile || "",
-      previewImage: currentMediaFile.previewImage || "",
-      notation: currentMediaFile.notation || null,
-    };
-
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
     setFormData({
       ...formData,
-      mediaFiles: [...(formData.mediaFiles || []), newMediaFile],
-    });
-
-    // Reset the current media file
-    setCurrentMediaFile({
-      documentFile: "",
-      audioFile: "",
-      previewImage: "",
-      notation: undefined,
+      title: newTitle,
+      slug: generateSlug(newTitle),
     });
   };
-
-  const handleRemoveMediaFile = (mediaFileId: string) => {
-    setFormData({
-      ...formData,
-      mediaFiles:
-        formData.mediaFiles?.filter((media) => media._id !== mediaFileId) || [],
-    });
-  };
-
-  const renderPreview = (media: SongMedia) => {
-    if (media.previewImage) {
-      return (
-        <Box position="relative" maxW="200px">
-          <Image
-            src={media.previewImage}
-            alt="Preview"
-            borderRadius="md"
-            maxH="100px"
-            objectFit="cover"
-          />
-        </Box>
-      );
-    }
-    if (media.documentFile) {
-      return (
-        <Box
-          p={2}
-          bg="gray.100"
-          borderRadius="md"
-          display="flex"
-          alignItems="center"
-        >
-          <Text fontSize="sm">📄 {media.documentFile}</Text>
-        </Box>
-      );
-    }
-    if (media.audioFile) {
-      return (
-        <Box
-          p={2}
-          bg="gray.100"
-          borderRadius="md"
-          display="flex"
-          alignItems="center"
-        >
-          <Text fontSize="sm">🎵 {media.audioFile}</Text>
-        </Box>
-      );
-    }
-    return null;
-  };
-
-  useEffect(() => {
-    return () => {
-      formData.mediaFiles?.forEach((media) => {
-        if (media.previewImage && media.previewImage.startsWith("blob:")) {
-          URL.revokeObjectURL(media.previewImage);
-        }
-      });
-    };
-  }, []);
 
   return (
     <Box maxW="container.md" mx="auto" py={8}>
@@ -210,9 +137,7 @@ const SongFormPage = () => {
               <FormLabel color="blue.500">Title</FormLabel>
               <Input
                 value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
+                onChange={handleTitleChange}
                 bg={inputBg}
                 color={inputColor}
               />
@@ -227,6 +152,8 @@ const SongFormPage = () => {
                 }
                 bg={inputBg}
                 color={inputColor}
+                readOnly
+                _readOnly={{ opacity: 0.7 }}
               />
             </FormControl>
 
@@ -301,148 +228,125 @@ const SongFormPage = () => {
               />
             </FormControl>
 
-            <Box p={4} borderWidth="1px" borderRadius="lg" bg={inputBg}>
-              <FormLabel color="blue.500">Add Media Files</FormLabel>
-              <VStack spacing={4}>
-                <FormControl>
-                  <FormLabel color="blue.500">
-                    Document File (PDF/DOC)
-                  </FormLabel>
-                  <Input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={(e) => handleFileChange(e, "document")}
-                    bg={inputBg}
-                    color={inputColor}
-                    p={1}
-                  />
-                  {currentMediaFile.documentFile && (
-                    <Text color={inputColor} fontSize="sm" mt={1}>
-                      Selected: {currentMediaFile.documentFile}
-                    </Text>
-                  )}
-                </FormControl>
+            <Box borderWidth="1px" borderRadius="lg" p={4} mt={4}>
+              <Heading size="md" mb={4} color="blue.500">
+                Media Files
+              </Heading>
 
-                <FormControl>
-                  <FormLabel color="blue.500">Audio File</FormLabel>
-                  <Input
-                    type="file"
-                    accept="audio/*"
-                    onChange={(e) => handleFileChange(e, "audio")}
-                    bg={inputBg}
-                    color={inputColor}
-                    p={1}
-                  />
-                  {currentMediaFile.audioFile && (
-                    <Text color={inputColor} fontSize="sm" mt={1}>
-                      Selected: {currentMediaFile.audioFile}
-                    </Text>
-                  )}
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel color="blue.500">Preview Image</FormLabel>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleFileChange(e, "image")}
-                    bg={inputBg}
-                    color={inputColor}
-                    p={1}
-                  />
-                  {currentMediaFile.previewImage && (
-                    <Text color={inputColor} fontSize="sm" mt={1}>
-                      Selected: {currentMediaFile.previewImage}
-                    </Text>
-                  )}
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel color="blue.500">Notation</FormLabel>
-                  <Select
-                    value={currentMediaFile.notation?._id || ""}
-                    onChange={(e) =>
-                      setCurrentMediaFile((prev) => ({
-                        ...prev,
-                        notation:
-                          notations?.find((n) => n._id === e.target.value) ||
-                          undefined,
-                      }))
-                    }
-                    bg={inputBg}
-                    color={inputColor}
-                  >
-                    <option value="">Select notation</option>
-                    {notations?.map((notation) => (
-                      <option key={notation._id} value={notation._id}>
-                        {notation.title}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <Button
-                  onClick={handleAddMediaFile}
-                  colorScheme="blue"
-                  isDisabled={
-                    !currentMediaFile.documentFile &&
-                    !currentMediaFile.audioFile &&
-                    !currentMediaFile.previewImage
-                  }
+              <FormControl>
+                <FormLabel color="blue.500">Select Media Files</FormLabel>
+                <Select
+                  value=""
+                  onChange={(e) => handleMediaSelect(e.target.value)}
+                  bg={inputBg}
+                  color={inputColor}
+                  isDisabled={mediaLoading}
                 >
-                  Add Media Files
-                </Button>
-              </VStack>
-            </Box>
-
-            {formData.mediaFiles && formData.mediaFiles.length > 0 && (
-              <Box>
-                <FormLabel color="blue.500">Current Media Files:</FormLabel>
-                <VStack align="stretch" spacing={3}>
-                  {formData.mediaFiles.map((media) => (
-                    <Box
+                  <option value="">Select a media file</option>
+                  {mediaFiles.map((media) => (
+                    <option
                       key={media._id}
-                      p={3}
-                      bg={inputBg}
-                      borderRadius="md"
-                      position="relative"
+                      value={media._id}
+                      disabled={formData.mediaFiles?.includes(media._id)}
                     >
-                      <Flex justify="space-between" align="flex-start">
-                        <VStack align="stretch" spacing={2} flex={1}>
-                          {media.documentFile && (
-                            <Text color={inputColor}>
-                              Document: {media.documentFile}
-                            </Text>
-                          )}
-                          {media.audioFile && (
-                            <Text color={inputColor}>
-                              Audio: {media.audioFile}
-                            </Text>
-                          )}
-                          {media.previewImage && (
-                            <Text color={inputColor}>
-                              Image: {media.previewImage}
-                            </Text>
-                          )}
-                          {media.notation && (
-                            <Text color={inputColor}>
-                              Notation: {media.notation.title}
-                            </Text>
-                          )}
-                          {renderPreview(media)}
-                        </VStack>
-                        <CloseButton
-                          onClick={() => handleRemoveMediaFile(media._id)}
-                          size="sm"
-                          color={inputColor}
-                          _hover={{ color: "red.500" }}
-                        />
-                      </Flex>
-                    </Box>
+                      {media.name}
+                      {media.documentFile
+                        ? ` - Document: ${media.documentFile}`
+                        : ""}
+                      {media.audioFile ? ` - Audio: ${media.audioFile}` : ""}
+                      {media.previewImage
+                        ? ` - Image: ${media.previewImage}`
+                        : ""}
+                    </option>
                   ))}
-                </VStack>
-              </Box>
-            )}
+                </Select>
+                <br />
+                <Select
+                  value=""
+                  onChange={(e) => handleMediaSelect(e.target.value)}
+                  bg={inputBg}
+                  color={inputColor}
+                  isDisabled={mediaLoading}
+                >
+                  <option value="">Select a media file</option>
+                  {mediaFiles.map((media) => (
+                    <option
+                      key={media._id}
+                      value={media._id}
+                      disabled={formData.mediaFiles?.includes(media._id)}
+                    >
+                      {media.name}
+                      {media.documentFile
+                        ? ` - Document: ${media.documentFile}`
+                        : ""}
+                      {media.audioFile ? ` - Audio: ${media.audioFile}` : ""}
+                      {media.previewImage
+                        ? ` - Image: ${media.previewImage}`
+                        : ""}
+                    </option>
+                  ))}
+                </Select>
+                <br />
+                <Select
+                  value=""
+                  onChange={(e) => handleMediaSelect(e.target.value)}
+                  bg={inputBg}
+                  color={inputColor}
+                  isDisabled={mediaLoading}
+                >
+                  <option value="">Select a media file</option>
+                  {mediaFiles.map((media) => (
+                    <option
+                      key={media._id}
+                      value={media._id}
+                      disabled={formData.mediaFiles?.includes(media._id)}
+                    >
+                      {media.name}
+                      {media.documentFile
+                        ? ` - Document: ${media.documentFile}`
+                        : ""}
+                      {media.audioFile ? ` - Audio: ${media.audioFile}` : ""}
+                      {media.previewImage
+                        ? ` - Image: ${media.previewImage}`
+                        : ""}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {formData.mediaFiles && formData.mediaFiles.length > 0 && (
+                <Box mt={4}>
+                  <FormLabel color="blue.500">Selected Files:</FormLabel>
+                  {formData.mediaFiles.map((mediaId) => {
+                    const media = mediaFiles.find((m) => m._id === mediaId);
+                    if (!media) return null;
+                    return (
+                      <Flex key={media._id} alignItems="center" gap={2} mb={2}>
+                        <Text color={inputColor}>
+                          {media.name}
+                          {media.documentFile
+                            ? ` - Document: ${media.documentFile}`
+                            : ""}
+                          {media.audioFile
+                            ? ` - Audio: ${media.audioFile}`
+                            : ""}
+                          {media.previewImage
+                            ? ` - Image: ${media.previewImage}`
+                            : ""}
+                        </Text>
+                        <Button
+                          size="sm"
+                          colorScheme="red"
+                          onClick={() => handleMediaSelect(media._id)}
+                        >
+                          Remove
+                        </Button>
+                      </Flex>
+                    );
+                  })}
+                </Box>
+              )}
+            </Box>
 
             <Flex gap={4}>
               <Button

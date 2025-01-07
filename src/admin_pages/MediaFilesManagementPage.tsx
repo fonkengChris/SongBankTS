@@ -11,29 +11,71 @@ import {
   Td,
   Button,
   Flex,
-  Link,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useMediaFiles from "../hooks/useMediaFiles";
 import SongMedia from "../entities/SongMedia";
+import APIClient from "../services/api-client";
 
 const MediaFilesManagementPage = () => {
-  // State to store media files
-  const [mediaFiles, setMediaFiles] = useState<SongMedia[]>([]);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [mediaToDelete, setMediaToDelete] = useState<string | null>(null);
+  const cancelRef = React.useRef<HTMLButtonElement>(null);
+  const toast = useToast();
+  const apiClient = new APIClient<SongMedia>("/api/media_files");
+  const { mediaFiles, loading, error } = useMediaFiles();
 
   useEffect(() => {
-    // Define an async function to fetch media files
-    const fetchMediaFiles = async () => {
-      try {
-        const media_files = await useMediaFiles(); // Await the promise resolution
-        setMediaFiles(media_files!); // Update the state with the resolved value
-      } catch (error) {
-        console.error("Error fetching media files:", error);
-      }
-    };
+    if (error) {
+      toast({
+        title: "Error fetching media files",
+        description: error,
+        status: "error",
+        duration: 3000,
+      });
+    }
+  }, [error, toast]);
 
-    fetchMediaFiles(); // Call the async function
-  }, []); // Empty dependency array ensures this runs once on mount
+  if (loading) {
+    return <Box p={4}>Loading...</Box>;
+  }
+
+  const handleDeleteClick = (mediaId: string) => {
+    setMediaToDelete(mediaId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!mediaToDelete) return;
+
+    try {
+      await apiClient.delete(mediaToDelete);
+      setMediaFiles(mediaFiles.filter((media) => media._id !== mediaToDelete));
+      toast({
+        title: "Media file deleted successfully",
+        status: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error deleting media file",
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+        status: "error",
+        duration: 3000,
+      });
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setMediaToDelete(null);
+    }
+  };
 
   return (
     <ChakraProvider>
@@ -57,8 +99,7 @@ const MediaFilesManagementPage = () => {
           <Table variant="simple">
             <Thead>
               <Tr>
-                <Th>Song</Th>
-                <Th>Notation</Th>
+                <Th>Name</Th>
                 <Th>Document</Th>
                 <Th>Audio</Th>
                 <Th>Image</Th>
@@ -66,14 +107,12 @@ const MediaFilesManagementPage = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {mediaFiles!.map((media) => (
+              {mediaFiles?.map((media) => (
                 <Tr key={media._id}>
-                  <Td color={"blue.400"}>{media.song.title}</Td>
-                  <Td color={"blue.400"}>{media.notation.title}</Td>
+                  <Td color={"blue.400"}>{media.name}</Td>
                   <Td color={"blue.400"}>{media.documentFile}</Td>
                   <Td color={"blue.400"}>{media.audioFile}</Td>
                   <Td color={"blue.400"}>{media.previewImage}</Td>
-
                   <Td>
                     <Button
                       as={RouterLink}
@@ -84,7 +123,11 @@ const MediaFilesManagementPage = () => {
                     >
                       Edit
                     </Button>
-                    <Button colorScheme="red" size="sm">
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleDeleteClick(media._id)}
+                    >
                       Delete
                     </Button>
                   </Td>
@@ -93,6 +136,36 @@ const MediaFilesManagementPage = () => {
             </Tbody>
           </Table>
         </Box>
+
+        <AlertDialog
+          isOpen={isDeleteDialogOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={() => setIsDeleteDialogOpen(false)}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Delete Media File
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                Are you sure? This action cannot be undone.
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button
+                  ref={cancelRef}
+                  onClick={() => setIsDeleteDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>
+                  Delete
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
       </Box>
     </ChakraProvider>
   );

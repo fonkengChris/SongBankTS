@@ -41,8 +41,6 @@ const MainNavBar = ({ user }: Props) => {
     navigate(0);
   };
 
-  console.log(user);
-
   // const fullname = `${user?.first_name} ${user?.last_name}`;
   return (
     <HStack justifyContent="space-between" padding="10px">

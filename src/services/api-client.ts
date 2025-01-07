@@ -4,37 +4,47 @@ const BASE_URL = "http://localhost:3000/";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, // Include credentials
+  withCredentials: true,
   headers: {
-    "Content-Type": "application/json", // Ensure headers are correct
-    Origin: "http://127.0.0.1:5173",
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
-// Add an interceptor to attach the JWT token dynamically to each request
+// Update the interceptor to preserve existing headers
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers["x-auth-token"] = token; // Attach token if available
+      config.headers = {
+        ...config.headers,
+        "x-auth-token": token,
+      };
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-export const axiosLikeInstance = axios.create({
-  baseURL: BASE_URL + "api/songs/",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true,
-});
+// Simple response interceptor that handles unauthorized errors
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/auth";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const axiosPrivate = axios.create({
   baseURL: BASE_URL,
-  headers: { "Content-Type": "application/json" },
   withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 class APIClient<T> {
@@ -46,12 +56,9 @@ class APIClient<T> {
 
   getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
     const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
-
     return axiosInstance
       .get<T[]>(url, config)
-      .then((res) => {
-        return res.data;
-      })
+      .then((res) => res.data)
       .catch((error) => {
         console.error("Error fetching documents:", error);
         throw error;

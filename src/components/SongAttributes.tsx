@@ -12,7 +12,7 @@ interface Props {
 const SongAttributes = ({ mediaFile }: Props) => {
   const song = mediaFile.song;
   const category = useCategory(song.category);
-  const notation = useNotation(mediaFile.notation);
+  const { notation } = useNotation(mediaFile.notation._id);
 
   // console.log();
   return (

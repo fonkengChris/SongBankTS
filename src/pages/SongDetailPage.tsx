@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import ExpandableText from "../components/ExpandableText";
-import useMedia from "../hooks/useMedia";
+import useMedia from "../hooks/useMediaFile";
 import useSong from "../hooks/useSong";
 import { MEDIA_BASE_URL } from "../data/constants";
 import DefinitionItem from "../components/DefinitionItem";

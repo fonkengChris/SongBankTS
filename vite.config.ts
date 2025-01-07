@@ -12,8 +12,9 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         configure: (proxy, _options) => {
-          proxy.on("proxyReq", (proxyReq) => {
-            proxyReq.setHeader("Access-Control-Allow-Credentials", "true");
+          proxy.on("proxyReq", (proxyReq, req, res) => {
+            proxyReq.removeHeader("origin");
+            proxyReq.setHeader("origin", "http://127.0.0.1:5173");
           });
         },
       },

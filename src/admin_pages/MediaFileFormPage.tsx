@@ -29,6 +29,7 @@ const MediaFileFormPage = () => {
   const [songs, setSongs] = useState<Song[]>([]);
   const [notations, setNotations] = useState<Notation[]>([]);
   const [formData, setFormData] = useState({
+    name: "",
     song: "",
     notation: "",
     documentFile: "",
@@ -53,7 +54,8 @@ const MediaFileFormPage = () => {
         if (id) {
           const mediaData = await mediaApiClient.get(id);
           setFormData({
-            song: mediaData.song._id,
+            name: mediaData.name || "",
+            song: mediaData.song?._id || "",
             notation: mediaData.notation._id,
             documentFile: mediaData.documentFile,
             audioFile: mediaData.audioFile,
@@ -120,7 +122,19 @@ const MediaFileFormPage = () => {
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <FormControl isRequired>
-              <FormLabel color="blue.500">Song</FormLabel>
+              <FormLabel color="blue.500">Name</FormLabel>
+              <Input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                bg={inputBg}
+                color={inputColor}
+                placeholder="Enter media file name"
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel color="blue.500">Song (Optional)</FormLabel>
               <Select
                 name="song"
                 value={formData.song}

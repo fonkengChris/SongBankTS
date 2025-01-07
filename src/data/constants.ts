@@ -1,20 +1,20 @@
 //api endpoints
 
 export const MEDIA_BASE_URL = "http://localhost:3000";
-export const USERS_ENDPOINT = "/api/users/";
-export const CUSTOMERS_ENDPOINT = "/api/customers/";
-export const CATEGORIES_ENDPOINT = "/api/categories/";
+export const USERS_ENDPOINT = "/users/";
+export const CUSTOMERS_ENDPOINT = "/customers/";
+export const CATEGORIES_ENDPOINT = "/categories/";
 export const SONGS_ENDPOINT = "/api/songs/";
-export const NOTATIONS_ENDPOINT = "/api/notations/";
-export const LANGUAGES_ENDPOINT = "/api/languages/";
-export const LOGIN_ENDPOINT = "/api/auth/";
-export const MEDIA_FILES_ENDPOINT = "/api/media_files/";
-export const AUDIOS_ENDPOINT = "/api/audios/";
-export const IMAGES_ENDPOINT = "/api/images/";
-export const REFRESH_TOKEN_ENDPOINT = "/auth/jwt/refresh/";
-export const ACCESS_TOKEN_ENDPOINT = "/%5Eapi-token-auth/";
-export const CURRENT_USER_ENDPOINT = "/api/users/me/";
-export const CHANGE_PASSWORD_ENDPOINT = "/api/change_password/";
+export const NOTATIONS_ENDPOINT = "/notations/";
+export const LANGUAGES_ENDPOINT = "/languages/";
+export const LOGIN_ENDPOINT = "/auth/";
+export const MEDIA_FILES_ENDPOINT = "/media_files/";
+export const AUDIOS_ENDPOINT = "/audios/";
+export const IMAGES_ENDPOINT = "/images/";
+// export const REFRESH_TOKEN_ENDPOINT = "/auth/jwt/refresh/";
+// export const ACCESS_TOKEN_ENDPOINT = "/%5Eapi-token-auth/";
+export const CURRENT_USER_ENDPOINT = "/users/me/";
+export const CHANGE_PASSWORD_ENDPOINT = "/change_password/";
 
 //validation constants
 

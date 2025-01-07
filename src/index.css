@@ -135,3 +135,26 @@ button {
 .login-form .btn {
   margin-top: 1rem;
 }
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+
+.password-toggle:hover {
+  color: #333;
+}

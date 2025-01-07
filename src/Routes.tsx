@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import SongDetailPage from "./pages/SongDetailPage";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
-import ChangePassword from "./components/ChangePassword";
+import ChangePassword from "./pages/ChangePassword";
 import EditProfile from "./pages/EditProfile";
 import Contact from "./pages/Contact";
 import UploadSong from "./pages/UploadSong";

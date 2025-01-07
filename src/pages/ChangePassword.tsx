@@ -2,11 +2,13 @@ import {
   faCheck,
   faTimes,
   faInfoCircle,
+  faEye,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { CHANGE_PASSWORD_ENDPOINT, PWD_REGEX } from "../data/constants";
-import APIClient, { axiosInstance } from "../services/api-client";
+import { axiosInstance } from "../services/api-client";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import CurrentUser from "../entities/CurrentUser";
@@ -14,9 +16,6 @@ import CurrentUser from "../entities/CurrentUser";
 const ChangePassword = () => {
   const navigate = useNavigate();
   const user = jwtDecode<CurrentUser>(localStorage.getItem("token")!);
-  const apiClient = new APIClient<{ old_password: String; password: String }>(
-    CHANGE_PASSWORD_ENDPOINT
-  );
 
   const endpoint = CHANGE_PASSWORD_ENDPOINT + user._id + "/";
 
@@ -33,6 +32,10 @@ const ChangePassword = () => {
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
+
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     setValidOldPassword(PWD_REGEX.test(old_password));
@@ -73,17 +76,26 @@ const ChangePassword = () => {
                 <FontAwesomeIcon icon={faTimes} className="invalid" />
               ))}
           </label>
-          <input
-            className="form-control"
-            id="old_password"
-            onChange={(e) => setOldPassword(e.target.value)}
-            value={old_password}
-            required
-            aria-invalid={validPassword ? "false" : "true"}
-            aria-describedby="pwdnote"
-            type="password"
-            placeholder="Enter Old password"
-          />
+          <div className="password-input-wrapper">
+            <input
+              className="form-control"
+              id="old_password"
+              onChange={(e) => setOldPassword(e.target.value)}
+              value={old_password}
+              required
+              aria-invalid={validPassword ? "false" : "true"}
+              aria-describedby="pwdnote"
+              type={showOldPassword ? "text" : "password"}
+              placeholder="Enter Old password"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowOldPassword(!showOldPassword)}
+            >
+              <FontAwesomeIcon icon={showOldPassword ? faEyeSlash : faEye} />
+            </button>
+          </div>
         </div>
 
         {oldPasswordFocus === true && validPassword === false && (
@@ -114,17 +126,26 @@ const ChangePassword = () => {
                 <FontAwesomeIcon icon={faTimes} className="invalid" />
               ))}
           </label>
-          <input
-            className="form-control"
-            id="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            required
-            aria-invalid={validPassword ? "false" : "true"}
-            aria-describedby="pwdnote"
-            type="password"
-            placeholder="Enter New password"
-          />
+          <div className="password-input-wrapper">
+            <input
+              className="form-control"
+              id="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              required
+              aria-invalid={validPassword ? "false" : "true"}
+              aria-describedby="pwdnote"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter New password"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </button>
+          </div>
         </div>
 
         {passwordFocus === true && validPassword === false && (
@@ -155,17 +176,28 @@ const ChangePassword = () => {
                 <FontAwesomeIcon icon={faTimes} className="invalid" />
               ))}
           </label>
-          <input
-            className="form-control"
-            type="password"
-            id="confirm_pwd"
-            onChange={(e) => setMatchPassword(e.target.value)}
-            value={matchPassword}
-            required
-            aria-invalid={validMatch ? "false" : "true"}
-            aria-describedby="confirmnote"
-            placeholder="Confirm New password"
-          />
+          <div className="password-input-wrapper">
+            <input
+              className="form-control"
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirm_pwd"
+              onChange={(e) => setMatchPassword(e.target.value)}
+              value={matchPassword}
+              required
+              aria-invalid={validMatch ? "false" : "true"}
+              aria-describedby="confirmnote"
+              placeholder="Confirm New password"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              <FontAwesomeIcon
+                icon={showConfirmPassword ? faEyeSlash : faEye}
+              />
+            </button>
+          </div>
         </div>
 
         {matchFocus && !validMatch && (
