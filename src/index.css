@@ -158,3 +158,148 @@ button {
 .password-toggle:hover {
   color: #333;
 }
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-container,
+.login-container {
+  background-color: rgb(26, 32, 44);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label,
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: white;
+}
+
+.form-control,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #4a5568;
+  border-radius: 0.375rem;
+  background-color: rgb(45, 55, 72);
+  color: white;
+}
+
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #63b3ed;
+  outline: none;
+  box-shadow: 0 0 0 1px #63b3ed;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #3182ce;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2b6cb0;
+}
+
+.btn-danger {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c53030;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.password-toggle:hover {
+  color: #cbd5e0;
+}
+
+.instructions {
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background: #1a202c;
+  color: white;
+  padding: 0.5rem;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.valid {
+  color: #48bb78;
+  margin-left: 0.25rem;
+}
+
+.invalid {
+  color: #f56565;
+  margin-left: 0.25rem;
+}
+
+.errmsg {
+  background-color: #fed7d7;
+  color: #c53030;
+  font-weight: bold;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0.375rem;
+}
+
+/* Table styles for profile view */
+table {
+  width: 100%;
+  color: white;
+}
+
+th,
+td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #4a5568;
+}
+
+th {
+  text-align: left;
+  color: #a0aec0;
+}

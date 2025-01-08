@@ -1,16 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { LOGIN_ENDPOINT } from "../data/constants";
 import useAuth from "../hooks/useAuth";
-import APIClient, { axiosInstance } from "../services/api-client";
+import { axiosInstance } from "../services/api-client";
 import Cookies from "js-cookie";
 import "../index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
-
-const apiClient = new APIClient<Auth>(LOGIN_ENDPOINT);
 
 const Login = () => {
   const jwt = localStorage.getItem("token");
@@ -38,12 +35,11 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post<any | Error>("/api/auth/", {
+      const response = await axiosInstance.post("api/auth", {
         email: user,
         password: pwd,
       });
 
-      // Retrieve the access token from response body
       const access = response?.data?.accessToken;
       localStorage.setItem("token", access);
 

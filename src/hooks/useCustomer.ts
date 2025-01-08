@@ -7,14 +7,14 @@ import ms from "ms";
 const apiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
 const useCustomer = (userId: string) => {
-  return useQuery<Customer | undefined, Error>({
+  return useQuery<Customer | null, Error>({
     queryKey: ["customer", userId],
     queryFn: async () => {
       if (!userId) throw new Error("User ID is required");
       const customers = await apiClient.getAll();
-      return customers.find((c) => c?.user?._id === userId);
+      return customers.find((c) => c?.user?._id === userId) || null;
     },
-    enabled: !!userId, // Only run the query if userId is present
+    enabled: !!userId,
     staleTime: ms("24h"),
     cacheTime: 0,
   });

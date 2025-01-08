@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Heading } from "@chakra-ui/react";
+import { Heading, Input, Select } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-
 import { CUSTOMERS_ENDPOINT } from "../data/constants";
-import countries from "../data/countries";
 import useCustomer from "../hooks/useCustomer";
 import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
+import { useCountries } from "../hooks/useCountries";
+import CountrySelector from "../components/CountrySelector";
 
 const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
 
@@ -35,6 +33,9 @@ const EditProfile = () => {
 
   // Fetch the customer
   const { data: customer, error, isLoading } = useCustomer(userId!);
+
+  const { countries: filteredCountries, setFilter } = useCountries();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (customer) {
@@ -76,6 +77,7 @@ const EditProfile = () => {
   };
 
   if (isLoading) return <p>Loading...</p>;
+  if (!customer) return <p>No customer profile found.</p>;
 
   return (
     <>
@@ -91,24 +93,10 @@ const EditProfile = () => {
 
           <div className="form-group">
             <label htmlFor="country">Country</label>
-            <select
-              className="form-control"
-              id="country"
-              name="country"
-              autoComplete="off"
-              onChange={(e) => setCountry(e.target.value)}
-              value={country}
-              placeholder="Enter Country ..."
-            >
-              <option disabled value="">
-                --Select Country Name--
-              </option>
-              {countries.map((country) => (
-                <option value={country.iso} key={country.iso}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
+            <CountrySelector
+              selectedCountry={country}
+              onSelect={(countryCode) => setCountry(countryCode)}
+            />
           </div>
 
           <div className="form-group">

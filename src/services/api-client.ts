@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const BASE_URL = "http://localhost:3000/";
+// Make sure we're using the same format consistently
+const BASE_URL = "http://127.0.0.1:3000";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -11,9 +12,16 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Update the interceptor to preserve existing headers
+// Add request interceptor with logging
 axiosInstance.interceptors.request.use(
   (config) => {
+    console.log("Request Config:", {
+      url: config.url,
+      method: config.method,
+      headers: config.headers,
+      withCredentials: config.withCredentials,
+    });
+
     const token = localStorage.getItem("token");
     if (token) {
       config.headers = {
@@ -23,13 +31,30 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error("Request Error:", error);
+    return Promise.reject(error);
+  }
 );
 
-// Simple response interceptor that handles unauthorized errors
+// Add response interceptor with logging
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log("Response:", {
+      status: response.status,
+      headers: response.headers,
+      data: response.data,
+    });
+    return response;
+  },
   async (error) => {
+    console.error("Response Error:", {
+      status: error.response?.status,
+      headers: error.response?.headers,
+      data: error.response?.data,
+      message: error.message,
+    });
+
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
       window.location.href = "/auth";
