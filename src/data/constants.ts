@@ -11,10 +11,10 @@ export const LOGIN_ENDPOINT = "/api/auth/";
 export const MEDIA_FILES_ENDPOINT = "/api/media_files/";
 export const AUDIOS_ENDPOINT = "/api/audios/";
 export const IMAGES_ENDPOINT = "/api/images/";
-// export const REFRESH_TOKEN_ENDPOINT = "/auth/jwt/refresh/";
-// export const ACCESS_TOKEN_ENDPOINT = "/%5Eapi-token-auth/";
 export const CURRENT_USER_ENDPOINT = "/api/users/me/";
 export const CHANGE_PASSWORD_ENDPOINT = "/change_password/";
+export const RESET_PASSWORD_ENDPOINT = "/api/auth/password-reset/reset-password";
+export const REQUEST_RESET_ENDPOINT = "/api/auth/password-reset/request-reset";
 
 //validation constants
 

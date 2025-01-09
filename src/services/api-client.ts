@@ -5,7 +5,8 @@ const BASE_URL = "http://127.0.0.1:3000";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
+  // Remove withCredentials since it's causing CORS issues
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -19,7 +20,7 @@ axiosInstance.interceptors.request.use(
       url: config.url,
       method: config.method,
       headers: config.headers,
-      withCredentials: config.withCredentials,
+      data: config.data,
     });
 
     const token = localStorage.getItem("token");
@@ -62,15 +63,6 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export const axiosPrivate = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
-});
 
 class APIClient<T> {
   endpoint: string;

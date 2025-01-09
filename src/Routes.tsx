@@ -14,6 +14,7 @@ import Contact from "./pages/Contact";
 import UploadSong from "./pages/UploadSong";
 import AdminPage from "./pages/AdminPage";
 import adminRoutes from "./AdminRoutes"; // Import the admin router
+import ResetPassword from "./pages/ResetPassword";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "edit_profile", element: <EditProfile /> },
       { path: "songs", element: <SongsPage /> },
       { path: "/media_files/:id", element: <SongDetailPage /> },
+      { path: "reset-password", element: <ResetPassword /> },
     ],
   },
   {

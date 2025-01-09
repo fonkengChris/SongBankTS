@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { axiosInstance } from "../services/api-client";
+import api from "../services/axios-config";
 import Cookies from "js-cookie";
 import "../index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
+import APIClient from "../services/api-client";
 
 const Login = () => {
   const jwt = localStorage.getItem("token");
@@ -27,6 +28,8 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const authApi = new APIClient("/api/auth");
+
   useEffect(() => {
     userRef.current?.focus();
   }, []);
@@ -35,12 +38,11 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post("api/auth", {
-        email: user,
-        password: pwd,
-      });
+      console.log("Attempting login...");
+      const response = await authApi.post({ email: user, password: pwd });
+      console.log("Login successful:", response);
 
-      const access = response?.data?.accessToken;
+      const access = response?.accessToken;
       localStorage.setItem("token", access);
 
       // Retrieve the refresh token from cookies
@@ -56,7 +58,8 @@ const Login = () => {
 
       navigate("/songs");
       navigate(0);
-    } catch (err: Error) {
+    } catch (err: any) {
+      console.error("Login failed:", err);
       if (!err?.response) {
         setErrMsg("No Server Response");
       } else if (err.response?.status === 400) {
@@ -78,12 +81,9 @@ const Login = () => {
         decoded,
       });
 
-      const response = await axiosInstance.post(
-        "api/auth/google/google-login",
-        {
-          token: credentialResponse.credential,
-        }
-      );
+      const response = await api.post("api/auth/google/google-login", {
+        token: credentialResponse.credential,
+      });
 
       const access = response?.data?.accessToken;
       localStorage.setItem("token", access);
@@ -154,6 +154,12 @@ const Login = () => {
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
             </div>
+          </div>
+
+          <div className="form-group">
+            <Link to="/reset-password" className="forgot-password-link">
+              Forgot Password?
+            </Link>
           </div>
 
           <button type="submit" className="btn btn-primary">
