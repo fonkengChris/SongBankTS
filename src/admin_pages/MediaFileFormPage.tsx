@@ -11,6 +11,7 @@ import {
   Select,
   Flex,
   useColorModeValue,
+  Text,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import APIClient from "../services/api-client";
@@ -116,9 +117,19 @@ const MediaFileFormPage = () => {
   return (
     <Box maxW="container.md" mx="auto" py={8}>
       <VStack spacing={8} align="stretch">
-        <Heading color="blue.500">
-          {id ? "Edit Media File" : "Add New Media File"}
-        </Heading>
+        <Box>
+          <Heading color="blue.500" mb={4}>
+            {id ? "Edit Media File" : "Add New Media File"}
+          </Heading>
+          <Text color="blue.500" mb={6}>
+            Use this form to add a new media file. Required fields are marked
+            with an asterisk (*). You can associate this media file with a song
+            (optional) and must select a notation type. The media file can
+            include a document file (e.g., PDF), an audio file (e.g., MP3),
+            and/or a preview image. At least one file type must be provided.
+          </Text>
+        </Box>
+
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <FormControl isRequired>

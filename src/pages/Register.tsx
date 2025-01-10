@@ -117,8 +117,8 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setLoading(true);
+
     try {
       const userPayload: UserPayload = {
         name: firstname + " " + lastname,
@@ -126,28 +126,45 @@ const Register = () => {
         password: password,
       };
 
-      const response = await userApiClient.post(userPayload);
+      // First create the user
+      const userResponse = await userApiClient.post(userPayload);
+      const userId = userResponse._id;
 
-      const userId = response._id;
+      try {
+        // Then try to create the customer profile
+        await customerApiClient.post({
+          user: userId,
+          country: country,
+          phone_number: phone,
+          birth_date: birthDate,
+        });
 
-      console.log(response);
-      const res = await customerApiClient.post({
-        user: userId,
-        country: country,
-        phone_number: phone,
-        birth_date: birthDate,
-      });
+        // If both succeed, clear the form and navigate
+        setEmail("");
+        setFirstName("");
+        setLastName("");
+        setPassword("");
+        setMatchPassword("");
+        setCountry("");
+        setPhone("");
+        setBirthDate("");
 
-      setEmail("");
-      setFirstName("");
-      setLastName("");
-      setPassword("");
-      setMatchPassword("");
-      setCountry("");
-      setPhone("");
-      setBirthDate("");
+        navigate("/auth");
+      } catch (customerError: any) {
+        // If customer creation fails, show specific error but still allow login
+        setErrMsg(
+          `Account created successfully, but customer profile creation failed: ${
+            customerError.response?.data?.message ||
+            customerError.message ||
+            "Unknown error"
+          }. You can still login with your credentials.`
+        );
 
-      navigate("/auth");
+        // Wait 3 seconds before redirecting to login
+        setTimeout(() => {
+          navigate("/auth");
+        }, 3000);
+      }
     } catch (error) {
       const err = error as AxiosError;
       if (!err?.response) {
@@ -158,6 +175,8 @@ const Register = () => {
         setErrMsg("Registration Failed");
       }
       errRef.current?.focus();
+    } finally {
+      setLoading(false);
     }
   };
 

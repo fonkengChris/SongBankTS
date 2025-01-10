@@ -129,7 +129,18 @@ const SongFormPage = () => {
   return (
     <Box maxW="container.md" mx="auto" py={8}>
       <VStack spacing={8} align="stretch">
-        <Heading color="blue.500">{id ? "Edit Song" : "Add New Song"}</Heading>
+        <Box>
+          <Heading color="blue.500" mb={4}>
+            {id ? "Edit Song" : "Add New Song"}
+          </Heading>
+          <Text color="blue.500" mb={6}>
+            Fill in the form below to create a new song. Required fields are
+            marked with an asterisk (*). The slug will be automatically
+            generated from the title. You can attach up to three media files
+            (document, audio, or image) to the song. These media files must be
+            created first in the Media Files section.
+          </Text>
+        </Box>
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
