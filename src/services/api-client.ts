@@ -64,12 +64,33 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export interface PaginatedResponse<T> {
+  songs: T[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    hasMore: boolean;
+  };
+}
+
 class APIClient<T> {
   endpoint: string;
 
   constructor(endpoint: string) {
     this.endpoint = endpoint;
   }
+
+  getAllSongs = (config?: AxiosRequestConfig, queryParams?: string) => {
+    const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
+    return axiosInstance
+      .get<PaginatedResponse<T>>(url, config)
+      .then((res) => res.data)
+      .catch((error) => {
+        console.error("Error fetching songs:", error);
+        throw error;
+      });
+  };
 
   getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
     const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
