@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import "../index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import APIClient from "../services/api-client";
 
@@ -105,7 +105,7 @@ const Login = () => {
   };
 
   return (
-    <>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
       <section className="login-container">
         <p
           ref={errRef}
@@ -185,7 +185,7 @@ const Login = () => {
           </span>
         </p>
       </section>
-    </>
+    </GoogleOAuthProvider>
   );
 };
 
