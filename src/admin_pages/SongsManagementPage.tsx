@@ -111,7 +111,9 @@ const SongsManagementPage = () => {
                     <Td color="blue.500">
                       {String(getNestedValue(song, "category.title"))}
                     </Td>
-                    <Td color="blue.500">{String(song.language || "N/A")}</Td>
+                    <Td color="blue.500">
+                      {String(song.language.name || "N/A")}
+                    </Td>
                     <Td color="blue.500">
                       {typeof song.description === "string"
                         ? song.description.substring(0, 30) + "..."

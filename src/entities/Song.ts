@@ -1,4 +1,5 @@
 import Category from "./Category";
+import Language from "./Language";
 import SongMedia from "./SongMedia";
 
 export default interface Song {
@@ -8,7 +9,7 @@ export default interface Song {
   description: string;
   likesCount: number;
   lyrics: string;
-  language: string;
+  language: Language;
   views: number;
   category: Category;
   mediaFiles: SongMedia[];
