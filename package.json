@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview --port $PORT",
     "start": "node server.js",
-    "heroku-postbuild": "npm run build"
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.5.5",
