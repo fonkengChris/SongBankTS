@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 // Proxy API requests to your backend
 const API_URL =
   process.env.API_URL ||
-  "https://sheet-music-library-ad225c202768.herokuapp.com";
+  "https://sheet-music-library-vite-7ffed1c383be.herokuapp.com";
 app.use(
   "/api",
   createProxyMiddleware({
