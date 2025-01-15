@@ -1,11 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosHeaders } from "axios";
 
-// Make sure we're using the same format consistently
-const BASE_URL = "http://127.0.0.1:3000";
-
 export const axiosInstance = axios.create({
-  baseURL: BASE_URL,
-  // Remove withCredentials since it's causing CORS issues
   withCredentials: false,
   headers: {
     "Content-Type": "application/json",

@@ -8,10 +8,29 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Add CORS and security headers
+app.use((req, res, next) => {
+  res.header(
+    "Content-Security-Policy",
+    "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+  );
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
+// Parse JSON bodies
+app.use(express.json());
+
 // Logging middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`);
   next();
+});
+
+// API routes should be before static files
+app.use("/api", (req, res) => {
+  // Temporary response for testing
+  res.json({ message: "API endpoint reached" });
 });
 
 // Serve static files from the dist directory
