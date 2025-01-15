@@ -9,7 +9,7 @@ const SongHeading = () => {
   const category = useCategory(categoryId);
 
   const notationId = useSongQueryStore((s) => s.songQuery.notationId);
-  const notation = useNotation(notationId);
+  const { notation } = useNotation(notationId || undefined);
 
   const languageId = useSongQueryStore((s) => s.songQuery.languageId);
   const language = useLanguage(languageId);

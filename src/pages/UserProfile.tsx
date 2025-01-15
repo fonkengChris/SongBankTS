@@ -23,6 +23,7 @@ import Customer from "../entities/Customer";
 import CountrySelector from "../components/CountrySelector";
 import "../index.css";
 import { CUSTOMERS_ENDPOINT } from "../data/constants";
+import { CustomerPayload } from "../types/forms";
 
 const UserProfile = () => {
   // Define local interface for the post request
@@ -68,7 +69,9 @@ const UserProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const apiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
+    const apiClient = new APIClient<Customer, CustomerPayload>(
+      CUSTOMERS_ENDPOINT
+    );
     try {
       await apiClient.post({
         user: userId!,

@@ -18,6 +18,7 @@ import APIClient from "../services/api-client";
 import SongMedia from "../entities/SongMedia";
 import Song from "../entities/Song";
 import Notation from "../entities/Notation";
+import { MediaFileFormData } from "../types/forms";
 
 const MediaFileFormPage = () => {
   const { id } = useParams();
@@ -29,7 +30,7 @@ const MediaFileFormPage = () => {
 
   const [songs, setSongs] = useState<Song[]>([]);
   const [notations, setNotations] = useState<Notation[]>([]);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<MediaFileFormData>({
     name: "",
     song: "",
     notation: "",
@@ -38,7 +39,9 @@ const MediaFileFormPage = () => {
     previewImage: "",
   });
 
-  const mediaApiClient = new APIClient<SongMedia>("/api/media_files");
+  const apiClient = new APIClient<SongMedia, MediaFileFormData>(
+    "/api/media_files"
+  );
   const songsApiClient = new APIClient<Song>("/api/songs");
   const notationsApiClient = new APIClient<Notation>("/api/notations");
 
@@ -53,7 +56,7 @@ const MediaFileFormPage = () => {
         setNotations(notationsData);
 
         if (id) {
-          const mediaData = await mediaApiClient.get(id);
+          const mediaData = await apiClient.get(id);
           setFormData({
             name: mediaData.name || "",
             song: mediaData.song?._id || "",
@@ -75,19 +78,18 @@ const MediaFileFormPage = () => {
 
     loadData();
   }, [id]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (id) {
-        await mediaApiClient.put(id, formData);
+        await apiClient.put(id, formData);
         toast({
           title: "Media file updated successfully",
           status: "success",
           duration: 3000,
         });
       } else {
-        await mediaApiClient.post(formData);
+        await apiClient.post(formData);
         toast({
           title: "Media file created successfully",
           status: "success",

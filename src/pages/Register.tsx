@@ -23,22 +23,12 @@ import APIClient, { axiosInstance } from "../services/api-client";
 import "../index.css";
 import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
+import { UserPayload, UserResponse, CustomerPayload } from "../types/forms";
 
-type UserPayload = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-type UserResponse = {
-  _id: string;
-  name: string;
-  email: string;
-  isAdmin: boolean;
-};
-
-const userApiClient = new APIClient<UserResponse>(USERS_ENDPOINT);
-const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
+const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
+const customerApiClient = new APIClient<Customer, CustomerPayload>(
+  CUSTOMERS_ENDPOINT
+);
 
 const Register = () => {
   const jwt = localStorage.getItem("token");

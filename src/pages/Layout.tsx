@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import MainNavBar from "../components/MainNavBar";
 import jwtDecode from "jwt-decode";
 import { useState, useEffect } from "react";
+import CurrentUser from "../entities/CurrentUser";
 
 const Layout = () => {
   const [user, setUser] = useState({} as CurrentUser);

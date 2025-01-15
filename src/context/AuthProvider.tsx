@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useState } from "react";
+import { Auth } from "../entities/Auth";
 
 interface Props {
   children: ReactNode;

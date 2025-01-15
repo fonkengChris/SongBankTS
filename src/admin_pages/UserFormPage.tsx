@@ -16,19 +16,20 @@ import {
 } from "@chakra-ui/react";
 import APIClient from "../services/api-client";
 import User from "../entities/User";
+import { UserFormData } from "../types/forms";
 
 const UserFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const apiClient = new APIClient<User>("/api/users");
+  const apiClient = new APIClient<User, UserFormData>("/api/users");
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserFormData>({
     name: "",
     email: "",
-    role: "regular" as "regular" | "admin" | "superAdmin",
+    role: "regular",
   });
 
   useEffect(() => {

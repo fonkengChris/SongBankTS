@@ -5,8 +5,6 @@ interface Props {
   url: URL;
 }
 
-const apiClient = new
-
 const DocumentFile = ({ url }: Props) => {
   const [numPages, setNumPages] = useState(2);
   const [pageNumber, setPageNumber] = useState(1);
@@ -15,7 +13,6 @@ const DocumentFile = ({ url }: Props) => {
   //     setNumPages(numPages);
   //   }
 
-  
   return (
     <div>
       <Document file={url}>

@@ -17,17 +17,20 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import APIClient from "../services/api-client";
 import Category from "../entities/Category";
+import { CategoryFormData } from "../types/forms";
 
-interface CategoryFormData {
-  title: string;
-}
+// interface CategoryFormData {
+//   title: string;
+// }
 
 const CategoryFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const apiClient = new APIClient<Category>("/api/categories");
+  const apiClient = new APIClient<Category, CategoryFormData>(
+    "/api/categories"
+  );
 
   const {
     register,

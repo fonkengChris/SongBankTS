@@ -16,12 +16,13 @@ import {
 import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
 import User from "../entities/User";
+import { CustomerFormData } from "../types/forms";
 
 const CustomerFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const apiClient = new APIClient<Customer>("/api/customers");
+  const apiClient = new APIClient<Customer, CustomerFormData>("/api/customers");
   const userApiClient = new APIClient<User>("/api/users");
 
   const [users, setUsers] = useState<User[]>([]);

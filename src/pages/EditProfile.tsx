@@ -9,8 +9,11 @@ import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
 import { useCountries } from "../hooks/useCountries";
 import CountrySelector from "../components/CountrySelector";
+import { CustomerUpdateFormData } from "../types/forms";
 
-const customerApiClient = new APIClient<Customer>(CUSTOMERS_ENDPOINT);
+const customerApiClient = new APIClient<Customer, CustomerUpdateFormData>(
+  CUSTOMERS_ENDPOINT
+);
 
 const EditProfile = () => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -52,7 +55,7 @@ const EditProfile = () => {
     e.preventDefault();
 
     try {
-      if (!customer) return;
+      if (!customer?._id) return; // Type guard to check if _id exists
 
       await customerApiClient.put(customer._id, {
         country: country || customer.country,

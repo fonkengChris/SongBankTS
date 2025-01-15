@@ -14,12 +14,13 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import APIClient from "../services/api-client";
 import Language from "../entities/Language";
+import { LanguageFormData } from "../types/forms";
 
 const LanguageFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const apiClient = new APIClient<Language>("/api/languages");
+  const apiClient = new APIClient<Language, LanguageFormData>("/api/languages");
 
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");

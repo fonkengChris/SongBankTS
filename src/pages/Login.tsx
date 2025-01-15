@@ -9,6 +9,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import APIClient from "../services/api-client";
+import { AuthResponse, AuthCredentials } from "../types/forms";
 
 const Login = () => {
   const jwt = localStorage.getItem("token");
@@ -28,7 +29,7 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const authApi = new APIClient("/api/auth");
+  const authApi = new APIClient<AuthResponse, AuthCredentials>("/api/auth");
 
   useEffect(() => {
     userRef.current?.focus();

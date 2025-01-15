@@ -16,14 +16,15 @@ import { useEffect, useState } from "react";
 import APIClient from "../services/api-client";
 import { NOTATIONS_ENDPOINT } from "../data/constants";
 import Notation from "../entities/Notation";
+import { NotationFormData } from "../types/forms";
 
-const apiClient = new APIClient<Notation>(NOTATIONS_ENDPOINT);
+const apiClient = new APIClient<Notation, NotationFormData>(NOTATIONS_ENDPOINT);
 
 const NotationFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const [notation, setNotation] = useState<Partial<Notation>>({
+  const [notation, setNotation] = useState<NotationFormData>({
     title: "",
     slug: "",
   });
@@ -41,7 +42,7 @@ const NotationFormPage = () => {
     event.preventDefault();
     try {
       if (id) {
-        await apiClient.put(id, { title: notation.title, slug: notation.slug });
+        await apiClient.put(id, notation);
         toast({ title: "Notation updated successfully", status: "success" });
       } else {
         await apiClient.post(notation as Notation);

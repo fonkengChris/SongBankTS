@@ -27,10 +27,15 @@ import APIClient from "../services/api-client";
 const MediaFilesManagementPage = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [mediaToDelete, setMediaToDelete] = useState<string | null>(null);
+  const [localMediaFiles, setLocalMediaFiles] = useState<SongMedia[]>([]);
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const apiClient = new APIClient<SongMedia>("/api/media_files");
   const { mediaFiles, loading, error } = useMediaFiles();
+
+  useEffect(() => {
+    setLocalMediaFiles(mediaFiles || []);
+  }, [mediaFiles]);
 
   useEffect(() => {
     if (error) {
@@ -57,7 +62,9 @@ const MediaFilesManagementPage = () => {
 
     try {
       await apiClient.delete(mediaToDelete);
-      setMediaFiles(mediaFiles.filter((media) => media._id !== mediaToDelete));
+      setLocalMediaFiles(
+        localMediaFiles.filter((media) => media._id !== mediaToDelete)
+      );
       toast({
         title: "Media file deleted successfully",
         status: "success",
@@ -107,7 +114,7 @@ const MediaFilesManagementPage = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {mediaFiles?.map((media) => (
+              {localMediaFiles?.map((media) => (
                 <Tr key={media._id}>
                   <Td color={"blue.400"}>{media.name}</Td>
                   <Td color={"blue.400"}>{media.documentFile}</Td>

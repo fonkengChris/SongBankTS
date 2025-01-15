@@ -20,6 +20,7 @@ import Song from "../entities/Song";
 import useCategories from "../hooks/useCategories";
 import useSong from "../hooks/useSong";
 import useMediaFiles from "../hooks/useMediaFiles";
+import { SongFormData } from "../types/forms";
 
 const SongFormPage = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ const SongFormPage = () => {
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");
 
-  const [formData, setFormData] = useState<Partial<Song>>({
+  const [formData, setFormData] = useState<SongFormData>({
     title: "",
     slug: "",
     description: "",
@@ -46,16 +47,18 @@ const SongFormPage = () => {
   const handleMediaSelect = (mediaId: string) => {
     if (!mediaId) return;
 
-    const updatedMediaFiles = formData.mediaFiles || [];
-    const index = updatedMediaFiles.indexOf(mediaId);
+    setFormData((prev) => {
+      const updatedMediaFiles = [...(prev.mediaFiles || [])];
+      const index = updatedMediaFiles.indexOf(mediaId);
 
-    if (index === -1) {
-      updatedMediaFiles.push(mediaId);
-    } else {
-      updatedMediaFiles.splice(index, 1);
-    }
+      if (index === -1) {
+        updatedMediaFiles.push(mediaId);
+      } else {
+        updatedMediaFiles.splice(index, 1);
+      }
 
-    setFormData({ ...formData, mediaFiles: updatedMediaFiles });
+      return { ...prev, mediaFiles: updatedMediaFiles };
+    });
   };
 
   useEffect(() => {
@@ -75,13 +78,13 @@ const SongFormPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const apiClient = new APIClient<Song>("/api/songs");
+    const apiClient = new APIClient<Song, SongFormData>("/api/songs");
 
     try {
-      const payload = {
+      const payload: SongFormData = {
         ...formData,
+        category: categories?.find((c) => c._id === formData.category?._id),
         mediaFiles: formData.mediaFiles || [],
-        category: formData.category?._id,
       };
 
       if (id) {
