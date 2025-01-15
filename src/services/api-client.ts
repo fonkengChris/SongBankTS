@@ -74,8 +74,7 @@ export interface PaginatedResponse<T> {
 
 export default class APIClient<T, R = T> {
   constructor(public endpoint: string) {
-    // Remove /api prefix if it exists
-    this.endpoint = endpoint.replace(/^\/api/, "");
+    // Remove the /api prefix removal
   }
 
   getAllSongs = (config?: AxiosRequestConfig, queryParams?: string) => {
