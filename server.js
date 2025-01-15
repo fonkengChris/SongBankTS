@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,11 +28,24 @@ app.use((req, res, next) => {
   next();
 });
 
-// API routes should be before static files
-app.use("/api", (req, res) => {
-  // Temporary response for testing
-  res.json({ message: "API endpoint reached" });
-});
+// Proxy API requests to your backend
+const API_URL =
+  process.env.API_URL ||
+  "https://sheet-music-library-ad225c202768.herokuapp.com";
+app.use(
+  "/api",
+  createProxyMiddleware({
+    target: API_URL,
+    changeOrigin: true,
+    pathRewrite: {
+      "^/api": "/api", // keep /api prefix
+    },
+    onProxyReq: (proxyReq, req, res) => {
+      // Log proxy requests
+      console.log("Proxying to:", API_URL + proxyReq.path);
+    },
+  })
+);
 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, "dist")));
