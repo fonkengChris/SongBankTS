@@ -2,17 +2,19 @@ import Category from "./Category";
 import Language from "./Language";
 import SongMedia from "./SongMedia";
 
-export default interface Song {
+interface Song {
   _id: string;
   title: string;
   slug: string;
-  description: string;
-  likesCount: number;
+  description?: string;
   lyrics: string;
   language: Language;
-  views: number;
-  category: Category;
-  mediaFiles: SongMedia[];
   authorName: string;
-  metacritic: number;
+  category?: Category;
+  mediaFiles: SongMedia[];
+  views?: number;
+  likesCount?: number;
+  metacritic?: number;
 }
+
+export default Song;
