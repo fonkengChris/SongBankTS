@@ -1,6 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosHeaders } from "axios";
 
+// Use the environment variable for the API URL
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const axiosInstance = axios.create({
+  baseURL: API_URL, // Set the base URL to point directly to the backend
   withCredentials: false,
   headers: {
     "Content-Type": "application/json",
