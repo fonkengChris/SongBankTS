@@ -4,8 +4,8 @@ import axios, { AxiosRequestConfig, AxiosHeaders } from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const axiosInstance = axios.create({
-  baseURL: API_URL, // Set the base URL to point directly to the backend
-  withCredentials: false,
+  baseURL: API_URL,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -73,7 +73,10 @@ export interface PaginatedResponse<T> {
 }
 
 export default class APIClient<T, R = T> {
-  constructor(public endpoint: string) {}
+  constructor(public endpoint: string) {
+    // Remove /api prefix if it exists
+    this.endpoint = endpoint.replace(/^\/api/, "");
+  }
 
   getAllSongs = (config?: AxiosRequestConfig, queryParams?: string) => {
     const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
