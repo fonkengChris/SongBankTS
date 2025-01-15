@@ -21,13 +21,11 @@ import Song from "../entities/Song";
 import { SONGS_ENDPOINT } from "../data/constants";
 
 const SongsManagementPage = () => {
-  const { data: songs, error, isLoading, refetch } = useSongs();
+  const { data, error, isLoading, refetch } = useSongs();
+  const songs = data?.pages[0]?.songs;
   const toast = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
   const apiClient = new APIClient<Song>(SONGS_ENDPOINT);
-
-  // // Debug log
-  // console.log("Songs data:", JSON.stringify(songs, null, 2));
 
   if (isLoading) {
     return (
