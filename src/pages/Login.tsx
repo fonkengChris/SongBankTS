@@ -91,7 +91,7 @@ const Login = () => {
       localStorage.setItem("token", access);
 
       setAuth({ user: decoded.email, pwd: "", access });
-      navigate("/songs");
+      // navigate("/songs");
       navigate(0);
     } catch (err: any) {
       console.error("Google login error:", err);
