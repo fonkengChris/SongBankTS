@@ -21,6 +21,7 @@ import useCategories from "../hooks/useCategories";
 import useSong from "../hooks/useSong";
 import useMediaFiles from "../hooks/useMediaFiles";
 import { SongFormData } from "../types/forms";
+import useLanguages from "../hooks/useLanguages";
 
 const SongFormPage = () => {
   const { id } = useParams();
@@ -29,6 +30,7 @@ const SongFormPage = () => {
   const { data: categories } = useCategories();
   const { song } = useSong(id || "");
   const { mediaFiles, loading: mediaLoading } = useMediaFiles();
+  const { data: languages } = useLanguages();
 
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");
@@ -38,7 +40,7 @@ const SongFormPage = () => {
     slug: "",
     description: "",
     lyrics: "",
-    language: "",
+    language: { _id: "", name: "", code: "" },
     authorName: "",
     category: undefined,
     mediaFiles: [],
@@ -207,14 +209,24 @@ const SongFormPage = () => {
 
             <FormControl isRequired>
               <FormLabel color="blue.500">Language</FormLabel>
-              <Input
-                value={formData.language}
+              <Select
+                value={formData.language?._id}
                 onChange={(e) =>
-                  setFormData({ ...formData, language: e.target.value })
+                  setFormData({
+                    ...formData,
+                    language: languages?.find((l) => l._id === e.target.value)!,
+                  })
                 }
                 bg={inputBg}
                 color={inputColor}
-              />
+              >
+                <option value="">Select language</option>
+                {languages?.map((language) => (
+                  <option key={language._id} value={language._id}>
+                    {language.name}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl>

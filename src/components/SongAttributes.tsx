@@ -22,13 +22,16 @@ const SongAttributes = ({ mediaFile }: Props) => {
         <Text>{notation!.title}</Text>
       </DefinitionItem>
       <DefinitionItem term="MetaScore">
-        <CriticScore score={song.metacritic} />
+        <CriticScore score={song.metacritic || 0} />
       </DefinitionItem>
       <DefinitionItem term="Category">
         <Text>{category!.title}</Text>
       </DefinitionItem>
       <DefinitionItem term="Author">
         <Text>{song.authorName}</Text>
+      </DefinitionItem>
+      <DefinitionItem term="Likes">
+        <Text>{song.likesCount || 0}</Text>
       </DefinitionItem>
     </SimpleGrid>
   );

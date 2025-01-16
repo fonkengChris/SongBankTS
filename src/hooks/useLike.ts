@@ -17,7 +17,7 @@ export const useLike = (id: string) => {
     }
     try {
       // console.log(`Fetched song ${song.title}`);
-      const updatedLikesCount = song.likesCount + 1;
+      const updatedLikesCount = (song.likesCount || 0) + 1;
 
       const response = await axios.patch(
         `${SONGS_ENDPOINT}/${id}`,

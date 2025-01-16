@@ -17,7 +17,7 @@ export const useUnlike = (id: string) => {
       return;
     }
     try {
-      const updatedLikesCount = song.likesCount - 1;
+      const updatedLikesCount = (song.likesCount || 0) - 1;
 
       const response = await axios.patch(
         `${SONGS_ENDPOINT}/${id}`,

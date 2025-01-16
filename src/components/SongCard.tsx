@@ -23,7 +23,7 @@ const SongCard = ({ song, mediaFile }: Props) => {
         <Link to={"/media_files/" + mediaFile._id}>{song.title}</Link>
         <HStack justifyContent="space-between">
           <Text>{mediaFile.notation.title}</Text>
-          <CriticScore score={song.metacritic} />
+          <CriticScore score={song.metacritic || 0} />
         </HStack>
         {song.authorName !== "Unknown" && <Text>{song.authorName}</Text>}
       </CardBody>

@@ -1,4 +1,6 @@
 import Category from "../entities/Category";
+import Language from "../entities/Language";
+import SongMedia from "../entities/SongMedia";
 
 export interface CategoryFormData {
   title: string;
@@ -38,10 +40,13 @@ export interface SongFormData {
   slug: string;
   description?: string;
   lyrics: string;
-  language: string;
+  language: Language;
   authorName: string;
   category?: Category;
   mediaFiles: string[];
+  views?: number;
+  likesCount?: number;
+  metacritic?: number;
 }
 
 export interface NotationFormData {
