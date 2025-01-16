@@ -87,7 +87,7 @@ const Login = () => {
       });
       console.log("response:", response.data);
 
-      const access = response?.data?.authToken;
+      const access = response?.data?.token;
       localStorage.setItem("token", access);
 
       setAuth({ user: decoded.email, pwd: "", access });
