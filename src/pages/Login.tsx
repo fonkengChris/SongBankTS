@@ -105,6 +105,9 @@ const Login = () => {
     }
   };
 
+  // const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
+  // console.log("Client ID:", clientId);
+
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
       <section className="login-container">

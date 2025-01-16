@@ -13,7 +13,12 @@ const PORT = process.env.PORT || 3000;
 app.use((req, res, next) => {
   res.header(
     "Content-Security-Policy",
-    "default-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com;"
+    "default-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com; " +
+      "img-src 'self' data: https:; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleusercontent.com; " +
+      "style-src 'self' 'unsafe-inline'; " +
+      "frame-src 'self' https://accounts.google.com; " +
+      "connect-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com https://accounts.google.com;"
   );
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
