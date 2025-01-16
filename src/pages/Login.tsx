@@ -105,11 +105,12 @@ const Login = () => {
     }
   };
 
-  // const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
-  // console.log("Client ID:", clientId);
+  // Add debug logging
+  const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
+  console.log("Google OAuth Client ID:", clientId); // Temporary debug log
 
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={clientId || ""}>
       <section className="login-container">
         <p
           ref={errRef}
