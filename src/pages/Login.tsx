@@ -85,6 +85,7 @@ const Login = () => {
       const response = await api.post("api/auth/google/google-login", {
         token: credentialResponse.credential,
       });
+      console.log("response:", response.data);
 
       const access = response?.data?.accessToken;
       localStorage.setItem("token", access);
