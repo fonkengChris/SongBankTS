@@ -24,6 +24,8 @@ import "../index.css";
 import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import { UserPayload, UserResponse, CustomerPayload } from "../types/forms";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { toast } from "@chakra-ui/react";
 
 const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
 const customerApiClient = new APIClient<Customer, CustomerPayload>(
@@ -179,11 +181,21 @@ const Register = () => {
       });
 
       const response = await axiosInstance.post(
-        "api/auth/google/google-register",
+        "/api/auth/google/google-register",
         {
           token: credentialResponse.credential,
         }
       );
+
+      console.log("Registration response:", response.data);
+
+      // After successful registration, redirect to login
+      toast({
+        title: "Registration successful",
+        description: "Please login with your Google account",
+        status: "success",
+        duration: 3000,
+      });
 
       navigate("/auth");
     } catch (err: any) {
@@ -191,7 +203,8 @@ const Register = () => {
       if (!err?.response) {
         setErrMsg("No Server Response");
       } else if (err.response?.status === 409) {
-        setErrMsg("Account Already Exists");
+        setErrMsg("Account Already Exists - Please Login Instead");
+        setTimeout(() => navigate("/auth"), 2000);
       } else {
         setErrMsg(`Registration Failed: ${err.message}`);
       }
@@ -199,8 +212,12 @@ const Register = () => {
     }
   };
 
+  // Use the same client ID as Login
+  const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
+  console.log("Google OAuth Client ID:", clientId); // Debug log
+
   return (
-    <>
+    <GoogleOAuthProvider clientId={clientId || ""}>
       <section className="login-container">
         <form onSubmit={handleSubmit} className="login-form" role="form">
           {errMsg !== "" && (
@@ -510,7 +527,7 @@ const Register = () => {
           />
         </div>
       </section>
-    </>
+    </GoogleOAuthProvider>
   );
 };
 
