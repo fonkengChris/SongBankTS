@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading, useToast } from "@chakra-ui/react";
 import {
   faCheck,
   faInfoCircle,
@@ -25,7 +25,6 @@ import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import { UserPayload, UserResponse, CustomerPayload } from "../types/forms";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { toast } from "@chakra-ui/react";
 
 const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
 const customerApiClient = new APIClient<Customer, CustomerPayload>(
@@ -37,6 +36,7 @@ const Register = () => {
   if (jwt) return <Navigate to="/songs" />;
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   //defining ref hooks
   const firstnameRef = useRef<HTMLInputElement | null>(null);
