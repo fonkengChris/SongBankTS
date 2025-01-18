@@ -13,6 +13,7 @@ import {
   Show,
   IconButton,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
@@ -85,6 +86,7 @@ const MainNavBar = ({ user }: Props) => {
       wrap="wrap"
       alignItems="center"
       justifyContent="space-between"
+      gap={2}
     >
       {/* Logo and Title Section */}
       <Flex alignItems="center" marginRight={4}>
@@ -105,8 +107,8 @@ const MainNavBar = ({ user }: Props) => {
         <NavLinks />
       </Show>
 
-      {/* User Section */}
-      <Flex alignItems="center" gap={4}>
+      {/* User Section and Mobile Menu */}
+      <Flex alignItems="center" gap={4} flex={1} justifyContent="flex-end">
         {/* Mobile Menu */}
         <Show below="md">
           <Menu>
@@ -150,7 +152,11 @@ const MainNavBar = ({ user }: Props) => {
             </Menu>
           </Flex>
         )}
-        <ColorModeSwitch />
+
+        {/* ColorModeSwitch in its own container */}
+        <Box marginLeft="auto">
+          <ColorModeSwitch />
+        </Box>
       </Flex>
     </Flex>
   );
