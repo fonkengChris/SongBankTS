@@ -1,9 +1,10 @@
-import { Box, background, useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import MainNavBar from "../components/MainNavBar";
 import jwtDecode from "jwt-decode";
 import { useState, useEffect } from "react";
 import CurrentUser from "../entities/CurrentUser";
+import PayPalProvider from "../components/PayPalProvider";
 
 const Layout = () => {
   const [user, setUser] = useState({} as CurrentUser);
@@ -16,8 +17,9 @@ const Layout = () => {
       setUser({ ...currentUser });
     } catch (error) {}
   }, []);
+
   return (
-    <>
+    <PayPalProvider>
       <div
         style={{
           backgroundColor: `var(--chakra-colors-${bgColor.replace(".", "-")})`,
@@ -29,7 +31,7 @@ const Layout = () => {
           <Outlet />
         </Box>
       </div>
-    </>
+    </PayPalProvider>
   );
 };
 
