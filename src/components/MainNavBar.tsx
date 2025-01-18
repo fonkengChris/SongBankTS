@@ -2,7 +2,6 @@ import {
   Avatar,
   Button,
   Flex,
-  HStack,
   Heading,
   Image,
   List,
@@ -11,22 +10,21 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Show,
+  IconButton,
   Text,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
 import ColorModeSwitch from "./ColorModeSwitch";
 import CurrentUser from "../entities/CurrentUser";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 interface Props {
   user: CurrentUser | null;
 }
 
 const MainNavBar = ({ user }: Props) => {
-  // const userToken = localStorage.getItem("token");
-
   const ListOfActions = [
     { value: "users/" + user?._id, label: "User Profile" },
     { value: "/change_password/", label: "Change Password" },
@@ -36,105 +34,125 @@ const MainNavBar = ({ user }: Props) => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("tokenRef");
-
     navigate("/logout");
     navigate(0);
   };
 
-  // const fullname = `${user?.first_name} ${user?.last_name}`;
-  return (
-    <HStack justifyContent="space-between" padding="10px">
-      <Flex>
-        <Link to="/songs/">
-          <Image src={logo} boxSize="60px" />
-        </Link>
-        <Link to="/songs/">
-          <Text as="b" color="brown" fontSize="4xl" marginRight={3}>
-            SheetMusicLibrary
-          </Text>
-        </Link>
+  const NavLinks = () => (
+    <List>
+      <Flex direction={{ base: "column", md: "row" }} gap={2}>
+        <ListItem>
+          <Button color={"cyan.400"} width="100%">
+            <NavLink to="/upload">Upload Song</NavLink>
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button color={"cyan.400"} width="100%">
+            <NavLink to="/contact">Contact Us</NavLink>
+          </Button>
+        </ListItem>
+        {(user?.role === "admin" || user?.role === "superAdmin") && (
+          <ListItem>
+            <Button color={"cyan.400"} width="100%">
+              <NavLink to="/admin">Admin Panel</NavLink>
+            </Button>
+          </ListItem>
+        )}
+      </Flex>
+    </List>
+  );
 
-        <List className="navbar-nav">
-          <Flex>
-            <ListItem className="nav-item" marginRight={3}>
-              <Button color={"cyan.400"}>
-                <NavLink className="nav-link" to="/upload">
-                  Upload Song
-                </NavLink>
-              </Button>
-            </ListItem>
-            <ListItem className="nav-item" marginRight={3}>
-              <Button color={"cyan.400"}>
-                <NavLink className="nav-link" to="/contact">
-                  Contact Us
-                </NavLink>
-              </Button>
-            </ListItem>
-            {(user?.role === "admin" || user?.role === "superAdmin") && (
-              <ListItem className="nav-item" marginRight={3}>
-                <Button color={"cyan.400"}>
-                  <NavLink className="nav-link" to="/admin">
-                    Admin Panel
-                  </NavLink>
-                </Button>
-              </ListItem>
-            )}
-          </Flex>
-        </List>
+  const AuthButtons = () => (
+    <List>
+      <Flex direction={{ base: "column", md: "row" }} gap={2}>
+        <ListItem>
+          <Button width="100%">
+            <NavLink to="/auth">Login</NavLink>
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button width="100%">
+            <NavLink to="/register">Register</NavLink>
+          </Button>
+        </ListItem>
+      </Flex>
+    </List>
+  );
+
+  return (
+    <Flex
+      padding="10px"
+      wrap="wrap"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      {/* Logo and Title Section */}
+      <Flex alignItems="center" marginRight={4}>
+        <Link to="/songs/">
+          <Image src={logo} boxSize="60px" marginRight={2} />
+        </Link>
+        <Show above="sm">
+          <Link to="/songs/">
+            <Text as="b" color="brown" fontSize={{ base: "2xl", md: "4xl" }}>
+              SheetMusicLibrary
+            </Text>
+          </Link>
+        </Show>
       </Flex>
 
-      <HStack justifyContent="space-between" padding={2}>
-        {!user?._id && (
-          <List>
-            <Flex>
-              <ListItem className="nav-item" marginRight={3}>
-                <Button>
-                  <NavLink className="nav-link" to="/auth">
-                    Login
-                  </NavLink>
-                </Button>
-              </ListItem>
-              <ListItem className="nav-item" marginRight={3}>
-                <Button>
-                  <NavLink className="nav-link" to="/register">
-                    Register
-                  </NavLink>
-                </Button>
-              </ListItem>
-            </Flex>
-          </List>
-        )}
+      {/* Navigation Section */}
+      <Show above="md">
+        <NavLinks />
+      </Show>
+
+      {/* User Section */}
+      <Flex alignItems="center" gap={4}>
+        {/* Mobile Menu */}
+        <Show below="md">
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<HamburgerIcon />}
+              variant="outline"
+            />
+            <MenuList>
+              <NavLinks />
+              {!user?._id && <AuthButtons />}
+            </MenuList>
+          </Menu>
+        </Show>
+
+        {/* Desktop Auth/User Section */}
+        <Show above="md">{!user?._id && <AuthButtons />}</Show>
+
         {user?._id && (
-          <List>
-            <Flex>
-              <Heading as="h2" paddingRight={5} size="lg">
+          <Flex alignItems="center" gap={2}>
+            <Show above="md">
+              <Heading as="h2" size={{ base: "sm", lg: "lg" }}>
                 Welcome: {user.name}
               </Heading>
-              <Menu>
-                <MenuButton>
-                  <Wrap>
-                    <WrapItem>
-                      <Avatar name={user.name} />
-                    </WrapItem>{" "}
-                  </Wrap>
-                </MenuButton>
-                <MenuList>
-                  {ListOfActions.map((action) => (
-                    <MenuItem key={action.value}>
-                      <NavLink to={action.value}>{action.label}</NavLink>
-                    </MenuItem>
-                  ))}
-                  <MenuItem onClick={() => handleLogout()} marginRight={3}>
-                    <Text>Logout</Text>
+            </Show>
+            <Menu>
+              <MenuButton>
+                <Avatar name={user.name} size={{ base: "sm", md: "md" }} />
+              </MenuButton>
+              <MenuList>
+                {ListOfActions.map((action) => (
+                  <MenuItem key={action.value}>
+                    <NavLink to={action.value}>{action.label}</NavLink>
                   </MenuItem>
-                </MenuList>
-              </Menu>
-            </Flex>
-          </List>
+                ))}
+                <MenuItem onClick={handleLogout}>
+                  <Text>Logout</Text>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
         )}
         <ColorModeSwitch />
-      </HStack>
-    </HStack>
+      </Flex>
+    </Flex>
   );
 };
 
