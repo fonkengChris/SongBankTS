@@ -216,6 +216,20 @@ const Register = () => {
   const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
   console.log("Google OAuth Client ID:", clientId); // Debug log
 
+  // Add this function to check if form is valid
+  const isFormValid = () => {
+    return (
+      validFirstName &&
+      validLastName &&
+      validEmail &&
+      validPassword &&
+      validMatch &&
+      country !== "" &&
+      phone !== "" &&
+      birthDate !== ""
+    );
+  };
+
   return (
     <GoogleOAuthProvider clientId={clientId || ""}>
       <section className="login-container">
@@ -411,11 +425,11 @@ const Register = () => {
           <div className="form-group">
             <label htmlFor="password">
               Password:
-              {validPassword === true && (
+              {validPassword && (
                 <FontAwesomeIcon icon={faCheck} className={"valid"} />
               )}
-              {(validPassword !== true || password === "") && (
-                <FontAwesomeIcon icon={faTimes} className={"hide"} />
+              {!validPassword && password !== "" && (
+                <FontAwesomeIcon icon={faTimes} className={"invalid"} />
               )}
             </label>
             <div className="password-input-wrapper">
@@ -429,6 +443,8 @@ const Register = () => {
                 aria-describedby="pwdnote"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
+                onFocus={() => setPasswordFocus(true)}
+                onBlur={() => setPasswordFocus(false)}
               />
               <button
                 type="button"
@@ -440,7 +456,7 @@ const Register = () => {
             </div>
           </div>
 
-          {passwordFocus === true && validPassword === false && (
+          {(passwordFocus || password !== "") && !validPassword && (
             <p id="pwdnote" className={"instructions"}>
               <FontAwesomeIcon icon={faInfoCircle} />
               8 to 24 characters.
@@ -502,7 +518,7 @@ const Register = () => {
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={loading}
+              disabled={loading || !isFormValid()}
             >
               {loading ? "Signing Up..." : "Sign Up"}
             </button>
