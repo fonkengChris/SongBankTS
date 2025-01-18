@@ -303,3 +303,10 @@ th {
   text-align: left;
   color: #a0aec0;
 }
+
+.btn-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #ccc !important;
+  transition: all 0.3s ease;
+}

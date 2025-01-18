@@ -517,8 +517,16 @@ const Register = () => {
           <div className="form-group">
             <button
               type="submit"
-              className="btn btn-primary"
+              className={`btn btn-primary ${
+                !isFormValid() || loading ? "btn-disabled" : ""
+              }`}
               disabled={loading || !isFormValid()}
+              style={{
+                opacity: !isFormValid() || loading ? 0.6 : 1,
+                cursor: !isFormValid() || loading ? "not-allowed" : "pointer",
+                backgroundColor: !isFormValid() || loading ? "#ccc" : "#007bff",
+                transition: "all 0.3s ease",
+              }}
             >
               {loading ? "Signing Up..." : "Sign Up"}
             </button>
