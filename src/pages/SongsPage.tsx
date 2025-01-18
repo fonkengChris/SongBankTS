@@ -34,23 +34,48 @@ const SongsPage = () => {
         <Box marginLeft={5}>
           <SongHeading />
         </Box>
-        <HStack paddingLeft={2} marginBottom={5}>
-          <Box marginLeft={3} marginRight={5}>
-            <NotationSelector />
-          </Box>
-          <Box marginLeft={3} marginRight={5}>
-            <LanguageSelector />
-          </Box>
-          <Show below="lg">
+
+        <Show above="lg">
+          <HStack paddingLeft={2} marginBottom={5}>
             <Box marginLeft={3} marginRight={5}>
-              <CategorySelector />
+              <NotationSelector />
             </Box>
-          </Show>
-          <SortSelector />
-          <Box width="70%" marginRight={10}>
-            <SearchInput />
+            <Box marginLeft={3} marginRight={5}>
+              <LanguageSelector />
+            </Box>
+            <SortSelector />
+            <Box width="70%" marginRight={10}>
+              <SearchInput />
+            </Box>
+          </HStack>
+        </Show>
+
+        <Show below="lg">
+          <Box paddingLeft={2} marginBottom={5}>
+            <HStack marginBottom={3}>
+              <Box marginLeft={3} marginRight={5}>
+                <NotationSelector />
+              </Box>
+              <Box marginLeft={3}>
+                <LanguageSelector />
+              </Box>
+            </HStack>
+
+            <HStack marginBottom={3}>
+              <Box marginLeft={3} marginRight={5}>
+                <CategorySelector />
+              </Box>
+              <Box marginLeft={3}>
+                <SortSelector />
+              </Box>
+            </HStack>
+
+            <Box marginLeft={3} marginRight={3} marginBottom={3}>
+              <SearchInput />
+            </Box>
           </Box>
-        </HStack>
+        </Show>
+
         <Box marginLeft={3}>
           <SongGrid />
         </Box>
