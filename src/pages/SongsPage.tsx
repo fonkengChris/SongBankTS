@@ -9,6 +9,7 @@ import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
 import LanguageSelector from "../components/LanguageSelector";
 import CategorySelector from "../components/CategorySelector";
+import PurchaseSection from "../components/PurchaseSection";
 
 const SongsPage = () => {
   const jwt = localStorage.getItem("token");
@@ -34,6 +35,8 @@ const SongsPage = () => {
         <Box marginLeft={5}>
           <SongHeading />
         </Box>
+
+        <PurchaseSection itemName="Song 1" price={10} />
 
         <Show above="lg">
           <HStack paddingLeft={2} marginBottom={5}>
