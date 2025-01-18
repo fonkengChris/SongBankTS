@@ -50,7 +50,7 @@ const MainNavBar = ({ user }: Props) => {
         </Link>
         <Link to="/songs/">
           <Text as="b" color="brown" fontSize="4xl" marginRight={3}>
-            SongBank
+            SheetMusicLibrary
           </Text>
         </Link>
 

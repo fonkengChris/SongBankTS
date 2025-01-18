@@ -16,6 +16,7 @@ import {
   NAME_REGEX,
   PWD_REGEX,
   USERS_ENDPOINT,
+  PHONE_NUMBER_REGEX,
 } from "../data/constants";
 import countries from "../data/countries";
 import Customer from "../entities/Customer";
@@ -82,6 +83,8 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [validPhone, setValidPhone] = useState(false);
+
   useEffect(() => {
     firstnameRef.current?.focus();
   }, []);
@@ -106,6 +109,10 @@ const Register = () => {
   useEffect(() => {
     setErrMsg("");
   }, [firstname, lastname, email, password, matchPassword]);
+
+  useEffect(() => {
+    setValidPhone(PHONE_NUMBER_REGEX.test(phone));
+  }, [phone]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -224,6 +231,7 @@ const Register = () => {
       validEmail &&
       validPassword &&
       validMatch &&
+      validPhone &&
       country !== "" &&
       phone !== "" &&
       birthDate !== ""
@@ -358,7 +366,15 @@ const Register = () => {
           )}
 
           <div className="form-group">
-            <label htmlFor="phone">Phone Number:</label>
+            <label htmlFor="phone">
+              Phone Number:{" "}
+              {validPhone && phone !== "" && (
+                <FontAwesomeIcon icon={faCheck} className="valid" />
+              )}
+              {!validPhone && phone !== "" && (
+                <FontAwesomeIcon icon={faTimes} className="invalid" />
+              )}
+            </label>
             <input
               className="form-control"
               type="text"
@@ -374,10 +390,16 @@ const Register = () => {
               placeholder="Enter phone number..."
             />
           </div>
-          {phoneFocus && phone !== "" && (
+          {(phoneFocus || phone !== "") && !validPhone && (
             <p className="instructions">
               <FontAwesomeIcon icon={faInfoCircle} />
-              Enter a valid phone number.
+              Phone number must be in format: +XXX-XXX-XXX-XXXX
+              <br />
+              Example: +234-812-345-6789
+              <br />
+              Country code must start with + followed by 1-3 digits
+              <br />
+              Rest of the number should be separated by hyphens
             </p>
           )}
 

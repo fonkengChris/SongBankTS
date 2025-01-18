@@ -8,6 +8,7 @@ import SongGrid from "../components/SongGrid";
 import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
 import LanguageSelector from "../components/LanguageSelector";
+import CategorySelector from "../components/CategorySelector";
 
 const SongsPage = () => {
   const jwt = localStorage.getItem("token");
@@ -40,6 +41,11 @@ const SongsPage = () => {
           <Box marginLeft={3} marginRight={5}>
             <LanguageSelector />
           </Box>
+          <Show below="lg">
+            <Box marginLeft={3} marginRight={5}>
+              <CategorySelector />
+            </Box>
+          </Show>
           <SortSelector />
           <Box width="70%" marginRight={10}>
             <SearchInput />

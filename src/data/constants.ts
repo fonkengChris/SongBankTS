@@ -26,7 +26,7 @@ export const EMAIL_REGEX =
 export const PHONE_NUMBER_REGEX =
   /^\\+[1-9]{1}[0-9]{0,2}-[2-9]{1}[0-9]{2}-[2-9]{1}[0-9]{2}-[0-9]{4}$/;
 export const PWD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,50}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%?&*^]).{8,50}$/;
 
 // Replace direct values with environment variables
 export const GOOGLE_OAUTH_CLIENT_ID = import.meta.env

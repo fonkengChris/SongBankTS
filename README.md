@@ -4,7 +4,7 @@ Thank you for providing additional files. Below is the updated README.md for you
 
 # SongBankTS
 
-SongBankTS is a web-based song library application built using React and TypeScript. It allows users to browse, search, and manage a collection of songs. The project utilizes a variety of modern web technologies to deliver a seamless user experience.
+SheetMusicLibraryTS is a web-based song library application built using React and TypeScript. It allows users to browse, search, and manage a collection of songs. The project utilizes a variety of modern web technologies to deliver a seamless user experience.
 
 ## Features
 
@@ -32,15 +32,16 @@ SongBankTS is a web-based song library application built using React and TypeScr
 To run this project locally, follow these steps:
 
 1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/fonkengChris/SongBankTS.git
-    cd SongBankTS
-    ```
+
+   ```bash
+   git clone https://github.com/fonkengChris/SongBankTS.git
+   cd SongBankTS
+   ```
 
 2. **Install dependencies**:
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 ## Running the Project
 
