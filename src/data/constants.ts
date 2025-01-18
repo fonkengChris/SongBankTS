@@ -23,8 +23,7 @@ export const REQUEST_RESET_ENDPOINT = "/api/auth/password-reset/request-reset";
 export const NAME_REGEX = /^[A-z][A-z0-9-_ ]{3,50}$/;
 export const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-export const PHONE_NUMBER_REGEX =
-  /^\\+[1-9]{1}[0-9]{0,2}-[2-9]{1}[0-9]{2}-[2-9]{1}[0-9]{2}-[0-9]{4}$/;
+export const PHONE_NUMBER_REGEX = /^(\+|00)[1-9][0-9]{1,14}$/;
 export const PWD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%?&*^]).{8,50}$/;
 

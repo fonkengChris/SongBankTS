@@ -393,13 +393,17 @@ const Register = () => {
           {(phoneFocus || phone !== "") && !validPhone && (
             <p className="instructions">
               <FontAwesomeIcon icon={faInfoCircle} />
-              Phone number must be in format: +XXX-XXX-XXX-XXXX
+              Phone number must:
               <br />
-              Example: +234-812-345-6789
+              - Start with '+' or '00'
               <br />
-              Country code must start with + followed by 1-3 digits
+              - First digit after '+' or '00' must be 1-9
               <br />
-              Rest of the number should be separated by hyphens
+              - Contain only digits
+              <br />
+              - Maximum 15 digits total
+              <br />
+              Example: +12345678901 or 0012345678901
             </p>
           )}
 
