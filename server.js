@@ -14,7 +14,7 @@ app.use((req, res, next) => {
   res.header(
     "Content-Security-Policy",
     "default-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com; " +
-      "img-src 'self' data: https:; " +
+      "img-src 'self' data: https: http: blob: https://sheet-music-library-ad225c202768.herokuapp.com https://storage.googleapis.com; " +
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleusercontent.com https://*.paypal.com https://www.paypalobjects.com; " +
       "style-src 'self' 'unsafe-inline' https://www.paypalobjects.com; " +
       "frame-src 'self' https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com; " +
