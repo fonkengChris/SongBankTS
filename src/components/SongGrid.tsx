@@ -5,6 +5,7 @@ import SongCardSkeleton from "./SongCardSkeleton";
 import SongCardContainer from "./SongCardContainer";
 import { useEffect, useRef } from "react";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
+import Song from "../entities/Song";
 
 const SongGrid = () => {
   const loadMoreRef = useRef(null);
@@ -19,6 +20,33 @@ const SongGrid = () => {
     isFetchingNextPage,
   } = useSongs();
 
+  // Create base song object
+  const dummySong: Partial<Song> = {
+    _id: "premium-1",
+    title: "Premium Song",
+    slug: "premium-song",
+    lyrics: "Premium lyrics",
+    language: { _id: "1", name: "English", code: "en" },
+    authorName: "Premium Author",
+    description: "This is a premium song",
+    mediaFiles: [],
+  };
+
+  // Add media files with song reference
+  dummySong.mediaFiles = [
+    {
+      _id: "premium-media-1",
+      name: "Premium Media",
+      song: dummySong as Song,
+      notation: { _id: "1", title: "Standard", slug: "standard" },
+      previewImage: "https://placehold.co/600x400?text=Premium+Content",
+      documentFile: "",
+      audioFile: "",
+    },
+  ];
+
+  const dummyPremiumSong = dummySong as Song;
+
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   useEffect(() => {
@@ -32,6 +60,15 @@ const SongGrid = () => {
   return (
     <Box>
       <SimpleGrid columns={{ sm: 1, md: 2, lg: 5 }} padding="10px" spacing={3}>
+        {/* Add Premium Song Card first */}
+        <SongCardContainer>
+          <SongCard
+            song={dummyPremiumSong}
+            mediaFile={dummyPremiumSong.mediaFiles[0]}
+          />
+        </SongCardContainer>
+
+        {/* Regular songs */}
         {isLoading &&
           skeletons.map((skeleton) => (
             <SongCardContainer key={skeleton}>
@@ -49,7 +86,6 @@ const SongGrid = () => {
         )}
       </SimpleGrid>
 
-      {/* Loading indicator and intersection observer target */}
       <Box ref={loadMoreRef} padding="20px" textAlign="center">
         {isFetchingNextPage && (
           <Spinner

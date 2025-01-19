@@ -36,8 +36,7 @@ const SongsPage = () => {
           <SongHeading />
         </Box>
 
-        <PurchaseSection itemName="Song 1" price={10} />
-
+        
         <Show above="lg">
           <HStack paddingLeft={2} marginBottom={5}>
             <Box marginLeft={3} marginRight={5}>
