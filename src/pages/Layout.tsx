@@ -20,17 +20,12 @@ const Layout = () => {
 
   return (
     <PayPalProvider>
-      <div
-        style={{
-          backgroundColor: `var(--chakra-colors-${bgColor.replace(".", "-")})`,
-          minHeight: "100vh",
-        }}
-      >
+      <Box minH="100vh" bg={bgColor}>
         <MainNavBar user={user} />
-        <Box padding={5} bg={bgColor}>
+        <Box padding={5}>
           <Outlet />
         </Box>
-      </div>
+      </Box>
     </PayPalProvider>
   );
 };
