@@ -47,15 +47,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy API requests to your backend
+// Determine API URL based on environment
 const API_URL =
-  process.env.API_URL ||
-  "https://sheet-music-library-ad225c202768.herokuapp.com";
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : process.env.API_URL ||
+      "https://sheet-music-library-ad225c202768.herokuapp.com";
+
 // Don't proxy to self - this causes infinite loops
 if (API_URL === process.env.HEROKU_APP_NAME) {
   console.error("Cannot proxy to self - please set correct API_URL");
   process.exit(1);
 }
+
 app.use(
   "/api",
   createProxyMiddleware({

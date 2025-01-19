@@ -1,6 +1,7 @@
 import { SimpleGrid, Text, Box, Spinner } from "@chakra-ui/react";
 import useSongs from "../hooks/useSongs";
 import SongCard from "./SongCard";
+import PremiumSongCard from "./PremiumSongCard";
 import SongCardSkeleton from "./SongCardSkeleton";
 import SongCardContainer from "./SongCardContainer";
 import { useEffect, useRef } from "react";
@@ -58,11 +59,15 @@ const SongGrid = () => {
   if (error) return <Text color="red">{error.message}</Text>;
 
   return (
-    <Box>
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 5 }} padding="10px" spacing={3}>
-        {/* Add Premium Song Card first */}
+    <Box padding="10px">
+      <SimpleGrid
+        columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+        spacing={6}
+        padding="10px"
+      >
+        {/* Premium song at the top */}
         <SongCardContainer>
-          <SongCard
+          <PremiumSongCard
             song={dummyPremiumSong}
             mediaFile={dummyPremiumSong.mediaFiles[0]}
           />

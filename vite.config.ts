@@ -6,6 +6,11 @@ export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current working directory.
   const env = loadEnv(mode, process.cwd(), "");
 
+  const isDevelopment = mode === "development";
+  const apiUrl = isDevelopment
+    ? "http://localhost:3000"
+    : "https://sheet-music-library-ad225c202768.herokuapp.com";
+
   return {
     plugins: [react()],
     define: {
@@ -17,7 +22,7 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       proxy: {
         "/api": {
-          target: "https://sheet-music-library-ad225c202768.herokuapp.com",
+          target: apiUrl,
           changeOrigin: true,
           secure: false,
         },
