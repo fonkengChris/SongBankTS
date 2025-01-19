@@ -6,6 +6,10 @@ interface Song {
   _id: string;
   title: string;
   slug: string;
+  isPremium: {
+    type: boolean;
+    default: false;
+  };
   description?: string;
   lyrics: string;
   language: Language;
