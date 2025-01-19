@@ -10,7 +10,11 @@ const PayPalProvider = ({ children }: Props) => {
     clientId: PAYPAL_CLIENT_ID,
     currency: CURRENCY,
     intent: "capture",
+    components: "buttons",
+    "disable-funding": "credit,card",
   };
+
+  console.log("PayPal Client ID:", PAYPAL_CLIENT_ID); // Debug log
 
   return (
     <PayPalScriptProvider options={initialOptions}>

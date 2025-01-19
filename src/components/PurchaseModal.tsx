@@ -8,6 +8,7 @@ import {
   Text,
   VStack,
   useToast,
+  Box,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import PayPalPaymentButton from "./PayPalPaymentButton";
@@ -48,22 +49,24 @@ const PurchaseModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size="md">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Purchase Premium Content</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <VStack spacing={4} align="stretch" pb={6}>
+          <VStack spacing={6} align="stretch" pb={6}>
             <Text>
               Get access to <strong>{songTitle}</strong>
             </Text>
             <Text fontWeight="bold">Price: ${price}</Text>
-            <PayPalPaymentButton
-              amount={price}
-              description={`Purchase ${songTitle}`}
-              onSuccess={handlePurchaseSuccess}
-            />
+            <Box minHeight="150px" width="100%">
+              <PayPalPaymentButton
+                amount={price}
+                description={`Purchase ${songTitle}`}
+                onSuccess={handlePurchaseSuccess}
+              />
+            </Box>
           </VStack>
         </ModalBody>
       </ModalContent>
