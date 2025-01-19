@@ -15,10 +15,10 @@ app.use((req, res, next) => {
     "Content-Security-Policy",
     "default-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com; " +
       "img-src 'self' data: https:; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleusercontent.com https://www.paypal.com https://www.paypalobjects.com; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleusercontent.com https://*.paypal.com https://www.paypalobjects.com; " +
       "style-src 'self' 'unsafe-inline' https://www.paypalobjects.com; " +
-      "frame-src 'self' https://accounts.google.com https://www.paypal.com; " +
-      "connect-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com https://accounts.google.com https://www.paypal.com https://*.paypal.com;"
+      "frame-src 'self' https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com; " +
+      "connect-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com;"
   );
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
