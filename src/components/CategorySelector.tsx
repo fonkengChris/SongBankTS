@@ -16,7 +16,15 @@ const CategorySelector = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+      <MenuButton
+        as={Button}
+        rightIcon={<BsChevronDown />}
+        minH="50px"
+        height="50px"
+        display="inline-flex"
+        alignItems="center"
+        width="auto"
+      >
         {selectedCategory?.title || "Categories"}
       </MenuButton>
       <MenuList>

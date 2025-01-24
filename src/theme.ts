@@ -8,11 +8,11 @@ const config: ThemeConfig = {
 const theme = extendTheme({
   config,
   styles: {
-    global: (props: { colorMode: string }) => ({
+    global: {
       body: {
-        bg: props.colorMode === "dark" ? "black" : "white",
+        bg: "black",
       },
-    }),
+    },
   },
   colors: {
     gray: {
@@ -43,9 +43,9 @@ const theme = extendTheme({
   },
   components: {
     Box: {
-      baseStyle: (props: { colorMode: string }) => ({
-        bg: props.colorMode === "dark" ? "black" : "white",
-      }),
+      baseStyle: {
+        bg: "black",
+      },
     },
   },
 });

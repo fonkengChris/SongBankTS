@@ -1,5 +1,4 @@
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { PAYPAL_CLIENT_ID } from "../config/paypal-config";
 import { ChakraProvider } from "@chakra-ui/react";
 
 interface Props {
@@ -8,15 +7,20 @@ interface Props {
 
 const PayPalProvider = ({ children }: Props) => {
   const initialOptions = {
-    "clientId": PAYPAL_CLIENT_ID,
+    clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
     currency: "USD",
     intent: "capture",
-    "data-sdk-integration-source": "button-factory",
+    "enable-funding": "paypal",
+    "disable-funding": "card",
+    components: "buttons",
+    "data-namespace": "paypal_sdk",
+    "data-paypal-sdk-version": "5.0.235",
+    "data-page-type": "checkout",
   };
 
   return (
     <ChakraProvider>
-      <PayPalScriptProvider deferLoading={false} options={initialOptions}>
+      <PayPalScriptProvider options={initialOptions}>
         {children}
       </PayPalScriptProvider>
     </ChakraProvider>

@@ -85,6 +85,22 @@ const Register = () => {
 
   const [validPhone, setValidPhone] = useState(false);
 
+  // Add loading state for Google button
+  const [googleLoaded, setGoogleLoaded] = useState(false);
+
+  // Verify client ID on component mount
+  useEffect(() => {
+    const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
+    if (clientId) {
+      setGoogleLoaded(true);
+      console.log("Google OAuth Client ID loaded:", clientId);
+    } else {
+      console.error(
+        "Google OAuth Client ID not found in environment variables"
+      );
+    }
+  }, []);
+
   useEffect(() => {
     firstnameRef.current?.focus();
   }, []);
@@ -219,10 +235,6 @@ const Register = () => {
     }
   };
 
-  // Use the same client ID as Login
-  const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
-  console.log("Google OAuth Client ID:", clientId); // Debug log
-
   // Add this function to check if form is valid
   const isFormValid = () => {
     return (
@@ -239,7 +251,9 @@ const Register = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={clientId || ""}>
+    <GoogleOAuthProvider
+      clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID || ""}
+    >
       <section className="login-container">
         <form onSubmit={handleSubmit} className="login-form" role="form">
           {errMsg !== "" && (
@@ -567,14 +581,22 @@ const Register = () => {
         </p>
         <div className="social-login">
           <p>Or create a new account with:</p>
-          <GoogleLogin
-            text="signup_with"
-            shape="rectangular"
-            onSuccess={handleGoogleSuccess}
-            onError={() => {
-              setErrMsg("Google Sign Up Failed");
-            }}
-          />
+          {googleLoaded ? (
+            <GoogleLogin
+              text="signup_with"
+              shape="rectangular"
+              theme="outline"
+              size="large"
+              width="300"
+              onSuccess={handleGoogleSuccess}
+              onError={() => {
+                console.error("Google Sign Up Failed");
+                setErrMsg("Google Sign Up Failed");
+              }}
+            />
+          ) : (
+            <p>Loading Google Sign Up...</p>
+          )}
         </div>
       </section>
     </GoogleOAuthProvider>

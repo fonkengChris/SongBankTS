@@ -2,7 +2,6 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import useSongQueryStore from "../Store";
 import useNotations from "../hooks/useNotations";
-import { useEffect } from "react";
 
 const NotationSelector = () => {
   const { data: notations, error } = useNotations();
@@ -15,7 +14,15 @@ const NotationSelector = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<BsChevronDown />}>
+      <MenuButton
+        as={Button}
+        rightIcon={<BsChevronDown />}
+        minH="50px"
+        height="50px"
+        display="inline-flex"
+        alignItems="center"
+        width="auto"
+      >
         {selectedNotation?.title || "Notations"}
       </MenuButton>
       <MenuList>

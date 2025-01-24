@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
-import ColorModeSwitch from "./ColorModeSwitch";
 import CurrentUser from "../entities/CurrentUser";
 import { HamburgerIcon } from "@chakra-ui/icons";
 
@@ -152,11 +151,6 @@ const MainNavBar = ({ user }: Props) => {
             </Menu>
           </Flex>
         )}
-
-        {/* ColorModeSwitch in its own container */}
-        <Box marginLeft="auto">
-          <ColorModeSwitch />
-        </Box>
       </Flex>
     </Flex>
   );

@@ -17,8 +17,17 @@ const SongHeading = () => {
   const heading = `${language?.name || ""}  ${notation?.title || ""}  ${
     category?.title || ""
   }   Songs`;
+
   return (
-    <Heading textAlign="left" marginY={5} fontSize="5xl" as="h3">
+    <Heading
+      textAlign="left"
+      paddingTop={5}
+      paddingBottom={5}
+      paddingLeft={8}
+      fontSize="5xl"
+      as="h1"
+      lineHeight="1.2"
+    >
       {heading}
     </Heading>
   );

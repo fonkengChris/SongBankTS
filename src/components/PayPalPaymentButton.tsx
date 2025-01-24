@@ -1,5 +1,6 @@
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
-import { Box, Spinner, Text } from "@chakra-ui/react";
+import { Box, Spinner, Text, useToast } from "@chakra-ui/react";
+import APIClient from "../services/api-client";
 
 interface Props {
   amount: number;
@@ -9,6 +10,8 @@ interface Props {
 
 const PayPalPaymentButton = ({ amount, description, onSuccess }: Props) => {
   const [{ isPending }] = usePayPalScriptReducer();
+  const toast = useToast();
+  const apiClient = new APIClient("/api/payments");
 
   if (isPending) {
     return (
@@ -22,6 +25,7 @@ const PayPalPaymentButton = ({ amount, description, onSuccess }: Props) => {
   return (
     <Box width="100%" minH="200px">
       <PayPalButtons
+        style={{ layout: "vertical" }}
         createOrder={(_, actions) => {
           return actions.order.create({
             intent: "CAPTURE",
@@ -31,17 +35,31 @@ const PayPalPaymentButton = ({ amount, description, onSuccess }: Props) => {
                   value: amount.toString(),
                   currency_code: "USD",
                 },
-                description: description,
+                description,
               },
             ],
           });
         }}
-        onApprove={(_, actions) => {
-          return actions.order!.capture().then((details) => {
-            if (onSuccess) {
-              onSuccess();
-            }
-          });
+        onApprove={async (data, actions) => {
+          if (!actions.order) return;
+          try {
+            const order = await actions.order.capture();
+            toast({
+              title: "Payment Successful",
+              description: "Thank you for your purchase!",
+              status: "success",
+              duration: 5000,
+            });
+            if (onSuccess) onSuccess();
+          } catch (error) {
+            console.error("Payment failed:", error);
+            toast({
+              title: "Payment Failed",
+              description: "Sorry, your payment could not be processed",
+              status: "error",
+              duration: 5000,
+            });
+          }
         }}
       />
     </Box>
