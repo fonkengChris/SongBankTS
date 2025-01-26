@@ -5,6 +5,7 @@ import jwtDecode from "jwt-decode";
 import { useState, useEffect } from "react";
 import CurrentUser from "../entities/CurrentUser";
 import PayPalProvider from "../components/PayPalProvider";
+import Footer from "../components/Footer";
 
 const Layout = () => {
   const [user, setUser] = useState({} as CurrentUser);
@@ -20,11 +21,12 @@ const Layout = () => {
 
   return (
     <PayPalProvider>
-      <Box minH="100vh" bg={bgColor}>
+      <Box minH="100vh" bg={bgColor} display="flex" flexDirection="column">
         <MainNavBar user={user} />
-        <Box padding={5}>
+        <Box padding={5} flex="1">
           <Outlet />
         </Box>
+        <Footer />
       </Box>
     </PayPalProvider>
   );

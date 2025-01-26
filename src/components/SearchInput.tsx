@@ -19,7 +19,7 @@ const SearchInput = () => {
         <Input
           ref={ref}
           borderRadius={20}
-          placeholder="Search games ..."
+          placeholder="Search songs ..."
           variant="filled"
           height="50px"
           minH="50px"
