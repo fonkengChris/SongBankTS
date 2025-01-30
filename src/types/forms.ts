@@ -40,10 +40,11 @@ export interface SongFormData {
   slug: string;
   description?: string;
   lyrics: string;
-  language: Language;
+  language: { _id: string; name: string; code: string };
   authorName: string;
   category?: Category;
   mediaFiles: string[];
+  price?: number;
   views?: number;
   likesCount?: number;
   metacritic?: number;

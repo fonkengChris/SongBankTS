@@ -44,6 +44,7 @@ const SongFormPage = () => {
     authorName: "",
     category: undefined,
     mediaFiles: [],
+    price: undefined,
   });
 
   const handleMediaSelect = (mediaId: string) => {
@@ -74,6 +75,7 @@ const SongFormPage = () => {
         authorName: song.authorName,
         category: song.category,
         mediaFiles: [],
+        price: song.price,
       });
     }
   }, [id, song]);
@@ -227,6 +229,27 @@ const SongFormPage = () => {
                   </option>
                 ))}
               </Select>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel color="blue.500">Price</FormLabel>
+              <Input
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.price || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    price: e.target.value
+                      ? parseFloat(e.target.value)
+                      : undefined,
+                  })
+                }
+                placeholder="Leave empty for free content"
+                bg={inputBg}
+                color={inputColor}
+              />
             </FormControl>
 
             <FormControl>

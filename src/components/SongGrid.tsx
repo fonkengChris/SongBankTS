@@ -65,14 +65,6 @@ const SongGrid = () => {
         spacing={6}
         padding="10px"
       >
-        {/* Premium song at the top */}
-        <SongCardContainer>
-          <PremiumSongCard
-            song={dummyPremiumSong}
-            mediaFile={dummyPremiumSong.mediaFiles[0]}
-          />
-        </SongCardContainer>
-
         {/* Regular songs */}
         {isLoading &&
           skeletons.map((skeleton) => (
@@ -84,7 +76,11 @@ const SongGrid = () => {
           page.songs.map((song) =>
             song.mediaFiles.map((mediaFile) => (
               <SongCardContainer key={`${pageIndex}-${mediaFile._id}`}>
-                <SongCard song={song} mediaFile={mediaFile} />
+                {song.price ? (
+                  <PremiumSongCard song={song} mediaFile={mediaFile} />
+                ) : (
+                  <SongCard song={song} mediaFile={mediaFile} />
+                )}
               </SongCardContainer>
             ))
           )

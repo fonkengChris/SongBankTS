@@ -6,10 +6,6 @@ interface Song {
   _id: string;
   title: string;
   slug: string;
-  isPremium: {
-    type: boolean;
-    default: false;
-  };
   description?: string;
   lyrics: string;
   language: Language;
@@ -19,6 +15,7 @@ interface Song {
   views?: number;
   likesCount?: number;
   metacritic?: number;
+  price?: number;
 }
 
 export default Song;

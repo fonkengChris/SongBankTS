@@ -94,6 +94,7 @@ const SongsManagementPage = () => {
                 <Th color="blue.600">Author</Th>
                 <Th color="blue.600">Category</Th>
                 <Th color="blue.600">Language</Th>
+                <Th color="blue.600">Price</Th>
                 <Th color="blue.600">Description</Th>
                 <Th color="blue.600">Lyrics</Th>
                 <Th color="blue.600">Views</Th>
@@ -113,6 +114,9 @@ const SongsManagementPage = () => {
                     </Td>
                     <Td color="blue.500">
                       {String(song.language.name || "N/A")}
+                    </Td>
+                    <Td color="blue.500">
+                      {song.price ? `$${song.price.toFixed(2)}` : "Free"}
                     </Td>
                     <Td color="blue.500">
                       {typeof song.description === "string"

@@ -1,4 +1,12 @@
-import { Card, CardBody, HStack, Heading, Image, Text } from "@chakra-ui/react";
+import {
+  Card,
+  CardBody,
+  HStack,
+  Heading,
+  Image,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Song from "../entities/Song";
 import SongMedia from "../entities/SongMedia";
@@ -21,12 +29,15 @@ const SongCard = ({ song, mediaFile }: Props) => {
         />
       </Link>
       <CardBody>
-        <Link to={"/media_files/" + mediaFile._id}>{song.title}</Link>
-        <HStack justifyContent="space-between">
-          <Text>{mediaFile.notation.title}</Text>
+        <Link to={"/media_files/" + mediaFile._id}>{mediaFile.name}</Link>
+        <Text mt={1}>{mediaFile.notation.title}</Text>
+        <Text>{song.authorName !== "Unknown" && song.authorName}</Text>
+        <HStack justifyContent="space-between" mt={2}>
           <CriticScore score={song.metacritic ?? 0} />
+          <Text color="green.500" fontWeight="bold">
+            Free
+          </Text>
         </HStack>
-        {song.authorName !== "Unknown" && <Text>{song.authorName}</Text>}
       </CardBody>
     </Card>
   );
