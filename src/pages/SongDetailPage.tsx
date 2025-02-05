@@ -51,8 +51,8 @@ const SongDetailPage = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { likeSong } = useLike(mediaFile?.song._id!); // Returns a function to like the song
-  const { unLikeSong } = useUnlike(mediaFile?.song._id!); // Returns a function to unlike the song
+  const { likeSong } = useLike(id);
+  const { unlikeSong } = useUnlike(id);
 
   const handleLike = async () => {
     try {
@@ -67,7 +67,7 @@ const SongDetailPage = () => {
       if (!likeState.liked) {
         await likeSong();
       } else {
-        await unLikeSong();
+        await unlikeSong();
       }
     } catch (error) {
       console.error("Error toggling like status:", error);

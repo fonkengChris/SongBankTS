@@ -1,43 +1,52 @@
-import React from "react";
-import { MEDIA_BASE_URL, SONGS_ENDPOINT } from "../data/constants";
-import Song from "../entities/Song";
-import useSong from "./useSong";
+import { SONGS_ENDPOINT, MEDIA_FILES_ENDPOINT } from "../data/constants";
 import axios from "axios";
 
-interface Props {
-  id: string;
-}
+export const useUnlike = (mediafileId: string) => {
+  const getMediafile = async () => {
+    const response = await axios.get(`${MEDIA_FILES_ENDPOINT}/${mediafileId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": `${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  };
 
-export const useUnlike = (id: string) => {
-  const { song } = useSong(id); // Get the song details using the hook
-
-  const unLikeSong = async () => {
-    if (!song) {
-      console.error("Song not found");
-      return;
-    }
+  const unlikeSong = async () => {
     try {
-      const updatedLikesCount = (song.likesCount || 0) - 1;
+      const mediafile = await getMediafile();
+      const songId = mediafile.song._id;
 
+      const songResponse = await axios.get(`${SONGS_ENDPOINT}/${songId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": `${localStorage.getItem("token")}`,
+        },
+      });
+      const song = songResponse.data;
+
+      if (!song) return;
+
+      const updatedLikesCount = (song.likesCount ?? 0) - 1;
       const response = await axios.patch(
-        `${SONGS_ENDPOINT}/${id}`,
+        `${SONGS_ENDPOINT}/${songId}`,
         {
-          likesCount: updatedLikesCount, // Incrementing likesCount
+          likesCount: updatedLikesCount,
         },
         {
           headers: {
+            "Content-Type": "application/json",
             "x-auth-token": `${localStorage.getItem("token")}`,
           },
         }
       );
       return response.data;
     } catch (err) {
-      console.error("Error liking the song:", err);
       throw err;
     }
   };
 
-  return { unLikeSong };
+  return { unlikeSong };
 };
 
 export default useUnlike;

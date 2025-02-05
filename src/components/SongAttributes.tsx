@@ -30,9 +30,7 @@ const SongAttributes = ({ mediaFile }: Props) => {
       <DefinitionItem term="Author">
         <Text>{song.authorName}</Text>
       </DefinitionItem>
-      <DefinitionItem term="Likes">
-        <Text>{song.likesCount || 0}</Text>
-      </DefinitionItem>
+      
     </SimpleGrid>
   );
 };

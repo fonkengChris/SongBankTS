@@ -9,9 +9,15 @@ import {
   VStack,
   useToast,
   Box,
+  Button,
+  Stack,
+  RadioGroup,
+  Radio,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import PayPalPaymentButton from "./PayPalPaymentButton";
+import MoMoPaymentButton from "./MoMoPaymentButton";
+import { useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -30,6 +36,7 @@ const PurchaseModal = ({
 }: Props) => {
   const navigate = useNavigate();
   const toast = useToast();
+  const [paymentMethod, setPaymentMethod] = useState("paypal");
 
   const handlePurchaseSuccess = () => {
     // Here you would typically:
@@ -60,13 +67,31 @@ const PurchaseModal = ({
               Get access to <strong>{songTitle}</strong>
             </Text>
             <Text fontWeight="bold">Price: ${price}</Text>
-            <Box minHeight="150px" width="100%">
-              <PayPalPaymentButton
-                amount={price}
-                description={`Purchase ${songTitle}`}
-                onSuccess={handlePurchaseSuccess}
-              />
-            </Box>
+
+            <RadioGroup onChange={setPaymentMethod} value={paymentMethod}>
+              <Stack direction="row" spacing={5}>
+                <Radio value="paypal">PayPal</Radio>
+                <Radio value="momo">MTN Mobile Money</Radio>
+              </Stack>
+            </RadioGroup>
+
+            {paymentMethod === "paypal" ? (
+              <Box minHeight="150px" width="100%">
+                <PayPalPaymentButton
+                  amount={price}
+                  description={`Purchase ${songTitle}`}
+                  onSuccess={handlePurchaseSuccess}
+                />
+              </Box>
+            ) : (
+              <Box minHeight="150px" width="100%">
+                <MoMoPaymentButton
+                  amount={price}
+                  description={`Purchase ${songTitle}`}
+                  onSuccess={handlePurchaseSuccess}
+                />
+              </Box>
+            )}
           </VStack>
         </ModalBody>
       </ModalContent>
