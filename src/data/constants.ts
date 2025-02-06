@@ -17,6 +17,7 @@ export const CHANGE_PASSWORD_ENDPOINT = "/api/auth/change_password";
 export const RESET_PASSWORD_ENDPOINT =
   "/api/auth/password-reset/reset-password";
 export const REQUEST_RESET_ENDPOINT = "/api/auth/password-reset/request-reset";
+export const CONTACT_ENDPOINT = "/api/contact";
 
 //validation constants
 
