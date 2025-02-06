@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import helmet from "helmet";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,9 +16,9 @@ app.use((req, res, next) => {
     "Content-Security-Policy",
     "default-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com; " +
       "img-src 'self' data: https: http: blob: https://sheet-music-library-ad225c202768.herokuapp.com https://storage.googleapis.com; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleusercontent.com https://*.paypal.com https://www.paypalobjects.com; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleusercontent.com https://*.paypal.com https://www.paypalobjects.com https://www.youtube.com https://s.ytimg.com; " +
       "style-src 'self' 'unsafe-inline' https://www.paypalobjects.com; " +
-      "frame-src 'self' https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com; " +
+      "frame-src 'self' https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com https://www.youtube.com https://www.youtube-nocookie.com; " +
       "connect-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com;"
   );
   res.header("Access-Control-Allow-Origin", "*");
