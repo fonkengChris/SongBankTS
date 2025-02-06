@@ -16,9 +16,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FaRunning, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import APIClient from "../services/api-client";
 import { CONTACT_ENDPOINT } from "../data/constants";
+import jwtDecode from "jwt-decode";
+import CurrentUser from "../entities/CurrentUser";
 
 interface ContactForm {
   email: string;
@@ -36,6 +38,20 @@ const Contact = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+
+  useEffect(() => {
+    try {
+      const access = localStorage.getItem("token");
+      const currentUser = jwtDecode<CurrentUser>(access!);
+      setFormData((prev) => ({
+        ...prev,
+        email: currentUser.email || "",
+        name: currentUser.name || "",
+      }));
+    } catch (error) {
+      // Silently fail - user can still fill in the form manually
+    }
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
