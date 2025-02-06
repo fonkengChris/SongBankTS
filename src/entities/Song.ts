@@ -16,6 +16,7 @@ interface Song {
   likesCount?: number;
   metacritic?: number;
   price?: number;
+  youtubeUrl?: string;
 }
 
 export default Song;

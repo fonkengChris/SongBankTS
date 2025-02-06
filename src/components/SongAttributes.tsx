@@ -1,4 +1,4 @@
-import { SimpleGrid, Text } from "@chakra-ui/react";
+import { SimpleGrid, Text, Spinner } from "@chakra-ui/react";
 import CriticScore from "./CriticScore";
 import DefinitionItem from "./DefinitionItem";
 import useCategory from "../hooks/useCategory";
@@ -12,25 +12,30 @@ interface Props {
 const SongAttributes = ({ mediaFile }: Props) => {
   const song = mediaFile.song;
   const category = useCategory(song.category);
-  const { notation } = useNotation(mediaFile.notation._id);
+  const {
+    notation,
+    isLoading: notationLoading,
+    error: notationError,
+  } = useNotation(mediaFile.notation._id);
 
-  // console.log();
+  if (notationLoading) return <Spinner />;
+  if (notationError) return <Text color="red.500">Error loading notation</Text>;
+  if (!notation) return <Text>No notation found</Text>;
+
   return (
     <SimpleGrid columns={2} as="dl">
       <DefinitionItem term={"Notation"}>
-        {/* I need to call the particular document file dynamically */}
-        <Text>{notation!.title}</Text>
+        <Text>{notation.title}</Text>
       </DefinitionItem>
       <DefinitionItem term="MetaScore">
         <CriticScore score={song.metacritic || 0} />
       </DefinitionItem>
       <DefinitionItem term="Category">
-        <Text>{category!.title}</Text>
+        <Text>{category?.title || "Uncategorized"}</Text>
       </DefinitionItem>
       <DefinitionItem term="Author">
         <Text>{song.authorName}</Text>
       </DefinitionItem>
-      
     </SimpleGrid>
   );
 };

@@ -20,6 +20,7 @@ import Views from "../components/Views";
 import useLike from "../hooks/useLike";
 import Like from "../components/Like";
 import useUnlike from "../hooks/useUnlike";
+import YouTube from "react-youtube";
 
 const SongDetailPage = () => {
   const jwt = localStorage.getItem("token");
@@ -80,6 +81,15 @@ const SongDetailPage = () => {
     }
   };
 
+  // Add this function to extract YouTube video ID from URL
+  const getYoutubeVideoId = (url?: string) => {
+    if (!url) return null;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
   if (mediaLoading) return <Spinner />;
 
   // Show error messages if applicable
@@ -116,8 +126,6 @@ const SongDetailPage = () => {
           <Text>No audio available for this song.</Text>
         )}
 
-        <br />
-
         <Heading>Background</Heading>
 
         <ExpandableText>
@@ -127,6 +135,23 @@ const SongDetailPage = () => {
 
       {/* Second Column */}
       <GridItem>
+        {song.youtubeUrl && (
+          <>
+            <Box my={4}>
+              <YouTube
+                videoId={getYoutubeVideoId(song.youtubeUrl)}
+                opts={{
+                  width: "500",
+                  height: "400",
+                  playerVars: {
+                    autoplay: 0,
+                  },
+                }}
+              />
+            </Box>
+            <br />
+          </>
+        )}
         <Heading mt={6}>Lyrics</Heading>
         <Text>{song!.lyrics || "No lyrics available."}</Text>
         <SongAttributes mediaFile={mediaFile!} />
