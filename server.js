@@ -48,6 +48,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add logging for debugging
+console.log("Node ENV:", process.env.NODE_ENV);
+console.log("API URL:", process.env.API_URL);
+console.log("Heroku App Name:", process.env.HEROKU_APP_NAME);
+
 // Determine API URL based on environment
 const API_URL =
   process.env.NODE_ENV === "development"
@@ -55,23 +60,34 @@ const API_URL =
     : process.env.API_URL ||
       "https://sheet-music-library-ad225c202768.herokuapp.com";
 
-// Don't proxy to self - this causes infinite loops
-if (API_URL === process.env.HEROKU_APP_NAME) {
-  console.error("Cannot proxy to self - please set correct API_URL");
+// Better self-proxy check
+if (
+  process.env.HEROKU_APP_NAME &&
+  API_URL.includes(process.env.HEROKU_APP_NAME)
+) {
+  console.error(
+    "Error: API_URL matches HEROKU_APP_NAME. This would cause an infinite proxy loop."
+  );
+  console.error("API_URL:", API_URL);
+  console.error("HEROKU_APP_NAME:", process.env.HEROKU_APP_NAME);
   process.exit(1);
 }
 
+// Add error handling for proxy
 app.use(
   "/api",
   createProxyMiddleware({
     target: API_URL,
     changeOrigin: true,
     pathRewrite: {
-      "^/api": "/api", // keep /api prefix
+      "^/api": "/api",
     },
     onProxyReq: (proxyReq, req, res) => {
-      // Log proxy requests
-      console.log("Proxying to:", API_URL + proxyReq.path);
+      console.log("Proxying request to:", API_URL + proxyReq.path);
+    },
+    onError: (err, req, res) => {
+      console.error("Proxy Error:", err);
+      res.status(500).send("Proxy Error");
     },
   })
 );
@@ -85,14 +101,16 @@ app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-// Error handling
+// Improve error handling
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
+  console.error("Server Error:", err);
+  console.error("Stack:", err.stack);
+  res.status(500).send("Internal Server Error");
 });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`API URL: ${API_URL}`);
   console.log(
     `Static files being served from: ${path.join(__dirname, "dist")}`
   );
