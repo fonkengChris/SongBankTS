@@ -81,13 +81,13 @@ const SongDetailPage = () => {
     }
   };
 
-  // Add this function to extract YouTube video ID from URL
-  const getYoutubeVideoId = (url?: string) => {
-    if (!url) return null;
+  // Update the return type to string | undefined
+  const getYoutubeVideoId = (url?: string): string | undefined => {
+    if (!url) return undefined;
     const regExp =
       /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
+    return match && match[2].length === 11 ? match[2] : undefined; // Return undefined instead of null
   };
 
   if (mediaLoading) return <Spinner />;
