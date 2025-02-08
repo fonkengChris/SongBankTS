@@ -27,7 +27,6 @@ import jwtDecode from "jwt-decode";
 import { UserPayload, UserResponse, CustomerPayload } from "../types/forms";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "../styles/auth.css";
-import backgroundImage from "../assets/background_image.jpg";
 
 const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
 const customerApiClient = new APIClient<Customer, CustomerPayload>(
@@ -138,7 +137,6 @@ const Register = () => {
         await customerApiClient.post({
           user: userId,
           country: country,
-          phone_number: phone,
         });
 
         setEmail("");
@@ -146,7 +144,6 @@ const Register = () => {
         setPassword("");
         setMatchPassword("");
         setCountry("");
-        setPhone("");
 
         navigate("/auth");
       } catch (customerError: any) {
@@ -222,13 +219,7 @@ const Register = () => {
   // Add this function to check if form is valid
   const isFormValid = () => {
     return (
-      validName &&
-      validEmail &&
-      validPassword &&
-      validMatch &&
-      validPhone &&
-      country !== "" &&
-      phone !== ""
+      validName && validEmail && validPassword && validMatch && country !== ""
     );
   };
 
@@ -315,48 +306,6 @@ const Register = () => {
                   Must be a valid email address format.
                   <br />
                   Example: username@domain.com
-                </p>
-              )}
-
-              <div className="form-group">
-                <label htmlFor="phone">
-                  Phone Number:{" "}
-                  {validPhone && phone !== "" && (
-                    <FontAwesomeIcon icon={faCheck} className="valid" />
-                  )}
-                  {!validPhone && phone !== "" && (
-                    <FontAwesomeIcon icon={faTimes} className="invalid" />
-                  )}
-                </label>
-                <input
-                  className="form-control"
-                  type="text"
-                  id="phone"
-                  name="phone"
-                  ref={phoneRef}
-                  autoComplete="off"
-                  onChange={(e) => setPhone(e.target.value)}
-                  value={phone}
-                  required
-                  onFocus={() => setPhoneFocus(true)}
-                  onBlur={() => setPhoneFocus(false)}
-                  placeholder="Enter phone number..."
-                />
-              </div>
-              {(phoneFocus || phone !== "") && !validPhone && (
-                <p className="instructions">
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  Phone number must:
-                  <br />
-                  - Start with '+' or '00'
-                  <br />
-                  - First digit after '+' or '00' must be 1-9
-                  <br />
-                  - Contain only digits
-                  <br />
-                  - Maximum 15 digits total
-                  <br />
-                  Example: +12345678901 or 0012345678901
                 </p>
               )}
 

@@ -10,7 +10,7 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: "black",
+        bg: "#181818",
       },
     },
   },
@@ -44,7 +44,7 @@ const theme = extendTheme({
   components: {
     Box: {
       baseStyle: {
-        bg: "black",
+        bg: "#181818",
       },
     },
   },

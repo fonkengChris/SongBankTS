@@ -84,5 +84,4 @@ export interface UserResponse {
 export interface CustomerPayload {
   user: string;
   country: string;
-  phone_number: string;
 }

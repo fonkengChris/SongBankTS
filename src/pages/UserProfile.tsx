@@ -1,19 +1,18 @@
 import {
-  Button,
-  Heading,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Tr,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
   Box,
+  Container,
+  Flex,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Image,
+  Icon,
+  Button,
+  useColorModeValue,
 } from "@chakra-ui/react";
+import { FaEdit } from "react-icons/fa";
+import { MdEmail, MdLocationOn, MdPerson } from "react-icons/md";
 import { Link } from "react-router-dom";
 import useCustomer from "../hooks/useCustomer";
 import jwtDecode from "jwt-decode";
@@ -21,9 +20,9 @@ import { useState } from "react";
 import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
 import CountrySelector from "../components/CountrySelector";
-import "../index.css";
 import { CUSTOMERS_ENDPOINT } from "../data/constants";
 import { CustomerPayload } from "../types/forms";
+import profileImage from "../assets/profile-container.jpg";
 
 const UserProfile = () => {
   // Define local interface for the post request
@@ -60,7 +59,6 @@ const UserProfile = () => {
   const { data: customer, error, isLoading } = useCustomer(userId!);
   const [formData, setFormData] = useState({
     country: "",
-    phone_number: "",
   });
 
   if (isLoading) return <p>Loading...</p>;
@@ -75,7 +73,6 @@ const UserProfile = () => {
       await apiClient.post({
         user: userId!,
         country: formData.country,
-        phone_number: formData.phone_number,
       });
       window.location.reload();
     } catch (error) {
@@ -84,86 +81,120 @@ const UserProfile = () => {
   };
 
   return (
-    <Box className="container">
-      <Heading mb={4} textAlign="center">
-        User Profile
-      </Heading>
+    <Box minH="100vh" bgSize="cover" bgPosition="center" py={8}>
+      <Container maxW="1200px">
+        <Flex
+          bg="rgba(26, 32, 44, 0.95)"
+          borderRadius="20px"
+          p={8}
+          gap={8}
+          direction={{ base: "column", md: "row" }}
+          boxShadow="xl"
+        >
+          {/* Left Section - 40% */}
+          <VStack
+            flex={{ base: "1", md: "0.4" }}
+            spacing={6}
+            align="center"
+            justify="space-between"
+            h="full"
+            bg="cyan.600"
+            borderRadius="lg"
+            p={8}
+          >
+            <VStack spacing={6} align="center" w="full">
+              <Box
+                width="180px"
+                height="180px"
+                borderRadius="full"
+                overflow="hidden"
+                borderWidth="3px"
+                borderColor="cyan.200"
+                bg="white"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Icon as={MdPerson} boxSize="100px" color="cyan.500" />
+              </Box>
+              <Heading size="lg" color="gray.700" textAlign="center">
+                {userName}
+              </Heading>
+            </VStack>
 
-      {customer ? (
-        <Box className="profile-container">
-          <TableContainer>
-            <Table variant="simple">
-              <TableCaption>Profile details for {userName}</TableCaption>
-              <Tbody>
-                <Tr>
-                  <Th>Full Name:</Th>
-                  <Td>{userName}</Td>
-                </Tr>
-                <Tr>
-                  <Th>Email Address:</Th>
-                  <Td>{userEmail}</Td>
-                </Tr>
-                <Tr>
-                  <Th>Nationality:</Th>
-                  <Td>{customer?.country || "N/A"}</Td>
-                </Tr>
-                <Tr>
-                  <Th>Phone Number:</Th>
-                  <Td>{customer?.phone_number || "N/A"}</Td>
-                </Tr>
-              </Tbody>
-            </Table>
-          </TableContainer>
-          <Link to="/edit_profile">
-            <Button mt={4} colorScheme="blue" width="100%">
+            <Button
+              as={Link}
+              to="/edit_profile"
+              leftIcon={<Icon as={FaEdit} />}
+              colorScheme="blue"
+              variant="solid"
+              size="lg"
+              width="80%"
+              _hover={{ bg: "cyan.600" }}
+            >
               Edit Profile
             </Button>
-          </Link>
-        </Box>
-      ) : (
-        <section className="login-container">
-          <p>No profile for this user</p>
-          <form onSubmit={handleSubmit} className="login-form">
-            <VStack spacing={4} align="stretch">
-              <FormControl isRequired className="form-group">
-                <FormLabel className="form-label">Country</FormLabel>
-                <CountrySelector
-                  selectedCountry={formData.country}
-                  onSelect={(countryCode) =>
-                    setFormData({ ...formData, country: countryCode })
-                  }
-                  onPhoneChange={(formattedNumber) =>
-                    setFormData({ ...formData, phone_number: formattedNumber })
-                  }
-                  phone={formData.phone_number}
-                />
-              </FormControl>
+          </VStack>
 
-              <FormControl isRequired className="form-group">
-                <FormLabel className="form-label">Phone Number</FormLabel>
-                <Input
-                  type="tel"
-                  value={formData.phone_number}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone_number: e.target.value })
-                  }
-                  className="form-control"
-                  placeholder="Enter phone number..."
-                />
-              </FormControl>
+          {/* Right Section - 60% */}
+          <Box flex={{ base: "1", md: "0.6" }} pl={{ base: 0, md: 8 }}>
+            <Heading size="lg" color="whiteAlpha.900" mb={8}>
+              Information
+            </Heading>
 
-              <Button
-                type="submit"
-                colorScheme="blue"
-                width="100%"
-                className="btn btn-primary"
-              >
-                Create Profile
-              </Button>
+            <VStack spacing={6} align="stretch">
+              <Box flex="1">
+                <HStack spacing={3} mb={2}>
+                  <Icon as={MdEmail} color="cyan.600" boxSize={5} />
+                  <Text color="whiteAlpha.700" fontSize="sm">
+                    Email Address
+                  </Text>
+                </HStack>
+                <Text color="whiteAlpha.900" fontSize="md" fontWeight="medium">
+                  {userEmail}
+                </Text>
+              </Box>
+
+              <Box>
+                <HStack spacing={3} mb={2}>
+                  <Icon as={MdLocationOn} color="cyan.600" boxSize={5} />
+                  <Text color="whiteAlpha.700" fontSize="sm">
+                    Country
+                  </Text>
+                </HStack>
+                <Text color="whiteAlpha.900" fontSize="md" fontWeight="medium">
+                  {customer?.country || "N/A"}
+                </Text>
+              </Box>
             </VStack>
-          </form>
-        </section>
-      )}
+
+            {!customer && (
+              <Box mt={8}>
+                <form onSubmit={handleSubmit}>
+                  <VStack spacing={6} align="stretch">
+                    <CountrySelector
+                      selectedCountry={formData.country}
+                      onSelect={(countryCode) =>
+                        setFormData({ ...formData, country: countryCode })
+                      }
+                    />
+                    <Button
+                      type="submit"
+                      bg="cyan.600"
+                      color="white"
+                      size="lg"
+                      width="100%"
+                      _hover={{ bg: "cyan.600" }}
+                    >
+                      Create Profile
+                    </Button>
+                  </VStack>
+                </form>
+              </Box>
+            )}
+          </Box>
+        </Flex>
+      </Container>
     </Box>
   );
 };

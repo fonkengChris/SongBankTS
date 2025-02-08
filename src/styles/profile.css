@@ -1,0 +1,109 @@
+.profile-container {
+  display: flex;
+  min-height: 100vh;
+  background-image: url("../../assets/bg-registration.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 2rem;
+}
+
+.profile-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  gap: 3rem;
+}
+
+.profile-details {
+  flex: 1;
+}
+
+.profile-image-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile-image-container {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #dc3545;
+}
+
+.profile-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.profile-subheading {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-info-section {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.info-group {
+  margin-bottom: 1.5rem;
+}
+
+.info-label {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-value {
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.profile-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.profile-btn:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .profile-image-section {
+    order: -1;
+  }
+}
