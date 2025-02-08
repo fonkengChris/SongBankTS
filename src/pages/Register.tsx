@@ -65,9 +65,6 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [phoneFocus, setPhoneFocus] = useState(false);
 
-  const [birthDate, setBirthDate] = useState("");
-  const [birthDateFocus, setBirthDateFocus] = useState(false);
-
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
@@ -141,19 +138,16 @@ const Register = () => {
         password: password,
       };
 
-      // First create the user
       const userResponse = await userApiClient.post(userPayload);
       const userId = userResponse._id;
 
       try {
-        // Then try to create the customer profile
         await customerApiClient.post({
           user: userId,
           country: country,
           phone_number: phone,
         });
 
-        // If both succeed, clear the form and navigate
         setEmail("");
         setFirstName("");
         setLastName("");
@@ -161,7 +155,6 @@ const Register = () => {
         setMatchPassword("");
         setCountry("");
         setPhone("");
-        setBirthDate("");
 
         navigate("/auth");
       } catch (customerError: any) {
@@ -244,8 +237,7 @@ const Register = () => {
       validMatch &&
       validPhone &&
       country !== "" &&
-      phone !== "" &&
-      birthDate !== ""
+      phone !== ""
     );
   };
 
@@ -436,23 +428,6 @@ const Register = () => {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="birthDate">Date of birth</label>
-            <input
-              className="form-control"
-              id="birthDate"
-              name="birthDate"
-              autoComplete="off"
-              type="date"
-              onChange={(e) => setBirthDate(e.target.value)}
-              value={birthDate}
-              required
-              onFocus={() => setBirthDateFocus(true)}
-              onBlur={() => setBirthDateFocus(false)}
-              placeholder="Date of birth"
-            />
           </div>
 
           <div className="form-group">
