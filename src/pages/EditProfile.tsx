@@ -19,7 +19,6 @@ const EditProfile = () => {
   const navigate = useNavigate(); // Initialize navigate function
   const [country, setCountry] = useState("");
   const [phone, setPhone] = useState("");
-  const [birth_date, setBirthDate] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
   const phoneRef = useRef<HTMLInputElement | null>(null);
@@ -44,7 +43,6 @@ const EditProfile = () => {
     if (customer) {
       setCountry(customer.country || "");
       setPhone(customer.phone_number || "");
-      setBirthDate(customer.birth_date || "");
     }
     if (error) {
       setErrMsg("Error fetching customer details.");
@@ -60,7 +58,6 @@ const EditProfile = () => {
       await customerApiClient.put(customer._id, {
         country: country || customer.country,
         phone_number: phone || customer.phone_number,
-        birth_date: birth_date || customer.birth_date,
       });
 
       alert("Profile updated successfully.");
@@ -115,19 +112,6 @@ const EditProfile = () => {
               value={phone}
               required
               placeholder="Enter phone number..."
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="birthDate">Date of Birth</label>
-            <input
-              className="form-control"
-              id="birthDate"
-              name="birthDate"
-              type="date"
-              onChange={(e) => setBirthDate(e.target.value)}
-              value={birth_date}
-              required
             />
           </div>
 

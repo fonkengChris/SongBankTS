@@ -60,7 +60,6 @@ const UserProfile = () => {
   const { data: customer, error, isLoading } = useCustomer(userId!);
   const [formData, setFormData] = useState({
     country: "",
-    birth_date: "",
     phone_number: "",
   });
 
@@ -76,7 +75,6 @@ const UserProfile = () => {
       await apiClient.post({
         user: userId!,
         country: formData.country,
-        birth_date: formData.birth_date,
         phone_number: formData.phone_number,
       });
       window.location.reload();
@@ -110,10 +108,6 @@ const UserProfile = () => {
                   <Td>{customer?.country || "N/A"}</Td>
                 </Tr>
                 <Tr>
-                  <Th>Date of Birth:</Th>
-                  <Td>{customer?.birth_date || "N/A"}</Td>
-                </Tr>
-                <Tr>
                   <Th>Phone Number:</Th>
                   <Td>{customer?.phone_number || "N/A"}</Td>
                 </Tr>
@@ -142,18 +136,6 @@ const UserProfile = () => {
                     setFormData({ ...formData, phone_number: formattedNumber })
                   }
                   phone={formData.phone_number}
-                />
-              </FormControl>
-
-              <FormControl isRequired className="form-group">
-                <FormLabel className="form-label">Date of Birth</FormLabel>
-                <Input
-                  type="date"
-                  value={formData.birth_date}
-                  onChange={(e) =>
-                    setFormData({ ...formData, birth_date: e.target.value })
-                  }
-                  className="form-control"
                 />
               </FormControl>
 

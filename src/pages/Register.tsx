@@ -151,7 +151,6 @@ const Register = () => {
           user: userId,
           country: country,
           phone_number: phone,
-          birth_date: birthDate,
         });
 
         // If both succeed, clear the form and navigate
@@ -295,11 +294,9 @@ const Register = () => {
             validFirstName === false && (
               <p id="uidnote" className={"instructions"}>
                 <FontAwesomeIcon icon={faInfoCircle} />
-                4 to 24 characters.
+                3 to 50 characters.
                 <br />
-                Must begin with a letter.
-                <br />
-                Letters, numbers, underscores, hyphens allowed.
+                Letters, spaces, underscores, hyphens allowed.
               </p>
             )}
 
@@ -334,11 +331,9 @@ const Register = () => {
             validLastName === false && (
               <p id="uidnote" className={"instructions"}>
                 <FontAwesomeIcon icon={faInfoCircle} />
-                4 to 24 characters.
+                3 to 50 characters.
                 <br />
-                Must begin with a letter.
-                <br />
-                Letters, numbers, underscores, hyphens allowed.
+                Letters, spaces, underscores, hyphens allowed.
               </p>
             )}
 
@@ -371,11 +366,9 @@ const Register = () => {
           {emailFocus === true && email !== "" && validEmail === false && (
             <p id="emailnote" className={"instructions"}>
               <FontAwesomeIcon icon={faInfoCircle} />
-              4 to 24 characters.
+              Must be a valid email address format.
               <br />
-              Must begin with a letter.
-              <br />
-              Lowercase letters, numbers, special characters are allowed.
+              Example: username@domain.com
             </p>
           )}
 

@@ -17,7 +17,6 @@ export interface UserPayload {
 export interface CustomerFormData {
   user?: string;
   country: string;
-  birth_date: string;
   phone_number: string;
 }
 
@@ -64,7 +63,6 @@ export interface UserFormData {
 export interface CustomerUpdateFormData {
   country: string;
   phone_number: string;
-  birth_date: string;
 }
 
 export interface AuthResponse {
@@ -87,5 +85,4 @@ export interface CustomerPayload {
   user: string;
   country: string;
   phone_number: string;
-  birth_date: string;
 }

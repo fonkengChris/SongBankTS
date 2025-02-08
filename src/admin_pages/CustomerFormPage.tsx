@@ -29,7 +29,6 @@ const CustomerFormPage = () => {
   const [formData, setFormData] = useState({
     user: "", // This will store the user._id
     country: "",
-    birth_date: "",
     phone_number: "",
   });
 
@@ -62,7 +61,6 @@ const CustomerFormPage = () => {
           setFormData({
             user: customer.user._id || "",
             country: customer.country,
-            birth_date: customer.birth_date.split("T")[0],
             phone_number: customer.phone_number,
           });
         })
@@ -153,18 +151,6 @@ const CustomerFormPage = () => {
               <Input
                 name="country"
                 value={formData.country}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              />
-            </FormControl>
-
-            <FormControl isRequired>
-              <FormLabel color="blue.500">Birth Date</FormLabel>
-              <Input
-                name="birth_date"
-                type="date"
-                value={formData.birth_date}
                 onChange={handleChange}
                 bg={inputBg}
                 color={inputColor}
