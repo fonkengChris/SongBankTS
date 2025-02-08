@@ -62,7 +62,6 @@ export interface UserFormData {
 
 export interface CustomerUpdateFormData {
   country: string;
-  phone_number: string;
 }
 
 export interface AuthResponse {

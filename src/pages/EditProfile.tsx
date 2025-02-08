@@ -1,5 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Heading, Input, Select } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Container,
+  Flex,
+  VStack,
+  Heading,
+  FormControl,
+  FormLabel,
+  Button,
+  HStack,
+  Text,
+} from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +18,6 @@ import { CUSTOMERS_ENDPOINT } from "../data/constants";
 import useCustomer from "../hooks/useCustomer";
 import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
-import { useCountries } from "../hooks/useCountries";
 import CountrySelector from "../components/CountrySelector";
 import { CustomerUpdateFormData } from "../types/forms";
 
@@ -16,13 +26,9 @@ const customerApiClient = new APIClient<Customer, CustomerUpdateFormData>(
 );
 
 const EditProfile = () => {
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
   const [country, setCountry] = useState("");
-  const [phone, setPhone] = useState("");
   const [errMsg, setErrMsg] = useState("");
-
-  const phoneRef = useRef<HTMLInputElement | null>(null);
-  const errRef = useRef<HTMLParagraphElement | null>(null);
 
   // Decode token and extract user ID
   const userToken = localStorage.getItem("token");
@@ -36,13 +42,9 @@ const EditProfile = () => {
   // Fetch the customer
   const { data: customer, error, isLoading } = useCustomer(userId!);
 
-  const { countries: filteredCountries, setFilter } = useCountries();
-  const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
     if (customer) {
       setCountry(customer.country || "");
-      setPhone(customer.phone_number || "");
     }
     if (error) {
       setErrMsg("Error fetching customer details.");
@@ -53,18 +55,13 @@ const EditProfile = () => {
     e.preventDefault();
 
     try {
-      if (!customer?._id) return; // Type guard to check if _id exists
+      if (!customer?._id) return;
 
       await customerApiClient.put(customer._id, {
         country: country || customer.country,
-        phone_number: phone || customer.phone_number,
       });
 
-      alert("Profile updated successfully.");
-
       navigate(`/users/${customer._id}`);
-
-      // setErrMsg("Profile updated successfully.");
     } catch (error) {
       const err = error as AxiosError;
       if (!err?.response) {
@@ -72,69 +69,83 @@ const EditProfile = () => {
       } else {
         setErrMsg("Error updating profile.");
       }
-      errRef.current?.focus();
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!customer) return <p>No customer profile found.</p>;
+  if (isLoading) return <Text color="whiteAlpha.900">Loading...</Text>;
+  if (!customer)
+    return <Text color="whiteAlpha.900">No customer profile found.</Text>;
 
   return (
-    <>
-      <section className="login-container">
-        <form onSubmit={handleSubmit} className="login-form" role="form">
+    <Box
+      minH="100vh"
+      bgImage="url('../../assets/bg-registration.jpg')"
+      bgSize="cover"
+      bgPosition="center"
+      py={8}
+    >
+      <Container maxW="1200px">
+        <Flex
+          bg="rgba(26, 32, 44, 0.95)"
+          borderRadius="20px"
+          p={8}
+          direction="column"
+          maxW="600px"
+          mx="auto"
+        >
+          <Heading size="lg" color="whiteAlpha.900" mb={8}>
+            Edit Profile
+          </Heading>
+
           {errMsg && (
-            <p ref={errRef} className="errmsg" aria-live="assertive">
+            <Text color="red.300" mb={4}>
               {errMsg}
-            </p>
+            </Text>
           )}
 
-          <Heading as="h1">Edit Profile</Heading>
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={6}>
+              <FormControl>
+                <FormLabel color="whiteAlpha.900">Country</FormLabel>
+                <Box
+                  bg="whiteAlpha.100"
+                  borderRadius="md"
+                  borderWidth="1px"
+                  borderColor="whiteAlpha.300"
+                  _hover={{ borderColor: "cyan.300" }}
+                >
+                  <CountrySelector
+                    selectedCountry={country}
+                    onSelect={(countryCode) => setCountry(countryCode)}
+                  />
+                </Box>
+              </FormControl>
 
-          <div className="form-group">
-            <label htmlFor="country">Country</label>
-            <CountrySelector
-              selectedCountry={country}
-              onSelect={(countryCode) => setCountry(countryCode)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="phone">Phone Number:</label>
-            <input
-              className="form-control"
-              type="text"
-              id="phone"
-              name="phone"
-              ref={phoneRef}
-              autoComplete="off"
-              onChange={(e) => setPhone(e.target.value)}
-              value={phone}
-              required
-              placeholder="Enter phone number..."
-            />
-          </div>
-
-          <div className="form-group" style={{ display: "flex", gap: "1rem" }}>
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => navigate(`/users/${customer?._id}`)}
-              style={{ flex: 1 }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              style={{ flex: 1 }}
-            >
-              Update Profile
-            </button>
-          </div>
-        </form>
-      </section>
-    </>
+              <HStack spacing={4} width="100%" pt={4}>
+                <Button
+                  onClick={() => navigate(`/users/${customer._id}`)}
+                  variant="outline"
+                  color="whiteAlpha.900"
+                  _hover={{ bg: "whiteAlpha.100" }}
+                  flex={1}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  bg="cyan.600"
+                  color="whiteAlpha.900"
+                  _hover={{ bg: "cyan.700" }}
+                  flex={1}
+                >
+                  Update Profile
+                </Button>
+              </HStack>
+            </VStack>
+          </form>
+        </Flex>
+      </Container>
+    </Box>
   );
 };
 
