@@ -17,7 +17,6 @@ export interface UserPayload {
 export interface CustomerFormData {
   user?: string;
   country: string;
-  phone_number: string;
 }
 
 export interface LanguageFormData {

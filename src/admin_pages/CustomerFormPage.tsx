@@ -29,7 +29,6 @@ const CustomerFormPage = () => {
   const [formData, setFormData] = useState({
     user: "", // This will store the user._id
     country: "",
-    phone_number: "",
   });
 
   const inputBg = useColorModeValue("white", "gray.700");
@@ -61,7 +60,6 @@ const CustomerFormPage = () => {
           setFormData({
             user: customer.user._id || "",
             country: customer.country,
-            phone_number: customer.phone_number,
           });
         })
         .catch((error) => {
@@ -151,17 +149,6 @@ const CustomerFormPage = () => {
               <Input
                 name="country"
                 value={formData.country}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              />
-            </FormControl>
-
-            <FormControl isRequired>
-              <FormLabel color="blue.500">Phone Number</FormLabel>
-              <Input
-                name="phone_number"
-                value={formData.phone_number}
                 onChange={handleChange}
                 bg={inputBg}
                 color={inputColor}

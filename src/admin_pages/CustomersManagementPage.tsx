@@ -88,7 +88,6 @@ const CustomersManagementPage = () => {
             <Tr bg="gray.50">
               <Th>Name</Th>
               <Th>Country</Th>
-              <Th>Phone Number</Th>
               <Th width="200px">Actions</Th>
             </Tr>
           </Thead>
@@ -100,7 +99,6 @@ const CustomersManagementPage = () => {
                     {customer.user ? customer.user.name : "No Name Available"}
                   </Td>
                   <Td color="blue.600">{customer.country || "N/A"}</Td>
-                  <Td color="blue.600">{customer.phone_number || "N/A"}</Td>
                   <Td>
                     <Button
                       as={RouterLink}
