@@ -20,6 +20,7 @@ import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
 import CountrySelector from "../components/CountrySelector";
 import { CustomerUpdateFormData } from "../types/forms";
+import backgroundImage from "../assets/background_image.jpg";
 
 const customerApiClient = new APIClient<Customer, CustomerUpdateFormData>(
   CUSTOMERS_ENDPOINT
@@ -77,21 +78,18 @@ const EditProfile = () => {
     return <Text color="whiteAlpha.900">No customer profile found.</Text>;
 
   return (
-    <Box
-      minH="100vh"
-      bgImage="url('../../assets/bg-registration.jpg')"
-      bgSize="cover"
-      bgPosition="center"
-      py={8}
-    >
+    <Box minH="100vh" py={8}>
       <Container maxW="1200px">
         <Flex
-          bg="rgba(26, 32, 44, 0.95)"
+          bgImage={`url(${backgroundImage})`}
+          bgSize="cover"
+          bgPosition="center"
           borderRadius="20px"
           p={8}
           direction="column"
           maxW="600px"
           mx="auto"
+          boxShadow="xl"
         >
           <Heading size="lg" color="whiteAlpha.900" mb={8}>
             Edit Profile
@@ -106,7 +104,9 @@ const EditProfile = () => {
           <form onSubmit={handleSubmit}>
             <VStack spacing={6}>
               <FormControl>
-                <FormLabel color="whiteAlpha.900">Country</FormLabel>
+                <FormLabel color="whiteAlpha.900" fontWeight="bold">
+                  Country
+                </FormLabel>
                 <Box
                   bg="whiteAlpha.100"
                   borderRadius="md"
