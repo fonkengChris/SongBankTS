@@ -10,6 +10,8 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import APIClient from "../services/api-client";
 import { AuthResponse, AuthCredentials } from "../types/forms";
+import "../styles/auth.css";
+// import backgroundImage from "../assets/background_image.jpg";
 
 const Login = () => {
   const jwt = localStorage.getItem("token");
@@ -112,85 +114,85 @@ const Login = () => {
 
   return (
     <GoogleOAuthProvider clientId={clientId || ""}>
-      <section className="login-container">
-        <p
-          ref={errRef}
-          className={errMsg ? "errMsg" : "offscreen"}
-          aria-live="assertive"
-        >
-          {errMsg}
-        </p>
-        <h1>Sign In</h1>
+      <div className="auth-container">
+        <div className="auth-form-container">
+          <div className="auth-form-section">
+            <h1 className="auth-heading">Sign In</h1>
+            <form onSubmit={handleSubmit} className="auth-form">
+              {errMsg && (
+                <p ref={errRef} className="error-message" aria-live="assertive">
+                  {errMsg}
+                </p>
+              )}
 
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="username" className="form-label">
-              Email Address:
-            </label>
-            <input
-              type="text"
-              id="username"
-              ref={userRef}
-              className="form-control"
-              autoComplete="off"
-              onChange={(e) => setUser(e.target.value)}
-              value={user}
-              required
-            />
-          </div>
+              <div className="form-group">
+                <label htmlFor="username" className="form-label">
+                  Email Address:
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  ref={userRef}
+                  className="form-control"
+                  autoComplete="off"
+                  onChange={(e) => setUser(e.target.value)}
+                  value={user}
+                  required
+                />
+              </div>
 
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">
-              Password:
-            </label>
-            <div className="password-input-wrapper">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                className="form-control"
-                onChange={(e) => setPwd(e.target.value)}
-                value={pwd}
-                required
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              <div className="form-group">
+                <label htmlFor="password" className="form-label">
+                  Password:
+                </label>
+                <div className="password-input-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    className="form-control"
+                    onChange={(e) => setPwd(e.target.value)}
+                    value={pwd}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" className="btn-primary">
+                Sign In
               </button>
-            </div>
+
+              <div className="social-login">
+                <p>Or sign in with:</p>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setErrMsg("Google Login Failed")}
+                  width="100%"
+                />
+              </div>
+
+              <div className="auth-links">
+                <p>
+                  Need an Account? <Link to="/register">Sign Up</Link>
+                </p>
+                <p>
+                  <Link to="/reset-password">Forgot Password?</Link>
+                </p>
+              </div>
+            </form>
           </div>
 
-          <div className="form-group">
-            <Link to="/reset-password" className="forgot-password-link">
-              Forgot Password?
-            </Link>
-          </div>
-
-          <button type="submit" className="btn btn-primary">
-            Log In
-          </button>
-        </form>
-
-        <div className="social-login">
-          <p>Or sign in with:</p>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => {
-              setErrMsg("Google Login Failed");
-            }}
-          />
+          {/* <div className="auth-image-section">
+            <img src={backgroundImage} alt="Login" />
+          </div> */}
         </div>
-
-        <p>
-          Need an Account?
-          <br />
-          <span className="line">
-            <Link to="/register">Sign Up</Link>
-          </span>
-        </p>
-      </section>
+      </div>
     </GoogleOAuthProvider>
   );
 };

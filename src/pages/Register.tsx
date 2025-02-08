@@ -26,6 +26,8 @@ import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import { UserPayload, UserResponse, CustomerPayload } from "../types/forms";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import "../styles/auth.css";
+import backgroundImage from "../assets/background_image.jpg";
 
 const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
 const customerApiClient = new APIClient<Customer, CustomerPayload>(
@@ -40,20 +42,15 @@ const Register = () => {
   const toast = useToast();
 
   //defining ref hooks
-  const firstnameRef = useRef<HTMLInputElement | null>(null);
-  const lastnameRef = useRef<HTMLInputElement | null>(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const phoneRef = useRef<HTMLInputElement | null>(null);
   const errRef = useRef<HTMLParagraphElement | null>(null);
 
   //defining state hooks
-  const [firstname, setFirstName] = useState("");
-  const [validFirstName, setValidFirstName] = useState(false);
-  const [firstnameFocus, setFirstNameFocus] = useState(false);
-
-  const [lastname, setLastName] = useState("");
-  const [validLastName, setValidLastName] = useState(false);
-  const [lastnameFocus, setLastNameFocus] = useState(false);
+  const [name, setName] = useState("");
+  const [validName, setValidName] = useState(false);
+  const [nameFocus, setNameFocus] = useState(false);
 
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
@@ -99,16 +96,12 @@ const Register = () => {
   }, []);
 
   useEffect(() => {
-    firstnameRef.current?.focus();
+    nameRef.current?.focus();
   }, []);
 
   useEffect(() => {
-    setValidFirstName(NAME_REGEX.test(firstname));
-  }, [firstname]);
-
-  useEffect(() => {
-    setValidLastName(NAME_REGEX.test(lastname));
-  }, [lastname]);
+    setValidName(NAME_REGEX.test(name));
+  }, [name]);
 
   useEffect(() => {
     setValidEmail(EMAIL_REGEX.test(email));
@@ -121,7 +114,7 @@ const Register = () => {
 
   useEffect(() => {
     setErrMsg("");
-  }, [firstname, lastname, email, password, matchPassword]);
+  }, [name, email, password, matchPassword]);
 
   useEffect(() => {
     setValidPhone(PHONE_NUMBER_REGEX.test(phone));
@@ -133,7 +126,7 @@ const Register = () => {
 
     try {
       const userPayload: UserPayload = {
-        name: firstname + " " + lastname,
+        name: name,
         email: email,
         password: password,
       };
@@ -149,8 +142,7 @@ const Register = () => {
         });
 
         setEmail("");
-        setFirstName("");
-        setLastName("");
+        setName("");
         setPassword("");
         setMatchPassword("");
         setCountry("");
@@ -230,8 +222,7 @@ const Register = () => {
   // Add this function to check if form is valid
   const isFormValid = () => {
     return (
-      validFirstName &&
-      validLastName &&
+      validName &&
       validEmail &&
       validPassword &&
       validMatch &&
@@ -245,328 +236,282 @@ const Register = () => {
     <GoogleOAuthProvider
       clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID || ""}
     >
-      <section className="login-container">
-        <form onSubmit={handleSubmit} className="login-form" role="form">
-          {errMsg !== "" && (
-            <p ref={errRef} className={"errmsg"} aria-live="assertive">
-              {errMsg}
-            </p>
-          )}
+      <div className="auth-container">
+        <div className="auth-form-container">
+          <div className="auth-form-section">
+            <h1 className="auth-heading">Registration Form</h1>
+            <form onSubmit={handleSubmit} className="auth-form">
+              {errMsg && (
+                <p ref={errRef} className="error-message" aria-live="assertive">
+                  {errMsg}
+                </p>
+              )}
 
-          <Heading as="h1">Register</Heading>
-          <div className="form-group">
-            <label htmlFor="firstname">
-              First name:{" "}
-              {validFirstName === true && (
-                <FontAwesomeIcon icon={faCheck} className="valid" />
-              )}
-              {validFirstName === false && firstname !== "" && (
-                <FontAwesomeIcon icon={faTimes} className="invalid" />
-              )}
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              id="firstname"
-              name="firstname"
-              ref={firstnameRef}
-              autoComplete="off"
-              onChange={(e) => setFirstName(e.target.value)}
-              value={firstname}
-              required
-              onFocus={() => setFirstNameFocus(true)}
-              onBlur={() => setFirstNameFocus(false)}
-              aria-describedby="uidnote"
-              aria-invalid={validFirstName ? "false" : "true"}
-              placeholder="Enter first name..."
-            />
-          </div>
-          {firstnameFocus === true &&
-            firstname !== "" &&
-            validFirstName === false && (
-              <p id="uidnote" className={"instructions"}>
-                <FontAwesomeIcon icon={faInfoCircle} />
-                3 to 50 characters.
-                <br />
-                Letters, spaces, underscores, hyphens allowed.
-              </p>
-            )}
-
-          <div className="form-group">
-            <label htmlFor="lastname">
-              Last name:{" "}
-              {validLastName === true && (
-                <FontAwesomeIcon icon={faCheck} className="valid" />
-              )}
-              {validLastName === false && lastname !== "" && (
-                <FontAwesomeIcon icon={faTimes} className="invalid" />
-              )}
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              id="lastname"
-              name="lastname"
-              ref={lastnameRef}
-              autoComplete="off"
-              onChange={(e) => setLastName(e.target.value)}
-              value={lastname}
-              required
-              onFocus={() => setLastNameFocus(true)}
-              onBlur={() => setLastNameFocus(false)}
-              aria-describedby="uidnote"
-              placeholder="Enter last name..."
-            />
-          </div>
-          {lastnameFocus === true &&
-            lastname !== "" &&
-            validLastName === false && (
-              <p id="uidnote" className={"instructions"}>
-                <FontAwesomeIcon icon={faInfoCircle} />
-                3 to 50 characters.
-                <br />
-                Letters, spaces, underscores, hyphens allowed.
-              </p>
-            )}
-
-          <div className="form-group">
-            <label htmlFor="email">
-              Email:{" "}
-              {validEmail === true && (
-                <FontAwesomeIcon icon={faCheck} className="valid" />
-              )}
-              {validEmail === false && email !== "" && (
-                <FontAwesomeIcon icon={faTimes} className="invalid" />
-              )}
-            </label>
-            <input
-              className="form-control"
-              id="email"
-              name="email"
-              type="email"
-              ref={emailRef}
-              autoComplete="off"
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              required
-              onFocus={() => setEmailFocus(true)}
-              onBlur={() => setEmailFocus(false)}
-              placeholder="Enter Email address ..."
-              aria-describedby="emailnote"
-            />
-          </div>
-          {emailFocus === true && email !== "" && validEmail === false && (
-            <p id="emailnote" className={"instructions"}>
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Must be a valid email address format.
-              <br />
-              Example: username@domain.com
-            </p>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="phone">
-              Phone Number:{" "}
-              {validPhone && phone !== "" && (
-                <FontAwesomeIcon icon={faCheck} className="valid" />
-              )}
-              {!validPhone && phone !== "" && (
-                <FontAwesomeIcon icon={faTimes} className="invalid" />
-              )}
-            </label>
-            <input
-              className="form-control"
-              type="text"
-              id="phone"
-              name="phone"
-              ref={phoneRef}
-              autoComplete="off"
-              onChange={(e) => setPhone(e.target.value)}
-              value={phone}
-              required
-              onFocus={() => setPhoneFocus(true)}
-              onBlur={() => setPhoneFocus(false)}
-              placeholder="Enter phone number..."
-            />
-          </div>
-          {(phoneFocus || phone !== "") && !validPhone && (
-            <p className="instructions">
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Phone number must:
-              <br />
-              - Start with '+' or '00'
-              <br />
-              - First digit after '+' or '00' must be 1-9
-              <br />
-              - Contain only digits
-              <br />
-              - Maximum 15 digits total
-              <br />
-              Example: +12345678901 or 0012345678901
-            </p>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="country">Country</label>
-            <select
-              className="form-control"
-              id="country"
-              name="country"
-              autoComplete="off"
-              onChange={(e) => setCountry(e.target.value)}
-              value={country}
-              onFocus={() => setCountryFocus(true)}
-              onBlur={() => setCountryFocus(false)}
-              placeholder="Enter Country ..."
-            >
-              <option disabled={true} value="">
-                --Select Country Name--
-              </option>
-              {countries.map((country) => (
-                <option value={country.iso} key={country.iso}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">
-              Password:
-              {validPassword && (
-                <FontAwesomeIcon icon={faCheck} className={"valid"} />
-              )}
-              {!validPassword && password !== "" && (
-                <FontAwesomeIcon icon={faTimes} className={"invalid"} />
-              )}
-            </label>
-            <div className="password-input-wrapper">
-              <input
-                className="form-control"
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                required
-                aria-invalid={validPassword ? "false" : "true"}
-                aria-describedby="pwdnote"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                onFocus={() => setPasswordFocus(true)}
-                onBlur={() => setPasswordFocus(false)}
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-              </button>
-            </div>
-          </div>
-
-          {(passwordFocus || password !== "") && !validPassword && (
-            <p id="pwdnote" className={"instructions"}>
-              <FontAwesomeIcon icon={faInfoCircle} />
-              8 to 24 characters.
-              <br />
-              Must include uppercase and lowercase letters, a number and a
-              special character.
-              <br />
-              Allowed special characters:{" "}
-              <span aria-label="exclamation mark">!</span>{" "}
-              <span aria-label="at symbol">@</span>{" "}
-              <span aria-label="hashtag">#</span>{" "}
-              <span aria-label="dollar sign">$</span>{" "}
-              <span aria-label="percent">%</span>
-            </p>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="confirm_pwd">
-              Confirm Password:
-              {validMatch === true && matchPassword !== "" && (
-                <FontAwesomeIcon icon={faCheck} className={"valid"} />
-              )}
-              {validMatch === false ||
-                (matchPassword === "" && (
-                  <FontAwesomeIcon icon={faTimes} className={"hide"} />
-                ))}
-            </label>
-            <div className="password-input-wrapper">
-              <input
-                className="form-control"
-                type={showConfirmPassword ? "text" : "password"}
-                id="confirm_pwd"
-                onChange={(e) => setMatchPassword(e.target.value)}
-                value={matchPassword}
-                required
-                aria-invalid={validMatch ? "false" : "true"}
-                aria-describedby="confirmnote"
-                placeholder="Confirm password"
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                <FontAwesomeIcon
-                  icon={showConfirmPassword ? faEyeSlash : faEye}
+              <div className="form-group">
+                <label htmlFor="name">
+                  Name:{" "}
+                  {validName && (
+                    <FontAwesomeIcon icon={faCheck} className="valid" />
+                  )}
+                  {!validName && name && (
+                    <FontAwesomeIcon icon={faTimes} className="invalid" />
+                  )}
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="name"
+                  name="name"
+                  ref={nameRef}
+                  autoComplete="off"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  required
+                  onFocus={() => setNameFocus(true)}
+                  onBlur={() => setNameFocus(false)}
+                  aria-describedby="uidnote"
+                  aria-invalid={validName ? "false" : "true"}
+                  placeholder="Enter full name..."
                 />
-              </button>
-            </div>
-          </div>
-          {matchFocus && !validMatch && (
-            <p id="confirmnote" className={"instructions"}>
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Must match the first password input field.
-            </p>
-          )}
+              </div>
+              {nameFocus && name && !validName && (
+                <p id="uidnote" className={"instructions"}>
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  3 to 50 characters.
+                  <br />
+                  Letters, spaces, underscores, hyphens allowed.
+                </p>
+              )}
 
-          <div className="form-group">
-            <button
-              type="submit"
-              className={`btn btn-primary ${
-                !isFormValid() || loading ? "btn-disabled" : ""
-              }`}
-              disabled={loading || !isFormValid()}
-              style={{
-                opacity: !isFormValid() || loading ? 0.6 : 1,
-                cursor: !isFormValid() || loading ? "not-allowed" : "pointer",
-                backgroundColor: !isFormValid() || loading ? "#ccc" : "#007bff",
-                transition: "all 0.3s ease",
-              }}
-            >
-              {loading ? "Signing Up..." : "Sign Up"}
-            </button>
+              <div className="form-group">
+                <label htmlFor="email">
+                  Email:{" "}
+                  {validEmail === true && (
+                    <FontAwesomeIcon icon={faCheck} className="valid" />
+                  )}
+                  {validEmail === false && email !== "" && (
+                    <FontAwesomeIcon icon={faTimes} className="invalid" />
+                  )}
+                </label>
+                <input
+                  className="form-control"
+                  id="email"
+                  name="email"
+                  type="email"
+                  ref={emailRef}
+                  autoComplete="off"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  required
+                  onFocus={() => setEmailFocus(true)}
+                  onBlur={() => setEmailFocus(false)}
+                  placeholder="Enter Email address ..."
+                  aria-describedby="emailnote"
+                />
+              </div>
+              {emailFocus === true && email !== "" && validEmail === false && (
+                <p id="emailnote" className={"instructions"}>
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  Must be a valid email address format.
+                  <br />
+                  Example: username@domain.com
+                </p>
+              )}
+
+              <div className="form-group">
+                <label htmlFor="phone">
+                  Phone Number:{" "}
+                  {validPhone && phone !== "" && (
+                    <FontAwesomeIcon icon={faCheck} className="valid" />
+                  )}
+                  {!validPhone && phone !== "" && (
+                    <FontAwesomeIcon icon={faTimes} className="invalid" />
+                  )}
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  ref={phoneRef}
+                  autoComplete="off"
+                  onChange={(e) => setPhone(e.target.value)}
+                  value={phone}
+                  required
+                  onFocus={() => setPhoneFocus(true)}
+                  onBlur={() => setPhoneFocus(false)}
+                  placeholder="Enter phone number..."
+                />
+              </div>
+              {(phoneFocus || phone !== "") && !validPhone && (
+                <p className="instructions">
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  Phone number must:
+                  <br />
+                  - Start with '+' or '00'
+                  <br />
+                  - First digit after '+' or '00' must be 1-9
+                  <br />
+                  - Contain only digits
+                  <br />
+                  - Maximum 15 digits total
+                  <br />
+                  Example: +12345678901 or 0012345678901
+                </p>
+              )}
+
+              <div className="form-group">
+                <label htmlFor="country">Country</label>
+                <select
+                  className="form-control"
+                  id="country"
+                  name="country"
+                  autoComplete="off"
+                  onChange={(e) => setCountry(e.target.value)}
+                  value={country}
+                  onFocus={() => setCountryFocus(true)}
+                  onBlur={() => setCountryFocus(false)}
+                  placeholder="Enter Country ..."
+                >
+                  <option disabled={true} value="">
+                    --Select Country Name--
+                  </option>
+                  {countries.map((country) => (
+                    <option value={country.iso} key={country.iso}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password">
+                  Password:
+                  {validPassword && (
+                    <FontAwesomeIcon icon={faCheck} className={"valid"} />
+                  )}
+                  {!validPassword && password !== "" && (
+                    <FontAwesomeIcon icon={faTimes} className={"invalid"} />
+                  )}
+                </label>
+                <div className="password-input-wrapper">
+                  <input
+                    className="form-control"
+                    id="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    required
+                    aria-invalid={validPassword ? "false" : "true"}
+                    aria-describedby="pwdnote"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter password"
+                    onFocus={() => setPasswordFocus(true)}
+                    onBlur={() => setPasswordFocus(false)}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
+              </div>
+
+              {(passwordFocus || password !== "") && !validPassword && (
+                <p id="pwdnote" className={"instructions"}>
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  8 to 24 characters.
+                  <br />
+                  Must include uppercase and lowercase letters, a number and a
+                  special character.
+                  <br />
+                  Allowed special characters:{" "}
+                  <span aria-label="exclamation mark">!</span>{" "}
+                  <span aria-label="at symbol">@</span>{" "}
+                  <span aria-label="hashtag">#</span>{" "}
+                  <span aria-label="dollar sign">$</span>{" "}
+                  <span aria-label="percent">%</span>
+                </p>
+              )}
+
+              <div className="form-group">
+                <label htmlFor="confirm_pwd">
+                  Confirm Password:
+                  {validMatch === true && matchPassword !== "" && (
+                    <FontAwesomeIcon icon={faCheck} className={"valid"} />
+                  )}
+                  {validMatch === false ||
+                    (matchPassword === "" && (
+                      <FontAwesomeIcon icon={faTimes} className={"hide"} />
+                    ))}
+                </label>
+                <div className="password-input-wrapper">
+                  <input
+                    className="form-control"
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirm_pwd"
+                    onChange={(e) => setMatchPassword(e.target.value)}
+                    value={matchPassword}
+                    required
+                    aria-invalid={validMatch ? "false" : "true"}
+                    aria-describedby="confirmnote"
+                    placeholder="Confirm password"
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    <FontAwesomeIcon
+                      icon={showConfirmPassword ? faEyeSlash : faEye}
+                    />
+                  </button>
+                </div>
+              </div>
+              {matchFocus && !validMatch && (
+                <p id="confirmnote" className={"instructions"}>
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  Must match the first password input field.
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={!isFormValid() || loading}
+              >
+                {loading ? "Signing Up..." : "Register Now"}
+              </button>
+
+              <div className="social-login">
+                <p>Or create account with:</p>
+                {googleLoaded && (
+                  <GoogleLogin
+                    text="signup_with"
+                    shape="rectangular"
+                    theme="outline"
+                    size="large"
+                    width="100%"
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => setErrMsg("Google Sign Up Failed")}
+                  />
+                )}
+              </div>
+
+              <div className="auth-links">
+                <p>
+                  Already have an account? <Link to="/auth">Sign In</Link>
+                </p>
+              </div>
+            </form>
           </div>
-        </form>
-        <p>
-          Already registered?
-          <br />
-          <span className="line">
-            <Link to="/auth">Sign In</Link>
-          </span>
-        </p>
-        <div className="social-login">
-          <p>Or create a new account with:</p>
-          {googleLoaded ? (
-            <GoogleLogin
-              text="signup_with"
-              shape="rectangular"
-              theme="outline"
-              size="large"
-              width="300"
-              onSuccess={handleGoogleSuccess}
-              onError={() => {
-                console.error("Google Sign Up Failed");
-                setErrMsg("Google Sign Up Failed");
-              }}
-            />
-          ) : (
-            <p>Loading Google Sign Up...</p>
-          )}
+
+          {/* <div className="auth-image-section">
+            <img src={backgroundImage} alt="Registration" />
+          </div> */}
         </div>
-      </section>
+      </div>
     </GoogleOAuthProvider>
   );
 };

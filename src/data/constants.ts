@@ -21,7 +21,7 @@ export const CONTACT_ENDPOINT = "/api/contact";
 
 //validation constants
 
-export const NAME_REGEX = /^[A-z][A-z\s_-]{2,49}$/;
+export const NAME_REGEX = /^[A-z][A-z\s_-]{2,74}$/;
 export const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 export const PHONE_NUMBER_REGEX = /^(\+|00)[1-9][0-9]{1,14}$/;
