@@ -31,9 +31,26 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const toast = useToast();
 
+  const formatPhoneNumber = (number: string) => {
+    // Remove all non-digits
+    const cleaned = number.replace(/\D/g, "");
+    // Ensure it starts with 256 (Uganda) if not already
+    return cleaned.startsWith("256") ? cleaned : `256${cleaned}`;
+  };
+
   const handlePayment = async () => {
     if (!phoneNumber.trim()) {
       setShowPinDialog(true);
+      return;
+    }
+
+    const formattedPhone = formatPhoneNumber(phoneNumber);
+    if (formattedPhone.length < 11) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid phone number",
+        status: "error",
+      });
       return;
     }
 
@@ -59,11 +76,13 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
         externalId: crypto.randomUUID(),
         payer: {
           partyIdType: "MSISDN",
-          partyId: phoneNumber.replace(/\D/g, ""), // Remove non-digits
+          partyId: formattedPhone,
         },
         payerMessage: description,
         payeeNote: "Payment for digital content",
       };
+
+      console.log("Payment payload:", payload); // For debugging
 
       const response = await axiosInstance.post("/api/momo/payment", payload, {
         headers,
