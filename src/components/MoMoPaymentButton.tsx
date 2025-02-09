@@ -32,6 +32,11 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
   const toast = useToast();
 
   const handlePayment = async () => {
+    if (!phoneNumber.trim()) {
+      setShowPinDialog(true);
+      return;
+    }
+
     setIsLoading(true);
     try {
       if (import.meta.env.DEV) {
@@ -95,13 +100,19 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
       });
       return;
     }
-    setShowPinDialog(false);
-    if (onSuccess) onSuccess();
-    toast({
-      title: "Payment Successful",
-      description: "Transaction completed successfully",
-      status: "success",
-    });
+
+    if (import.meta.env.DEV) {
+      setShowPinDialog(false);
+      if (onSuccess) onSuccess();
+      toast({
+        title: "Payment Successful",
+        description: "Transaction completed successfully",
+        status: "success",
+      });
+    } else {
+      setShowPinDialog(false);
+      handlePayment();
+    }
   };
 
   return (
@@ -137,16 +148,18 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
                 />
                 <FormHelperText>Format: +256XXXXXXXXX</FormHelperText>
               </FormControl>
-              <FormControl>
-                <FormLabel>PIN</FormLabel>
-                <Input
-                  type="password"
-                  maxLength={4}
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  placeholder="Enter 4-digit PIN"
-                />
-              </FormControl>
+              {import.meta.env.DEV && (
+                <FormControl>
+                  <FormLabel>PIN</FormLabel>
+                  <Input
+                    type="password"
+                    maxLength={4}
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                    placeholder="Enter 4-digit PIN"
+                  />
+                </FormControl>
+              )}
             </VStack>
           </ModalBody>
           <ModalFooter>
