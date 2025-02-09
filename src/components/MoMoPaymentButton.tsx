@@ -32,10 +32,22 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
   const toast = useToast();
 
   const formatPhoneNumber = (number: string) => {
-    // Remove all non-digits
-    const cleaned = number.replace(/\D/g, "");
-    // Ensure it starts with 256 (Uganda) if not already
-    return cleaned.startsWith("256") ? cleaned : `256${cleaned}`;
+    // Remove all non-digits and any leading zeros
+    let cleaned = number.replace(/\D/g, "").replace(/^0+/, "");
+
+    // Remove 256 if it exists at the start
+    if (cleaned.startsWith("256")) {
+      cleaned = cleaned.substring(3);
+    }
+
+    // Add 256 prefix
+    return `+237${cleaned}`;
+  };
+
+  const validatePhoneNumber = (number: string) => {
+    const formatted = formatPhoneNumber(number);
+    // MTN Uganda numbers should be 12 digits (256 + 9 digits)
+    return formatted.length === 12;
   };
 
   const handlePayment = async () => {
@@ -44,17 +56,19 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
       return;
     }
 
-    const formattedPhone = formatPhoneNumber(phoneNumber);
-    if (formattedPhone.length < 11) {
+    if (!validatePhoneNumber(phoneNumber)) {
       toast({
         title: "Invalid Phone Number",
-        description: "Please enter a valid phone number",
+        description: "Please enter a valid MTN number (e.g., 0775123456)",
         status: "error",
+        duration: 5000,
       });
       return;
     }
 
+    const formattedPhone = formatPhoneNumber(phoneNumber);
     setIsLoading(true);
+
     try {
       if (import.meta.env.DEV) {
         setShowPinDialog(true);
