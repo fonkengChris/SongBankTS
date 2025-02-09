@@ -137,16 +137,17 @@ const SongDetailPage = () => {
       <GridItem>
         {song.youtubeUrl && (
           <>
-            <Box my={4}>
+            <Box my={4} width="100%" display="flex" justifyContent="center">
               <YouTube
                 videoId={getYoutubeVideoId(song.youtubeUrl)}
                 opts={{
-                  width: "500",
-                  height: "400",
+                  width: "100%",
+                  height: { base: "300", md: "400" },
                   playerVars: {
                     autoplay: 0,
                   },
                 }}
+                style={{ width: { base: "80%", md: "500px" } }}
               />
             </Box>
             <br />
