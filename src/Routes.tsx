@@ -15,6 +15,9 @@ import UploadSong from "./pages/UploadSong";
 import AdminPage from "./pages/AdminPage";
 import adminRoutes from "./AdminRoutes"; // Import the admin router
 import ResetPassword from "./pages/ResetPassword";
+import AboutPage from "./pages/AboutPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import CopyrightPage from "./pages/CopyrightPage";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +37,9 @@ const router = createBrowserRouter([
       { path: "songs", element: <SongsPage /> },
       { path: "/media_files/:id", element: <SongDetailPage /> },
       { path: "reset-password", element: <ResetPassword /> },
+      { path: "about", element: <AboutPage /> },
+      { path: "privacy", element: <PrivacyPage /> },
+      { path: "copyright", element: <CopyrightPage /> },
     ],
   },
   {

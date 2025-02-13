@@ -130,37 +130,24 @@ const Register = () => {
         password: password,
       };
 
-      const userResponse = await userApiClient.post(userPayload);
-      const userId = userResponse._id;
+      const response = await userApiClient.post(userPayload);
+      const { accessToken } = response;
+
+      // Store the token and redirect
+      localStorage.setItem("token", accessToken);
 
       try {
         await customerApiClient.post({
-          user: userId,
+          user: response.user._id,
           country: country,
         });
-
-        setEmail("");
-        setName("");
-        setPassword("");
-        setMatchPassword("");
-        setCountry("");
-
-        navigate("/auth");
       } catch (customerError: any) {
-        // If customer creation fails, show specific error but still allow login
-        setErrMsg(
-          `Account created successfully, but customer profile creation failed: ${
-            customerError.response?.data?.message ||
-            customerError.message ||
-            "Unknown error"
-          }. You can still login with your credentials.`
-        );
-
-        // Wait 3 seconds before redirecting to login
-        setTimeout(() => {
-          navigate("/auth");
-        }, 3000);
+        console.error("Customer profile creation failed:", customerError);
       }
+
+      // Navigate to songs page directly instead of auth
+      navigate("/");
+      navigate(0); // Refresh to update the user context
     } catch (error) {
       const err = error as AxiosError;
       if (!err?.response) {
@@ -191,17 +178,16 @@ const Register = () => {
         }
       );
 
-      console.log("Registration response:", response.data);
 
-      // After successful registration, redirect to login
+      localStorage.setItem("token", response.data.accessToken);
       toast({
         title: "Registration successful",
-        description: "Please login with your Google account",
+        description: "Registration successful",
         status: "success",
         duration: 3000,
       });
 
-      navigate("/auth");
+      navigate("/");
     } catch (err: any) {
       console.error("Google registration error:", err);
       if (!err?.response) {

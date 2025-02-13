@@ -73,10 +73,13 @@ export interface AuthCredentials {
 }
 
 export interface UserResponse {
-  _id: string;
-  name: string;
-  email: string;
-  isAdmin: boolean;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+    isAdmin: boolean;
+  };
+  accessToken: string;
 }
 
 export interface CustomerPayload {

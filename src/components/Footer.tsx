@@ -31,6 +31,8 @@ const Footer = () => {
           <Link href={"/contact"}>Contact</Link>
           <Link href={"/upload"}>Upload</Link>
           <Link href={"/about"}>About</Link>
+          <Link href={"/privacy"}>Privacy</Link>
+          <Link href={"/copyright"}>Copyright</Link>
         </Stack>
         <Text>
           © {new Date().getFullYear()} SheetMusicLibrary. All rights reserved

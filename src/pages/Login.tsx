@@ -43,23 +43,17 @@ const Login = () => {
     try {
       console.log("Attempting login...");
       const response = await authApi.post({ email: user, password: pwd });
-      console.log("Login successful:", response);
+      // console.log("Login successful:", response);
 
       const access = response?.accessToken;
       localStorage.setItem("token", access);
-
-      // Retrieve the refresh token from cookies
-      const refresh = Cookies.get("csrftoken");
-      if (refresh) {
-        localStorage.setItem("tokenRef", refresh);
-      }
 
       setAuth({ user, pwd, access });
       console.log(auth);
       setUser("");
       setPwd("");
 
-      navigate("/songs");
+      navigate("/");
       navigate(0);
     } catch (err: any) {
       console.error("Login failed:", err);
@@ -84,26 +78,44 @@ const Login = () => {
         decoded,
       });
 
-      const response = await api.post("api/auth/google/google-login", {
-        token: credentialResponse.credential,
-      });
-      console.log("response:", response.data);
+      try {
+        // First try to login
+        const response = await api.post("api/auth/google/google-login", {
+          token: credentialResponse.credential,
+        });
 
-      const access = response?.data?.token;
-      localStorage.setItem("token", access);
+        const access = response?.data?.accessToken;
+        localStorage.setItem("token", access);
+        setAuth({ user: decoded.email, pwd: "", access });
+        navigate("/");
+        navigate(0);
+      } catch (loginErr: any) {
+        // If login fails with 404 (user not found), try registration
+        if (loginErr.response?.status === 404) {
+          const registerResponse = await api.post(
+            "api/auth/google/google-register",
+            {
+              token: credentialResponse.credential,
+            }
+          );
 
-      setAuth({ user: decoded.email, pwd: "", access });
-      // navigate("/songs");
-      navigate(0);
-    } catch (err: any) {
-      console.error("Google login error:", err);
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Google Authentication Failed");
-      } else {
-        setErrMsg(`Login Failed: ${err.message}`);
+          const access = registerResponse?.data?.token;
+          console.log("Google registration response:", registerResponse);
+          localStorage.setItem("token", access);
+          setAuth({ user: decoded.email, pwd: "", access });
+          navigate("/");
+          navigate(0);
+        } else {
+          throw loginErr; // Re-throw other errors
+        }
       }
+    } catch (err: any) {
+      console.error("Google auth error:", err);
+      setErrMsg(
+        err.response?.status === 401
+          ? "Google Authentication Failed"
+          : "Login Failed"
+      );
       errRef.current?.focus();
     }
   };

@@ -38,22 +38,46 @@ const MainNavBar = ({ user }: Props) => {
     navigate(0);
   };
 
+  const getFirstName = (fullName: string) => {
+    return fullName.split(" ")[0];
+  };
+
   const NavLinks = () => (
     <List>
       <Flex direction={{ base: "column", md: "row" }} gap={2}>
         <ListItem>
-          <Button color={"cyan.400"} width="100%">
-            <NavLink to="/upload">Upload Song</NavLink>
+          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+            <NavLink to="/">Home</NavLink>
           </Button>
         </ListItem>
         <ListItem>
-          <Button color={"cyan.400"} width="100%">
-            <NavLink to="/contact">Contact Us</NavLink>
+          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+            <NavLink to="/songs">Songs</NavLink>
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+            <NavLink to="/about">About</NavLink>
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+            <NavLink to="/contact">Contact</NavLink>
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+            <NavLink to="/upload">Upload</NavLink>
           </Button>
         </ListItem>
         {(user?.role === "admin" || user?.role === "superAdmin") && (
           <ListItem>
-            <Button color={"cyan.400"} width="100%">
+            <Button
+              colorScheme="cyan"
+              variant="solid"
+              bg="cyan.600"
+              width="100%"
+            >
               <NavLink to="/admin">Admin Panel</NavLink>
             </Button>
           </ListItem>
@@ -66,12 +90,12 @@ const MainNavBar = ({ user }: Props) => {
     <List>
       <Flex direction={{ base: "column", md: "row" }} gap={2}>
         <ListItem>
-          <Button width="100%">
+          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
             <NavLink to="/auth">Login</NavLink>
           </Button>
         </ListItem>
         <ListItem>
-          <Button width="100%">
+          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
             <NavLink to="/register">Register</NavLink>
           </Button>
         </ListItem>
@@ -131,7 +155,7 @@ const MainNavBar = ({ user }: Props) => {
           <Flex alignItems="center" gap={2}>
             <Show above="md">
               <Heading as="h2" size={{ base: "sm", lg: "lg" }}>
-                Welcome: {user.name}
+                Welcome: {getFirstName(user.name)}
               </Heading>
             </Show>
             <Menu>
