@@ -78,7 +78,7 @@ const MainNavBar = ({ user }: Props) => {
               bg="cyan.600"
               width="100%"
             >
-              <NavLink to="/admin">Admin Panel</NavLink>
+              <NavLink to="/admin">Admin</NavLink>
             </Button>
           </ListItem>
         )}
