@@ -7,7 +7,7 @@ const HomePage = () => {
 
   useEffect(() => {
     // Check for JWT token in localStorage
-    const token = localStorage.getItem("  token");
+    const token = localStorage.getItem("token");
     setIsLoggedIn(!!token); // Convert to boolean (true if token exists, false if null/undefined)
   }, []); // Empty dependency array means this runs once on component mount
 
