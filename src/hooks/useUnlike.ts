@@ -3,7 +3,12 @@ import { SONGS_ENDPOINT, MEDIA_FILES_ENDPOINT } from "../data/constants";
 
 export const useUnlike = (mediafileId: string) => {
   const token = localStorage.getItem("token");
+  const baseURL = import.meta.env.PROD
+    ? "https://sheet-music-library-vite-7ffed1c383be.herokuapp.com"
+    : "";
+
   const axiosInstance = axios.create({
+    baseURL,
     headers: {
       "x-auth-token": token,
       "Content-Type": "application/json",
