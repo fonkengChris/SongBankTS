@@ -18,6 +18,7 @@ import ResetPassword from "./pages/ResetPassword";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import CopyrightPage from "./pages/CopyrightPage";
+import Terms from "./pages/Terms";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
       { path: "about", element: <AboutPage /> },
       { path: "privacy", element: <PrivacyPage /> },
       { path: "copyright", element: <CopyrightPage /> },
+      { path: "terms", element: <Terms /> },
     ],
   },
   {

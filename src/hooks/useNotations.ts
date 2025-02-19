@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import APIClient from "../services/api-client";
+import notations from "../data/notations";
+import { axiosInstance } from "../services/api-client";
+import ms from "ms";
 import Notation from "../entities/Notation";
+import { NOTATIONS_ENDPOINT } from "../data/constants";
 
-const apiClient = new APIClient<Notation>("/api/notations");
-
-const useNotations = () => {
-  return useQuery({
+const useNotations = () =>
+  useQuery<Notation[]>({
     queryKey: ["notations"],
-    queryFn: apiClient.getAll,
+    queryFn: () =>
+      axiosInstance.get(NOTATIONS_ENDPOINT).then((res) => res.data),
+    staleTime: ms("24h"),
+    initialData: notations,
   });
-};
 
 export default useNotations;

@@ -81,6 +81,10 @@ const Register = () => {
   // Add loading state for Google button
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
+  // Add these state variables after other state declarations
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [termsError, setTermsError] = useState(false);
+
   // Verify client ID on component mount
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
@@ -121,6 +125,12 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!acceptedTerms) {
+      setTermsError(true);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -178,7 +188,6 @@ const Register = () => {
         }
       );
 
-
       localStorage.setItem("token", response.data.accessToken);
       toast({
         title: "Registration successful",
@@ -202,10 +211,15 @@ const Register = () => {
     }
   };
 
-  // Add this function to check if form is valid
+  // Update the isFormValid function
   const isFormValid = () => {
     return (
-      validName && validEmail && validPassword && validMatch && country !== ""
+      validName &&
+      validEmail &&
+      validPassword &&
+      validMatch &&
+      country !== "" &&
+      acceptedTerms
     );
   };
 
@@ -410,6 +424,31 @@ const Register = () => {
                   Must match the first password input field.
                 </p>
               )}
+
+              <div className="form-group">
+                <div className="checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    id="terms"
+                    checked={acceptedTerms}
+                    onChange={(e) => {
+                      setAcceptedTerms(e.target.checked);
+                      setTermsError(false);
+                    }}
+                  />
+                  <label htmlFor="terms">
+                    I agree to the{" "}
+                    <Link to="/terms" target="_blank">
+                      Terms and Conditions
+                    </Link>
+                  </label>
+                </div>
+                {termsError && (
+                  <p className="error-message">
+                    You must accept the Terms and Conditions to continue
+                  </p>
+                )}
+              </div>
 
               <button
                 type="submit"

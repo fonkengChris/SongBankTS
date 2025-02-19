@@ -108,3 +108,24 @@
     display: none;
   }
 }
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+.checkbox-wrapper label {
+  font-size: 14px;
+  margin: 0;
+}
+
+.checkbox-wrapper a {
+  color: #2b6cb0;
+  text-decoration: underline;
+}

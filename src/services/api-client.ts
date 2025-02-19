@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const axiosInstance = axios.create({
   baseURL: API_URL,
-  // withCredentials: true,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -15,6 +15,13 @@ export const axiosInstance = axios.create({
 // Add request interceptor with logging
 axiosInstance.interceptors.request.use(
   (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const headers = new AxiosHeaders(config.headers);
+      headers.set("x-auth-token", token);
+      config.headers = headers;
+    }
+
     console.log("Request Config:", {
       url: config.url,
       method: config.method,
@@ -22,12 +29,6 @@ axiosInstance.interceptors.request.use(
       data: config.data,
     });
 
-    const token = localStorage.getItem("token");
-    if (token) {
-      const headers = new AxiosHeaders(config.headers);
-      headers.set("x-auth-token", token);
-      config.headers = headers;
-    }
     return config;
   },
   (error) => {

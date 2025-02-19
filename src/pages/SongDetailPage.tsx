@@ -12,7 +12,6 @@ import {
 import { Link, Navigate, useParams } from "react-router-dom";
 import ExpandableText from "../components/ExpandableText";
 import useMedia from "../hooks/useMediaFile";
-import useSong from "../hooks/useSong";
 import { MEDIA_BASE_URL } from "../data/constants";
 import DefinitionItem from "../components/DefinitionItem";
 import SongAttributes from "../components/SongAttributes";
@@ -57,27 +56,30 @@ const SongDetailPage = () => {
 
   const handleLike = async () => {
     try {
-      setLikeState((prevState) => {
-        const newLiked = !prevState.liked;
-        return {
-          liked: newLiked,
-          likesCount: prevState.likesCount + (newLiked ? 1 : -1),
-        };
-      });
+      // Optimistically update the UI
+      setLikeState((prevState) => ({
+        liked: !prevState.liked,
+        likesCount: prevState.likesCount + (!prevState.liked ? 1 : -1),
+      }));
 
+      // Perform the API call
       if (!likeState.liked) {
         await likeSong();
       } else {
         await unlikeSong();
       }
-    } catch (error) {
+
+      setErrorMessage(""); // Clear any existing error message
+    } catch (error: any) {
       console.error("Error toggling like status:", error);
-      // Revert state in case of an error
+      // Revert the optimistic update
       setLikeState((prevState) => ({
         liked: !prevState.liked,
-        likesCount: prevState.likesCount + (prevState.liked ? -1 : 1),
+        likesCount: prevState.likesCount + (prevState.liked ? 1 : -1),
       }));
-      setErrorMessage("Failed to update like status. Please try again.");
+      setErrorMessage(
+        error.message || "Failed to update like status. Please try again."
+      );
     }
   };
 
