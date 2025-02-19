@@ -1,14 +1,14 @@
 import axios from "axios";
-import { SONGS_ENDPOINT, MEDIA_FILES_ENDPOINT } from "../data/constants";
+import {
+  SONGS_ENDPOINT,
+  MEDIA_FILES_ENDPOINT,
+  MEDIA_BASE_URL,
+} from "../data/constants";
 
 export const useUnlike = (mediafileId: string) => {
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.PROD
-    ? "https://sheet-music-library-vite-7ffed1c383be.herokuapp.com"
-    : "";
-
   const axiosInstance = axios.create({
-    baseURL,
+    baseURL: MEDIA_BASE_URL,
     headers: {
       "x-auth-token": token,
       "Content-Type": "application/json",
