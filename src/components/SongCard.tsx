@@ -22,11 +22,7 @@ const SongCard = ({ song, mediaFile }: Props) => {
   return (
     <Card>
       <Link to={"/media_files/" + mediaFile._id}>
-        <Image
-          boxSize="300px"
-          objectFit="cover"
-          src={MEDIA_BASE_URL + mediaFile.previewImage}
-        />
+        <Image boxSize="300px" objectFit="cover" src={mediaFile.previewImage} />
       </Link>
       <CardBody>
         <Link to={"/media_files/" + mediaFile._id}>{mediaFile.name}</Link>

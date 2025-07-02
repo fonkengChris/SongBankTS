@@ -45,6 +45,7 @@ const SongFormPage = () => {
     category: undefined,
     mediaFiles: [],
     price: undefined,
+    youtubeUrl: "",
   });
 
   const handleMediaSelect = (mediaId: string) => {
@@ -76,6 +77,7 @@ const SongFormPage = () => {
         category: song.category,
         mediaFiles: [],
         price: song.price,
+        youtubeUrl: song.youtubeUrl,
       });
     }
   }, [id, song]);
@@ -259,6 +261,20 @@ const SongFormPage = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
+                bg={inputBg}
+                color={inputColor}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel color="blue.500">YouTube URL</FormLabel>
+              <Input
+                type="url"
+                value={formData.youtubeUrl || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, youtubeUrl: e.target.value })
+                }
+                placeholder="https://youtube.com/watch?v=..."
                 bg={inputBg}
                 color={inputColor}
               />

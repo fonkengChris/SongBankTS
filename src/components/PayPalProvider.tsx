@@ -1,5 +1,4 @@
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { ChakraProvider } from "@chakra-ui/react";
 
 interface Props {
   children: React.ReactNode;
@@ -14,11 +13,9 @@ const PayPalProvider = ({ children }: Props) => {
   };
 
   return (
-    <ChakraProvider>
-      <PayPalScriptProvider options={initialOptions}>
-        {children}
-      </PayPalScriptProvider>
-    </ChakraProvider>
+    <PayPalScriptProvider options={initialOptions}>
+      {children}
+    </PayPalScriptProvider>
   );
 };
 

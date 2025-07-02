@@ -19,6 +19,7 @@ import SongMedia from "../entities/SongMedia";
 import Song from "../entities/Song";
 import Notation from "../entities/Notation";
 import { MediaFileFormData } from "../types/forms";
+import { useAllSongs } from "../hooks/useSongs";
 
 const MediaFileFormPage = () => {
   const { id } = useParams();
@@ -28,7 +29,6 @@ const MediaFileFormPage = () => {
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");
 
-  const [songs, setSongs] = useState<Song[]>([]);
   const [notations, setNotations] = useState<Notation[]>([]);
   const [formData, setFormData] = useState<MediaFileFormData>({
     name: "",
@@ -42,18 +42,25 @@ const MediaFileFormPage = () => {
   const apiClient = new APIClient<SongMedia, MediaFileFormData>(
     "/api/media_files"
   );
-  const songsApiClient = new APIClient<Song>("/api/songs");
   const notationsApiClient = new APIClient<Notation>("/api/notations");
+
+  // Use the new hook for all songs without pagination
+  const {
+    data: songs = [],
+    error: songsError,
+    isLoading: songsLoading,
+  } = useAllSongs();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [songsData, notationsData] = await Promise.all([
-          songsApiClient.getAll(),
-          notationsApiClient.getAll(),
-        ]);
-        setSongs(songsData);
-        setNotations(notationsData);
+        const notationsData = await notationsApiClient.getAll();
+
+        // Handle the notations response which is a direct array
+        const notationsArray = Array.isArray(notationsData)
+          ? notationsData
+          : (notationsData as any)?.notations || [];
+        setNotations(notationsArray);
 
         if (id) {
           const mediaData = await apiClient.get(id);

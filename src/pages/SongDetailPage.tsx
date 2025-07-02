@@ -99,7 +99,50 @@ const SongDetailPage = () => {
 
   // Ensure documentFile and song are available before rendering
   if (!mediaFile) return <Text>No document found.</Text>;
-  if (!mediaFile.song) return <Text>No song data found in document.</Text>;
+
+  // Fallback: If no song, show media file info
+  if (!mediaFile.song) {
+    return (
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
+        <GridItem>
+          <Heading>{mediaFile.name}</Heading>
+          <Link to={mediaFile.documentFile}>
+            <Img
+              src={mediaFile.previewImage}
+              boxSize="700px"
+              objectFit="cover"
+              alt={`Preview image for ${mediaFile.name}`}
+            />
+          </Link>
+          <br />
+          {mediaFile.audioFile ? (
+            <>
+              <audio controls src={mediaFile.audioFile}>
+                Your browser does not support the audio element.
+              </audio>
+              <br />
+            </>
+          ) : (
+            <Text>No audio available for this song.</Text>
+          )}
+          <Heading>Notation</Heading>
+          <Text>{mediaFile.notation?.title || "N/A"}</Text>
+        </GridItem>
+        <GridItem>
+          <Heading mt={6}>Document</Heading>
+          <Text>
+            <a
+              href={mediaFile.documentFile}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Document
+            </a>
+          </Text>
+        </GridItem>
+      </SimpleGrid>
+    );
+  }
 
   const { song, documentFile, previewImage, audioFile } = mediaFile;
 
@@ -108,9 +151,9 @@ const SongDetailPage = () => {
       {/* First Column */}
       <GridItem>
         <Heading>{song.title}</Heading>
-        <Link to={MEDIA_BASE_URL + documentFile}>
+        <Link to={documentFile}>
           <Img
-            src={MEDIA_BASE_URL + previewImage}
+            src={previewImage}
             boxSize="700px"
             objectFit="cover"
             alt={`Preview image for ${song?.title || "song"}`}
@@ -119,7 +162,7 @@ const SongDetailPage = () => {
         <br />
         {audioFile ? (
           <>
-            <audio controls src={MEDIA_BASE_URL + audioFile}>
+            <audio controls src={audioFile}>
               Your browser does not support the audio element.
             </audio>
             <br />

@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import useSongQueryStore from "../Store";
 import { SONGS_ENDPOINT } from "../data/constants";
 import APIClient from "../services/api-client";
@@ -30,4 +30,14 @@ const useSongs = () => {
   });
 };
 
+// Hook for admin pages that need all songs without pagination
+const useAllSongs = () => {
+  return useQuery<Song[], Error>({
+    queryKey: ["all-songs"],
+    queryFn: () => apiClient.getAllSongsWithoutPagination(),
+    cacheTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+export { useAllSongs };
 export default useSongs;

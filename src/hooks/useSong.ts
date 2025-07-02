@@ -13,7 +13,7 @@ const useSong = (id: string) => {
       setLoading(true);
       try {
         const response = await axios.get<Song>(
-          `${MEDIA_BASE_URL}${SONGS_ENDPOINT}${id}`,
+          `${MEDIA_BASE_URL}${SONGS_ENDPOINT}/${id}`,
           {
             headers: {
               "x-auth-token": `${localStorage.getItem("token")}`,

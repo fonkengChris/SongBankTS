@@ -9,8 +9,54 @@
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
+    <style>
+      /* Force dark mode immediately */
+      html,
+      body {
+        background-color: #000000 !important;
+        color: white !important;
+      }
+      * {
+        transition: none !important;
+      }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
+    <script>
+      // Chakra UI Color Mode Script - Prevent Flash
+      (function () {
+        var storageKey = "chakra-ui-color-mode";
+        var colorMode = localStorage.getItem(storageKey);
+
+        // Force dark mode if not set or if it's light
+        if (!colorMode || colorMode === "light") {
+          localStorage.setItem(storageKey, "dark");
+          colorMode = "dark";
+        }
+
+        // Apply dark theme immediately
+        if (colorMode === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.documentElement.style.backgroundColor = "#000000";
+          document.documentElement.style.color = "white";
+          document.body.style.backgroundColor = "#000000";
+          document.body.style.color = "white";
+
+          // Add CSS to prevent any light mode flash
+          var style = document.createElement("style");
+          style.textContent = `
+            html, body { 
+              background-color: #000000 !important; 
+              color: white !important; 
+            }
+            * { 
+              transition: none !important; 
+            }
+          `;
+          document.head.appendChild(style);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

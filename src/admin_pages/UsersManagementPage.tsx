@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  ChakraProvider,
   Box,
   Heading,
   Table,
@@ -88,100 +87,98 @@ const UsersManagementPage = () => {
   };
 
   return (
-    <ChakraProvider>
-      <Box bg="gray.100" minHeight="100vh" p={4}>
-        <Box bg="white" shadow="md" p={4} mb={4}>
-          <Flex justifyContent="space-between" alignItems="center">
-            <Heading color={"blue.400"} size="lg">
-              Users Management
-            </Heading>
-            <Button colorScheme="blue" as={RouterLink} to="/admin/users/add">
-              Add User
-            </Button>
-          </Flex>
-        </Box>
+    <Box bg="gray.100" minHeight="100vh" p={4}>
+      <Box bg="white" shadow="md" p={4} mb={4}>
+        <Flex justifyContent="space-between" alignItems="center">
+          <Heading color={"blue.400"} size="lg">
+            Users Management
+          </Heading>
+          <Button colorScheme="blue" as={RouterLink} to="/admin/users/add">
+            Add User
+          </Button>
+        </Flex>
+      </Box>
 
-        <Box bg="white" shadow="md" p={4}>
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>ID</Th>
-                <Th>Name</Th>
-                <Th>Email</Th>
-                <Th>Role</Th>
-                <Th>Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {users?.length > 0 ? (
-                users.map((user) => (
-                  <Tr key={user._id}>
-                    <Td color={"blue.400"}>{user._id}</Td>
-                    <Td color={"blue.400"}>{user.name}</Td>
-                    <Td color={"blue.400"}>{user.email}</Td>
-                    <Td color={"blue.400"}>{user.role}</Td>
-                    <Td>
-                      <Button
-                        colorScheme="teal"
-                        size="sm"
-                        mr={2}
-                        as={RouterLink}
-                        to={`/admin/users/edit/${user._id}`}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        colorScheme="red"
-                        size="sm"
-                        onClick={() => handleDeleteClick(user._id)}
-                      >
-                        Delete
-                      </Button>
-                    </Td>
-                  </Tr>
-                ))
-              ) : (
-                <Tr>
-                  <Td colSpan={5} textAlign="center">
-                    No users found.
+      <Box bg="white" shadow="md" p={4}>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>ID</Th>
+              <Th>Name</Th>
+              <Th>Email</Th>
+              <Th>Role</Th>
+              <Th>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {users?.length > 0 ? (
+              users.map((user) => (
+                <Tr key={user._id}>
+                  <Td color={"blue.400"}>{user._id}</Td>
+                  <Td color={"blue.400"}>{user.name}</Td>
+                  <Td color={"blue.400"}>{user.email}</Td>
+                  <Td color={"blue.400"}>{user.role}</Td>
+                  <Td>
+                    <Button
+                      colorScheme="teal"
+                      size="sm"
+                      mr={2}
+                      as={RouterLink}
+                      to={`/admin/users/edit/${user._id}`}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleDeleteClick(user._id)}
+                    >
+                      Delete
+                    </Button>
                   </Td>
                 </Tr>
-              )}
-            </Tbody>
-          </Table>
-        </Box>
-
-        <AlertDialog
-          isOpen={isDeleteDialogOpen}
-          leastDestructiveRef={cancelRef}
-          onClose={() => setIsDeleteDialogOpen(false)}
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Delete User
-              </AlertDialogHeader>
-
-              <AlertDialogBody>
-                Are you sure? This action cannot be undone.
-              </AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Button
-                  ref={cancelRef}
-                  onClick={() => setIsDeleteDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>
-                  Delete
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={5} textAlign="center">
+                  No users found.
+                </Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
       </Box>
-    </ChakraProvider>
+
+      <AlertDialog
+        isOpen={isDeleteDialogOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setIsDeleteDialogOpen(false)}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete User
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? This action cannot be undone.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={() => setIsDeleteDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </Box>
   );
 };
 

@@ -15,12 +15,12 @@ console.log("Client ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
+    <ColorModeScript
+      initialColorMode={theme.config.initialColorMode}
+      storageKey="chakra-ui-color-mode"
+    />
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
-      <ChakraProvider>
-        <ColorModeScript
-          initialColorMode={theme.config.initialColorMode}
-        ></ColorModeScript>
-
+      <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <RouterProvider router={router} />

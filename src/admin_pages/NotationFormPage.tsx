@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  ChakraProvider,
   FormControl,
   FormLabel,
   Heading,

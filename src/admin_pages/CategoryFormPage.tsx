@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {
-  ChakraProvider,
   Box,
   Button,
   FormControl,
@@ -87,57 +86,55 @@ const CategoryFormPage = () => {
   };
 
   return (
-    <ChakraProvider>
-      <Box bg="gray.100" minHeight="100vh" p={4}>
-        <Box bg="white" shadow="md" p={4} mb={4}>
-          <Flex justifyContent="space-between" alignItems="center">
-            <Heading color="blue.400" size="lg">
-              {id ? "Edit Category" : "Create Category"}
-            </Heading>
-          </Flex>
-        </Box>
-
-        <Box maxW="container.md" mx="auto" py={8}>
-          <VStack spacing={8} align="stretch">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <VStack spacing={4}>
-                <FormControl isInvalid={!!errors.title}>
-                  <FormLabel color="blue.500">Category Title</FormLabel>
-                  <Input
-                    {...register("title", { required: "Title is required" })}
-                    placeholder="Enter category title"
-                    bg={useColorModeValue("white", "gray.700")}
-                    color={useColorModeValue("gray.800", "gray.100")}
-                  />
-                </FormControl>
-
-                <Flex gap={4}>
-                  <Button
-                    onClick={() => navigate("/admin/category")}
-                    colorScheme="red"
-                    flex={1}
-                    minW="140px"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    colorScheme="blue"
-                    type="submit"
-                    isLoading={
-                      createMutation.isLoading || updateMutation.isLoading
-                    }
-                    flex={1}
-                    minW="140px"
-                  >
-                    {id ? "Update Category" : "Create Category"}
-                  </Button>
-                </Flex>
-              </VStack>
-            </form>
-          </VStack>
-        </Box>
+    <Box bg="gray.100" minHeight="100vh" p={4}>
+      <Box bg="white" shadow="md" p={4} mb={4}>
+        <Flex justifyContent="space-between" alignItems="center">
+          <Heading color="blue.400" size="lg">
+            {id ? "Edit Category" : "Create Category"}
+          </Heading>
+        </Flex>
       </Box>
-    </ChakraProvider>
+
+      <Box maxW="container.md" mx="auto" py={8}>
+        <VStack spacing={8} align="stretch">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack spacing={4}>
+              <FormControl isInvalid={!!errors.title}>
+                <FormLabel color="blue.500">Category Title</FormLabel>
+                <Input
+                  {...register("title", { required: "Title is required" })}
+                  placeholder="Enter category title"
+                  bg={useColorModeValue("white", "gray.700")}
+                  color={useColorModeValue("gray.800", "gray.100")}
+                />
+              </FormControl>
+
+              <Flex gap={4}>
+                <Button
+                  onClick={() => navigate("/admin/category")}
+                  colorScheme="red"
+                  flex={1}
+                  minW="140px"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  colorScheme="blue"
+                  type="submit"
+                  isLoading={
+                    createMutation.isLoading || updateMutation.isLoading
+                  }
+                  flex={1}
+                  minW="140px"
+                >
+                  {id ? "Update Category" : "Create Category"}
+                </Button>
+              </Flex>
+            </VStack>
+          </form>
+        </VStack>
+      </Box>
+    </Box>
   );
 };
 

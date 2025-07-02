@@ -89,6 +89,21 @@ export default class APIClient<T, R = T> {
       });
   };
 
+  getAllSongsWithoutPagination = (config?: AxiosRequestConfig) => {
+    return axiosInstance
+      .get<{ songs: T[] } | T[]>(`${this.endpoint}/all`, config)
+      .then((res) => {
+        // If the response is an object with a songs property, return that, else return the array directly
+        if (Array.isArray(res.data)) return res.data;
+        if ('songs' in res.data) return res.data.songs;
+        return [];
+      })
+      .catch((error) => {
+        console.error("Error fetching all songs:", error);
+        throw error;
+      });
+  };
+
   getAll = (config?: AxiosRequestConfig, queryParams?: string) => {
     const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
     return axiosInstance

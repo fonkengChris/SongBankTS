@@ -9,12 +9,10 @@
 html {
   font-family: "Nunito", sans-serif;
   font-size: 22px;
-  color: #fff;
 }
 
 body {
   min-height: 100vh;
-  background-color: rgb(58, 61, 64);
 }
 
 .App {
@@ -47,7 +45,7 @@ form {
 
 a,
 a:visited {
-  color: #fff;
+  color: inherit;
 }
 
 input[type="text"],
@@ -167,11 +165,9 @@ button {
 
 .profile-container,
 .login-container {
-  background-color: rgb(26, 32, 44);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  color: white;
 }
 
 .form-group {
@@ -183,7 +179,6 @@ label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: white;
 }
 
 .form-control,

@@ -40,7 +40,7 @@ const PremiumSongCard = ({ song, mediaFile }: Props) => {
             <Image
               boxSize="300px"
               objectFit="cover"
-              src={MEDIA_BASE_URL + mediaFile.previewImage}
+              src={mediaFile.previewImage}
             />
             <Box
               position="absolute"

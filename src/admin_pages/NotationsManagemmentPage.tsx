@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  ChakraProvider,
   Box,
   Heading,
   Table,
@@ -52,62 +51,56 @@ const NotationsManagementPage = () => {
   if (!notations) return null;
 
   return (
-    <ChakraProvider>
-      <Box bg="gray.100" minHeight="100vh" p={4}>
-        <Box bg="white" shadow="md" p={4} mb={4}>
-          <Flex justifyContent="space-between" alignItems="center">
-            <Heading color={"blue.400"} size="lg">
-              Notations Management
-            </Heading>
-            <Button
-              colorScheme="blue"
-              as={RouterLink}
-              to="/admin/notations/add"
-            >
-              Add Notation
-            </Button>
-          </Flex>
-        </Box>
-
-        <Box bg="white" shadow="md" p={4}>
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Title</Th>
-                <Th>Slug</Th>
-                <Th>Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {notations.map((notation) => (
-                <Tr key={notation._id}>
-                  <Td color={"blue.400"}>{notation.title}</Td>
-                  <Td color={"blue.400"}>{notation.slug}</Td>
-                  <Td>
-                    <Button
-                      as={RouterLink}
-                      to={`/admin/notations/edit/${notation._id}`}
-                      colorScheme="teal"
-                      size="sm"
-                      mr={2}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      colorScheme="red"
-                      size="sm"
-                      onClick={() => handleDelete(notation._id)}
-                    >
-                      Delete
-                    </Button>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
+    <Box bg="gray.100" minHeight="100vh" p={4}>
+      <Box bg="white" shadow="md" p={4} mb={4}>
+        <Flex justifyContent="space-between" alignItems="center">
+          <Heading color={"blue.400"} size="lg">
+            Notations Management
+          </Heading>
+          <Button colorScheme="blue" as={RouterLink} to="/admin/notations/add">
+            Add Notation
+          </Button>
+        </Flex>
       </Box>
-    </ChakraProvider>
+
+      <Box bg="white" shadow="md" p={4}>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Title</Th>
+              <Th>Slug</Th>
+              <Th>Actions</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {notations.map((notation) => (
+              <Tr key={notation._id}>
+                <Td color={"blue.400"}>{notation.title}</Td>
+                <Td color={"blue.400"}>{notation.slug}</Td>
+                <Td>
+                  <Button
+                    as={RouterLink}
+                    to={`/admin/notations/edit/${notation._id}`}
+                    colorScheme="teal"
+                    size="sm"
+                    mr={2}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    size="sm"
+                    onClick={() => handleDelete(notation._id)}
+                  >
+                    Delete
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
+    </Box>
   );
 };
 

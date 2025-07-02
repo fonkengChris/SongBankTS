@@ -46,27 +46,57 @@ const MainNavBar = ({ user }: Props) => {
     <List>
       <Flex direction={{ base: "column", md: "row" }} gap={2}>
         <ListItem>
-          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+          <Button
+            colorScheme="cyan"
+            variant="solid"
+            bg="cyan.600"
+            color="white"
+            width="100%"
+          >
             <NavLink to="/">Home</NavLink>
           </Button>
         </ListItem>
         <ListItem>
-          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+          <Button
+            colorScheme="cyan"
+            variant="solid"
+            bg="cyan.600"
+            color="white"
+            width="100%"
+          >
             <NavLink to="/songs">Songs</NavLink>
           </Button>
         </ListItem>
         <ListItem>
-          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+          <Button
+            colorScheme="cyan"
+            variant="solid"
+            bg="cyan.600"
+            color="white"
+            width="100%"
+          >
             <NavLink to="/about">About</NavLink>
           </Button>
         </ListItem>
         <ListItem>
-          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+          <Button
+            colorScheme="cyan"
+            variant="solid"
+            bg="cyan.600"
+            color="white"
+            width="100%"
+          >
             <NavLink to="/contact">Contact</NavLink>
           </Button>
         </ListItem>
         <ListItem>
-          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+          <Button
+            colorScheme="cyan"
+            variant="solid"
+            bg="cyan.600"
+            color="white"
+            width="100%"
+          >
             <NavLink to="/upload">Upload</NavLink>
           </Button>
         </ListItem>
@@ -76,6 +106,7 @@ const MainNavBar = ({ user }: Props) => {
               colorScheme="cyan"
               variant="solid"
               bg="cyan.600"
+              color="white"
               width="100%"
             >
               <NavLink to="/admin">Admin</NavLink>
@@ -90,12 +121,24 @@ const MainNavBar = ({ user }: Props) => {
     <List>
       <Flex direction={{ base: "column", md: "row" }} gap={2}>
         <ListItem>
-          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+          <Button
+            colorScheme="cyan"
+            variant="solid"
+            bg="cyan.600"
+            color="white"
+            width="100%"
+          >
             <NavLink to="/auth">Login</NavLink>
           </Button>
         </ListItem>
         <ListItem>
-          <Button colorScheme="cyan" variant="solid" bg="cyan.600" width="100%">
+          <Button
+            colorScheme="cyan"
+            variant="solid"
+            bg="cyan.600"
+            color="white"
+            width="100%"
+          >
             <NavLink to="/register">Register</NavLink>
           </Button>
         </ListItem>

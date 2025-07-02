@@ -3,16 +3,24 @@ import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 const config: ThemeConfig = {
   initialColorMode: "dark",
   useSystemColorMode: false,
+  disableTransitionOnChange: true,
 };
 
 const theme = extendTheme({
   config,
   styles: {
-    global: {
+    global: (props: any) => ({
       body: {
-        bg: "#0F0F0F",
+        bg: "#000000",
+        color: "white",
       },
-    },
+      html: {
+        bg: "#000000",
+      },
+      "*": {
+        transition: "none !important",
+      },
+    }),
   },
   colors: {
     gray: {
@@ -24,7 +32,7 @@ const theme = extendTheme({
       500: "#898989",
       600: "#6c6c6c",
       700: "#202020",
-      800: "#0F0F0F",
+      800: "#000000",
       900: "#000000",
     },
     blue: {
@@ -43,9 +51,9 @@ const theme = extendTheme({
   },
   components: {
     Box: {
-      baseStyle: {
-        bg: "#0F0F0F",
-      },
+      baseStyle: (props: any) => ({
+        bg: "#000000",
+      }),
     },
   },
 });
