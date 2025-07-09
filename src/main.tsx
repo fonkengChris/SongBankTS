@@ -11,7 +11,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
 
-console.log("Client ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
+console.log("Client ID:", import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -19,7 +19,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       initialColorMode={theme.config.initialColorMode}
       storageKey="chakra-ui-color-mode"
     />
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
+    <GoogleOAuthProvider
+      clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID || ""}
+    >
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>

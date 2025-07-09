@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import helmet from "helmet";
+import fetch from "node-fetch";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,10 +56,8 @@ console.log("Heroku App Name:", process.env.HEROKU_APP_NAME);
 
 // Determine API URL based on environment
 const API_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : process.env.API_URL ||
-      "https://sheet-music-library-ad225c202768.herokuapp.com";
+  process.env.API_URL ||
+  "https://sheet-music-library-ad225c202768.herokuapp.com";
 
 // Better self-proxy check
 if (
@@ -89,8 +88,44 @@ app.use(
       console.error("Proxy Error:", err);
       res.status(500).send("Proxy Error");
     },
+    // Skip proxy for media_files endpoint - we'll handle it locally
+    filter: (pathname, req) => {
+      if (pathname.startsWith("/api/media_files/")) {
+        return false; // Don't proxy this request
+      }
+      return true; // Proxy all other requests
+    },
   })
 );
+
+// Local media files endpoint
+app.get("/api/media_files/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const token = req.headers["x-auth-token"];
+
+    // Fetch media file data from Heroku backend
+    const response = await fetch(`${API_URL}/api/media_files/${id}`, {
+      headers: {
+        "x-auth-token": token,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return res.status(404).json({ error: "Media file not found" });
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const mediaFile = await response.json();
+    res.json(mediaFile);
+  } catch (error) {
+    console.error("Error fetching media file:", error);
+    res.status(500).json({ error: "Failed to fetch media file" });
+  }
+});
 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, "dist")));

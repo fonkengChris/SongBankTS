@@ -3,7 +3,7 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 
 interface Props {
   liked: boolean;
-  onLike: () => void;
+  onLike?: () => void;
 }
 
 const Like = ({ liked, onLike }: Props) => {
@@ -13,7 +13,10 @@ const Like = ({ liked, onLike }: Props) => {
     <Icon
       as={classes}
       onClick={onLike}
-      style={{ cursor: "pointer" }}
+      cursor={onLike ? "pointer" : "not-allowed"}
+      opacity={onLike ? 1 : 0.5}
+      transition="all 0.2s ease-in-out"
+      _hover={onLike ? { transform: "scale(1.1)" } : {}}
       aria-hidden="true"
     />
   );

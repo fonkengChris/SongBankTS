@@ -37,10 +37,17 @@
         // Apply dark theme immediately
         if (colorMode === "dark") {
           document.documentElement.setAttribute("data-theme", "dark");
-          document.documentElement.style.backgroundColor = "#000000";
-          document.documentElement.style.color = "white";
-          document.body.style.backgroundColor = "#000000";
-          document.body.style.color = "white";
+
+          // Safely set styles only if elements exist
+          if (document.documentElement) {
+            document.documentElement.style.backgroundColor = "#000000";
+            document.documentElement.style.color = "white";
+          }
+
+          if (document.body) {
+            document.body.style.backgroundColor = "#000000";
+            document.body.style.color = "white";
+          }
 
           // Add CSS to prevent any light mode flash
           var style = document.createElement("style");

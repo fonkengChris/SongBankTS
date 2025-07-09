@@ -30,3 +30,4 @@ dist-ssr
 .env.test.local
 .env.production
 vite-env.d.ts
+.early.coverage

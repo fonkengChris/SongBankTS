@@ -1,12 +1,20 @@
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
 import useSongQueryStore from "../Store";
 
 const SearchInput = () => {
   const ref = useRef<HTMLInputElement>(null);
-
+  const searchText = useSongQueryStore((s) => s.songQuery.searchText);
   const setSearchText = useSongQueryStore((s) => s.setSearchText);
+
+  // Update input value when searchText changes
+  useEffect(() => {
+    if (ref.current && searchText !== undefined) {
+      ref.current.value = searchText || "";
+    }
+  }, [searchText]);
+
   return (
     <form
       onSubmit={(event) => {
@@ -23,6 +31,7 @@ const SearchInput = () => {
           variant="filled"
           height="50px"
           minH="50px"
+          defaultValue={searchText || ""}
         />
       </InputGroup>
     </form>

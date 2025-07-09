@@ -16,8 +16,10 @@ import { MEDIA_BASE_URL } from "../data/constants";
 import DefinitionItem from "../components/DefinitionItem";
 import SongAttributes from "../components/SongAttributes";
 import Views from "../components/Views";
+import useLike from "../hooks/useLike";
 import Like from "../components/Like";
-import useLikeManager from "../hooks/useLikeManager";
+import useUnlike from "../hooks/useUnlike";
+import useLikeStatus from "../hooks/useLikeStatus";
 import YouTube from "react-youtube";
 
 const SongDetailPage = () => {
@@ -38,27 +40,110 @@ const SongDetailPage = () => {
   // Get the song ID from the media file
   const songId = mediaFile?.song?._id;
 
-  // Use the new like status hook only when we have a valid songId
+  // Use the new like status hook
   const {
-    isLiked,
-    likesCount,
-    loading: likeLoading,
-    error: likeError,
-    toggleLike,
-    refresh: refreshLikeStatus,
-  } = useLikeManager(songId);
+    likeStatus,
+    loading: likeStatusLoading,
+    refetch: refetchLikeStatus,
+  } = useLikeStatus(songId || "");
+
+  // Initialize like hooks with song ID
+  const { likeSong } = useLike(songId || "");
+  const { unlikeSong } = useUnlike(songId || "");
+
+  // Optimistic state for immediate UI updates
+  const [optimisticLikeState, setOptimisticLikeState] = useState<{
+    isLiked: boolean;
+    likesCount: number;
+  } | null>(null);
+
+  // Loading state for like/unlike operations
+  const [isLikeOperationLoading, setIsLikeOperationLoading] = useState(false);
+
+  // Ref to track if we're in the middle of a like operation
+  const isInLikeOperation = useRef(false);
+
+  // Ref to store timeout ID for cleanup
+  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Update optimistic state when likeStatus changes (but only if there's a significant difference)
+  useEffect(() => {
+    if (likeStatus && optimisticLikeState && !isInLikeOperation.current) {
+      // Only update if the server state is different from our optimistic state
+      // This prevents immediate reversion after successful operations
+      const serverIsLiked = likeStatus.isLiked;
+      const optimisticIsLiked = optimisticLikeState.isLiked;
+
+      // If the states are different, it means we need to sync
+      if (
+        serverIsLiked !== optimisticIsLiked ||
+        likeStatus.likesCount !== optimisticLikeState.likesCount
+      ) {
+        setOptimisticLikeState({
+          isLiked: likeStatus.isLiked,
+          likesCount: likeStatus.likesCount,
+        });
+      }
+    } else if (likeStatus && !optimisticLikeState) {
+      // Initial load - set the optimistic state
+      setOptimisticLikeState({
+        isLiked: likeStatus.isLiked,
+        likesCount: likeStatus.likesCount,
+      });
+    }
+  }, [likeStatus]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleLike = async () => {
-    if (!songId) return;
+    if (!songId || !optimisticLikeState) return;
+
+    // Store the current state for potential rollback
+    const previousState = { ...optimisticLikeState };
 
     try {
-      await toggleLike();
+      setIsLikeOperationLoading(true);
+      isInLikeOperation.current = true;
+
+      // Optimistically update the UI immediately
+      setOptimisticLikeState((prev) => ({
+        isLiked: !prev!.isLiked,
+        likesCount: prev!.likesCount + (!prev!.isLiked ? 1 : -1),
+      }));
+
+      // Perform the API call
+      if (!optimisticLikeState.isLiked) {
+        await likeSong();
+      } else {
+        await unlikeSong();
+      }
+
+      // Don't refetch immediately - let the optimistic state persist
+      // Sync with server state after a delay to ensure consistency
+      syncTimeoutRef.current = setTimeout(() => {
+        if (!isInLikeOperation.current) {
+          refetchLikeStatus();
+        }
+      }, 2000); // 2 second delay
+
       setErrorMessage(""); // Clear any existing error message
     } catch (error: any) {
       console.error("Error toggling like status:", error);
+      // Revert the optimistic update on error
+      setOptimisticLikeState(previousState);
       setErrorMessage(
         error.message || "Failed to update like status. Please try again."
       );
+    } finally {
+      setIsLikeOperationLoading(false);
+      isInLikeOperation.current = false;
     }
   };
 
@@ -186,21 +271,22 @@ const SongDetailPage = () => {
           <DefinitionItem term="Likes">
             <Box>
               <HStack>
-                {likeLoading ? (
+                {likeStatusLoading ? (
                   <Spinner size="sm" />
                 ) : (
-                  <Like liked={isLiked} onLike={handleLike} />
+                  <Like
+                    liked={optimisticLikeState?.isLiked || false}
+                    onLike={isLikeOperationLoading ? undefined : handleLike}
+                  />
                 )}
                 <Text
                   padding={2}
                   transition="all 0.2s ease-in-out"
-                  color={isLiked ? "red.500" : "inherit"}
+                  color={optimisticLikeState?.isLiked ? "red.500" : "inherit"}
                 >
-                  {likesCount}
+                  {optimisticLikeState?.likesCount || 0}
                 </Text>
-                {(errorMessage || likeError) && (
-                  <Text color="red.500">{errorMessage || likeError}</Text>
-                )}
+                {errorMessage && <Text color="red.500">{errorMessage}</Text>}
               </HStack>
             </Box>
           </DefinitionItem>

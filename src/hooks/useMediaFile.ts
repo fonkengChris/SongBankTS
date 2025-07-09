@@ -21,9 +21,15 @@ const useMedia = (id: string) => {
           }
         );
         setMedia(response.data);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Error fetching document:", err);
-        setError("Failed to load the document. Please try again.");
+        if (err.response?.status === 404) {
+          setError(
+            "Media file not found. It may have been removed or the link is invalid."
+          );
+        } else {
+          setError("Failed to load the document. Please try again.");
+        }
       } finally {
         setLoading(false);
       }

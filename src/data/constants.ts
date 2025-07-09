@@ -10,14 +10,15 @@ export const NOTATIONS_ENDPOINT = "/api/notations";
 export const LANGUAGES_ENDPOINT = "/api/languages";
 export const LOGIN_ENDPOINT = "/api/auth";
 export const MEDIA_FILES_ENDPOINT = "/api/media_files";
-export const AUDIOS_ENDPOINT = "/api/audios";
-export const IMAGES_ENDPOINT = "/api/images";
 export const CURRENT_USER_ENDPOINT = "/api/users/me";
 export const CHANGE_PASSWORD_ENDPOINT = "/api/auth/change_password";
 export const RESET_PASSWORD_ENDPOINT =
   "/api/auth/password-reset/reset-password";
 export const REQUEST_RESET_ENDPOINT = "/api/auth/password-reset/request-reset";
 export const CONTACT_ENDPOINT = "/api/contact";
+
+// Likes API endpoints
+export const LIKES_ENDPOINT = "/api/likes";
 
 //validation constants
 
