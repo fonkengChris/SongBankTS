@@ -1,9 +1,11 @@
-import useAudios from "./useAudios";
+import useMediaFiles from "./useMediaFiles";
+import SongMedia from "../entities/SongMedia";
 
 const useAudio = (id?: string | null) => {
-  const { data: audios } = useAudios();
-  console.log(audios);
-  return audios!.find((c) => c._id === id);
+  const { mediaFiles } = useMediaFiles();
+  return mediaFiles.find(
+    (media: SongMedia) => media._id === id && media.audioFile
+  );
 };
 
 export default useAudio;

@@ -1,8 +1,11 @@
-import useImages from "./useImages";
+import useMediaFiles from "./useMediaFiles";
+import SongMedia from "../entities/SongMedia";
 
 const useImage = (id?: string | null) => {
-  const { data: iamges } = useImages();
-  return iamges!.find((c) => c._id === id);
+  const { mediaFiles } = useMediaFiles();
+  return mediaFiles.find(
+    (media: SongMedia) => media._id === id && media.previewImage
+  );
 };
 
 export default useImage;
