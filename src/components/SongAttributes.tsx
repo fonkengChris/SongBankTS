@@ -16,7 +16,7 @@ const SongAttributes = ({ mediaFile }: Props) => {
     notation,
     isLoading: notationLoading,
     error: notationError,
-  } = useNotation(mediaFile.notation._id);
+  } = useNotation(mediaFile.notation?._id);
 
   if (notationLoading) return <Spinner />;
   if (notationError) return <Text color="red.500">Error loading notation</Text>;

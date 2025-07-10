@@ -58,8 +58,8 @@ const LikedSongsList = () => {
         ...mediaFile,
         songTitle: song.title,
         songAuthor: song.authorName,
-        songLanguage: song.language.name,
-        songCategory: song.category.title,
+        songLanguage: song.language?.name || "Unknown",
+        songCategory: song.category?.title || "Uncategorized",
         songViews: song.views,
         songLikes: song.likesCount,
         likedAt: song.likedAt,
@@ -132,7 +132,7 @@ const LikedSongsList = () => {
                   color="whiteAlpha.600"
                   flexShrink={0}
                 >
-                  <Text>{mediaFile.notation.title}</Text>
+                  <Text>{mediaFile.notation?.title || "No notation"}</Text>
                   <Text>•</Text>
                   <Text>{mediaFile.songLanguage}</Text>
                   <Text>•</Text>
