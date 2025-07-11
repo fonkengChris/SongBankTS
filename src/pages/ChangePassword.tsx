@@ -12,11 +12,19 @@ import { axiosInstance } from "../services/api-client";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import CurrentUser from "../entities/CurrentUser";
-import { Box, Container, Flex, FormControl, FormLabel } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Flex,
+  FormControl,
+  FormLabel,
+  useToast,
+} from "@chakra-ui/react";
 import backgroundImage from "../assets/background_image.jpg";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const user = jwtDecode<CurrentUser>(localStorage.getItem("token")!);
 
   const endpoint = CHANGE_PASSWORD_ENDPOINT + "/" + user._id;
@@ -61,7 +69,39 @@ const ChangePassword = () => {
         password,
       });
       console.log(response);
-    } catch (error) {}
+
+      // Show success toast
+      toast({
+        title: "Password Changed Successfully",
+        description:
+          "Your password has been updated. You will be logged out and redirected to the login page.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+
+      // Clear localStorage (logout)
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error: any) {
+      // Show error toast
+      toast({
+        title: "Password Change Failed",
+        description:
+          error.response?.data ||
+          "An error occurred while changing your password.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
   };
 
   return (
