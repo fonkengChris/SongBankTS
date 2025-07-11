@@ -11,7 +11,7 @@ export const LANGUAGES_ENDPOINT = "/api/languages";
 export const LOGIN_ENDPOINT = "/api/auth";
 export const MEDIA_FILES_ENDPOINT = "/api/media_files";
 export const CURRENT_USER_ENDPOINT = "/api/users/me";
-export const CHANGE_PASSWORD_ENDPOINT = "/api/auth/change_password";
+export const CHANGE_PASSWORD_ENDPOINT = "/api/change-password";
 export const RESET_PASSWORD_ENDPOINT =
   "/api/auth/password-reset/reset-password";
 export const REQUEST_RESET_ENDPOINT = "/api/auth/password-reset/request-reset";
