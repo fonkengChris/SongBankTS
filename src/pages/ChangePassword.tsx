@@ -19,7 +19,7 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const user = jwtDecode<CurrentUser>(localStorage.getItem("token")!);
 
-  const endpoint = CHANGE_PASSWORD_ENDPOINT + user._id + "/";
+  const endpoint = CHANGE_PASSWORD_ENDPOINT + "/" + user._id;
 
   const [old_password, setOldPassword] = useState("");
   const [validOldPassword, setValidOldPassword] = useState(false);
