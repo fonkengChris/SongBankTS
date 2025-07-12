@@ -20,13 +20,14 @@ const SongAttributes = ({ mediaFile }: Props) => {
 
   if (notationLoading) return <Spinner />;
   if (notationError) return <Text color="red.500">Error loading notation</Text>;
-  if (!notation) return <Text>No notation found</Text>;
 
   return (
     <SimpleGrid columns={2} as="dl">
-      <DefinitionItem term={"Notation"}>
-        <Text>{notation.title}</Text>
-      </DefinitionItem>
+      {notation && (
+        <DefinitionItem term={"Notation"}>
+          <Text>{notation.title}</Text>
+        </DefinitionItem>
+      )}
       <DefinitionItem term="MetaScore">
         <CriticScore score={song.metacritic || 0} />
       </DefinitionItem>

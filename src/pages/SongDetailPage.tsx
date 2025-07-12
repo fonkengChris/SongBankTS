@@ -105,7 +105,13 @@ const SongDetailPage = () => {
             <Text>No audio available for this song.</Text>
           )}
           <Heading>Notation</Heading>
-          <Text>{mediaFile.notation?.title || "N/A"}</Text>
+          <Text>
+            {mediaFile.notation?.title ||
+              mediaFile.notation?.name ||
+              (mediaFile.notation
+                ? "Notation available"
+                : "No notation available")}
+          </Text>
         </GridItem>
         <GridItem>
           <Heading mt={6}>Document</Heading>
