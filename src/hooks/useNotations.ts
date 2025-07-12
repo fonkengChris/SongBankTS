@@ -11,7 +11,6 @@ const useNotations = () =>
     queryFn: () =>
       axiosInstance.get(NOTATIONS_ENDPOINT).then((res) => res.data),
     staleTime: ms("24h"),
-    initialData: notations,
   });
 
 export default useNotations;

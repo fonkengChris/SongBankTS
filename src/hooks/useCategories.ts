@@ -12,7 +12,6 @@ const useCategories = () =>
     queryKey: ["categories"],
     queryFn: apiClient.getAll,
     staleTime: ms("24h"),
-    initialData: categories,
   });
 
 export default useCategories;
