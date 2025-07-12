@@ -8,7 +8,7 @@ const useNotation = (notationId: string | number | undefined) => {
 
   return {
     notation:
-      notationId && notations
+      notationId && notations && Array.isArray(notations)
         ? notations.find((n) => n._id === notationId)
         : undefined,
     error,

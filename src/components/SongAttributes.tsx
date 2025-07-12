@@ -18,7 +18,10 @@ const SongAttributes = ({ mediaFile }: Props) => {
     error: notationError,
   } = useNotation(mediaFile.notation?._id);
 
+  // Show loading state while data is being fetched
   if (notationLoading) return <Spinner />;
+
+  // Show error state if there's an error
   if (notationError) return <Text color="red.500">Error loading notation</Text>;
 
   return (
