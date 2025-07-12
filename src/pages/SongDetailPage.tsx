@@ -107,7 +107,6 @@ const SongDetailPage = () => {
           <Heading>Notation</Heading>
           <Text>
             {mediaFile.notation?.title ||
-              mediaFile.notation?.name ||
               (mediaFile.notation
                 ? "Notation available"
                 : "No notation available")}
