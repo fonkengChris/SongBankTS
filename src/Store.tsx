@@ -40,16 +40,14 @@ const useSongQueryStore = create<SongQueryStore>((set, get) => ({
     const { songQuery } = get();
     const params = new URLSearchParams();
 
-    if (songQuery.categoryId) params.append("categoryId", songQuery.categoryId);
-    if (songQuery.languageId) params.append("languageId", songQuery.languageId);
-    if (songQuery.notationId) params.append("notationId", songQuery.notationId);
+    if (songQuery.categoryId) params.append("category", songQuery.categoryId);
+    if (songQuery.languageId) params.append("language", songQuery.languageId);
+    if (songQuery.notationId) params.append("notation", songQuery.notationId);
     if (songQuery.sortOrder) params.append("sortOrder", songQuery.sortOrder);
     if (songQuery.searchText) params.append("searchText", songQuery.searchText);
 
     return `/api/songs?${params.toString()}`;
   },
 }));
-
-
 
 export default useSongQueryStore;
