@@ -12,6 +12,6 @@ const useLanguages = () =>
     queryKey: ["languages"],
     queryFn: apiClient.getAll,
     staleTime: ms("24h"),
-    initialData: languages,
+    // initialData: languages,
   });
 export default useLanguages;
