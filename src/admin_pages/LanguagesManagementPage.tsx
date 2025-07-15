@@ -66,7 +66,7 @@ const LanguagesManagementPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {languages.map((language) => (
+            {languages?.map((language) => (
               <Tr key={language._id}>
                 <Td color={"blue.400"}>{language.name}</Td>
                 <Td color={"blue.400"}>{language.code}</Td>

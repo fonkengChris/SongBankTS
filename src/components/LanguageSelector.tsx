@@ -7,7 +7,7 @@ import { useEffect } from "react";
 const LanguageSelector = () => {
   const { data: languages, error } = useLanguages();
   const selectedLanguageId = useSongQueryStore((s) => s.songQuery.languageId);
-  const selectedLanguage = languages.find((n) => n._id === selectedLanguageId);
+  const selectedLanguage = languages?.find((n) => n._id === selectedLanguageId);
 
   const setSelectedLanguage = useSongQueryStore((s) => s.setLanguageId);
 
