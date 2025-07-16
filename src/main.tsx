@@ -8,6 +8,7 @@ import router from "./Routes";
 import theme from "./theme";
 import { AuthProvider } from "./context/AuthProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import PWAUpdatePrompt from "./components/PWAUpdatePrompt";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <RouterProvider router={router} />
+            <PWAUpdatePrompt />
           </AuthProvider>
           <ReactQueryDevtools />
         </QueryClientProvider>

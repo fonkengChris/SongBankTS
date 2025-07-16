@@ -8,7 +8,8 @@
     "build": "NODE_ENV=production tsc && vite build",
     "preview": "vite preview",
     "start": "NODE_ENV=production node server.js",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "generate-icons": "node generate-pwa-icons.js"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",
@@ -47,6 +48,8 @@
     "simple-zustand-devtools": "^1.1.0",
     "typescript": "^4.9.3",
     "vite": "^4.2.0",
+    "vite-plugin-pwa": "^0.17.4",
+    "workbox-window": "^7.0.0",
     "zustand": "^4.3.7"
   },
   "devDependencies": {

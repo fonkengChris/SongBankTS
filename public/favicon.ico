@@ -1,0 +1,28 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    
+    <!-- Background -->
+    <rect width="32" height="32" fill="url(#bg)" rx="1.25"/>
+    
+    <!-- Music note -->
+    <g transform="translate(16, 16)">
+      <!-- Note head 1 -->
+      <ellipse cx="-2.5" cy="1.875" rx="1.25" ry="0.9375" fill="#ffffff"/>
+      
+      <!-- Stem -->
+      <rect x="-2.25" y="1.875" width="2" height="5.625" fill="#ffffff"/>
+      
+      <!-- Note head 2 -->
+      <ellipse cx="2.5" cy="-2.5" rx="1.25" ry="0.9375" fill="#ffffff"/>
+      
+      <!-- Staff lines -->
+      <g stroke="#4a90e2" stroke-width="1" fill="none">
+        <line x1="-7.5" y1="-1.875" x2="7.5" y2="-1.875"/><line x1="-7.5" y1="-0.9375" x2="7.5" y2="-0.9375"/><line x1="-7.5" y1="0" x2="7.5" y2="0"/><line x1="-7.5" y1="0.9375" x2="7.5" y2="0.9375"/><line x1="-7.5" y1="1.875" x2="7.5" y2="1.875"/>
+      </g>
+    </g>
+  </svg>
