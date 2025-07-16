@@ -270,7 +270,7 @@ const Register = () => {
                 <FormControl
                   id="name"
                   isRequired
-                  isInvalid={name && !validName}
+                  isInvalid={name ? !validName : false}
                 >
                   <FormLabel>Full Name</FormLabel>
                   <Input
@@ -298,7 +298,7 @@ const Register = () => {
                 <FormControl
                   id="email"
                   isRequired
-                  isInvalid={email && !validEmail}
+                  isInvalid={email ? !validEmail : false}
                 >
                   <FormLabel>Email address</FormLabel>
                   <Input
@@ -343,7 +343,7 @@ const Register = () => {
                 <FormControl
                   id="password"
                   isRequired
-                  isInvalid={password && !validPassword}
+                  isInvalid={password ? !validPassword : false}
                 >
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
@@ -389,7 +389,7 @@ const Register = () => {
                 <FormControl
                   id="confirmPassword"
                   isRequired
-                  isInvalid={matchPassword && !validMatch}
+                  isInvalid={matchPassword ? !validMatch : false}
                 >
                   <FormLabel>Confirm Password</FormLabel>
                   <InputGroup>

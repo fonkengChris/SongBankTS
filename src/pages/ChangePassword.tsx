@@ -140,7 +140,7 @@ const ChangePassword = () => {
               <FormControl
                 id="oldPassword"
                 isRequired
-                isInvalid={old_password && !validOldPassword}
+                isInvalid={old_password ? !validOldPassword : false}
               >
                 <FormLabel>Current Password</FormLabel>
                 <InputGroup>
@@ -185,7 +185,7 @@ const ChangePassword = () => {
               <FormControl
                 id="newPassword"
                 isRequired
-                isInvalid={password && !validPassword}
+                isInvalid={password ? !validPassword : false}
               >
                 <FormLabel>New Password</FormLabel>
                 <InputGroup>
@@ -231,7 +231,7 @@ const ChangePassword = () => {
               <FormControl
                 id="confirmPassword"
                 isRequired
-                isInvalid={matchPassword && !validMatch}
+                isInvalid={matchPassword ? !validMatch : false}
               >
                 <FormLabel>Confirm New Password</FormLabel>
                 <InputGroup>
