@@ -9,13 +9,15 @@ const SongCardContainer = ({ children }: Props) => {
   return (
     <Box
       _hover={{
-        transform: "scale(1.05)",
+        transform: "scale(1.02)",
         transition: "transform .15s ease-in",
+        boxShadow: "lg",
       }}
-      height="500px"
-      width="300px"
       borderRadius={10}
       overflow="hidden"
+      height="100%"
+      width="100%"
+      boxShadow="md"
     >
       {children}
     </Box>

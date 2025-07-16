@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading, Box } from "@chakra-ui/react";
 import useSongQueryStore from "../Store";
 import useCategory from "../hooks/useCategory";
 import useNotation from "../hooks/useNotation";
@@ -19,17 +19,23 @@ const SongHeading = () => {
   }   Songs`;
 
   return (
-    <Heading
-      textAlign="left"
-      paddingTop={5}
-      paddingBottom={5}
-      paddingLeft={8}
-      fontSize="5xl"
-      as="h1"
-      lineHeight="1.2"
+    <Box
+      paddingTop={{ base: 3, md: 4, lg: 5 }}
+      paddingBottom={{ base: 3, md: 4, lg: 5 }}
+      paddingLeft={{ base: 4, md: 6, lg: 8 }}
+      paddingRight={{ base: 4, md: 6, lg: 8 }}
     >
-      {heading}
-    </Heading>
+      <Heading
+        textAlign="left"
+        fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }}
+        as="h1"
+        lineHeight="1.2"
+        fontWeight="bold"
+        color="gray.800"
+      >
+        {heading}
+      </Heading>
+    </Box>
   );
 };
 

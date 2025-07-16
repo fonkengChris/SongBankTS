@@ -1,4 +1,12 @@
-import { Box, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  HStack,
+  Show,
+  VStack,
+  Hide,
+} from "@chakra-ui/react";
 import CategoryList from "../components/CategoryList";
 import { Navigate } from "react-router-dom";
 import NotationSelector from "../components/NotationSelector";
@@ -21,58 +29,84 @@ const SongsPage = () => {
       }}
       templateColumns={{
         base: "1fr",
-        lg: "200px 1fr",
+        lg: "250px 1fr",
       }}
+      gap={{ base: 4, lg: 6 }}
+      minHeight="100vh"
     >
       <Show above="lg">
-        <GridItem area="aside">
+        <GridItem area="aside" position="sticky" top={4} height="fit-content">
           <CategoryList />
         </GridItem>
       </Show>
       <GridItem area="main">
-        <SongHeading />
-        <Box paddingX={8}>
-          <Show above="lg">
-            <HStack spacing={5} marginBottom={5} alignItems="center">
-              <NotationSelector />
-              <LanguageSelector />
-              <SortSelector />
-              <Box flex={1}>
-                <SearchInput />
-              </Box>
-            </HStack>
-          </Show>
+        <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+          <SongHeading />
 
-          <Show below="lg">
-            <Box marginBottom={5}>
+          <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
+            {/* Desktop Layout */}
+            <Hide below="lg">
               <HStack
-                spacing={5}
-                marginBottom={3}
-                width="100%"
+                spacing={{ base: 3, md: 4, lg: 5 }}
+                marginBottom={6}
                 alignItems="center"
+                flexWrap="wrap"
+                gap={4}
               >
                 <NotationSelector />
                 <LanguageSelector />
-              </HStack>
-
-              <HStack
-                spacing={5}
-                marginBottom={3}
-                width="100%"
-                alignItems="center"
-              >
-                <CategorySelector />
                 <SortSelector />
+                <Box flex={1} minWidth="200px">
+                  <SearchInput />
+                </Box>
               </HStack>
+            </Hide>
 
-              <Box marginBottom={3}>
-                <SearchInput />
-              </Box>
-            </Box>
-          </Show>
+            {/* Mobile/Tablet Layout */}
+            <Show below="lg">
+              <VStack spacing={4} marginBottom={6} align="stretch">
+                {/* First row of filters */}
+                <HStack
+                  spacing={3}
+                  width="100%"
+                  alignItems="center"
+                  flexWrap="wrap"
+                  gap={3}
+                >
+                  <Box flex={1} minWidth="140px">
+                    <NotationSelector />
+                  </Box>
+                  <Box flex={1} minWidth="140px">
+                    <LanguageSelector />
+                  </Box>
+                </HStack>
 
-          <SongGrid />
-        </Box>
+                {/* Second row of filters */}
+                <HStack
+                  spacing={3}
+                  width="100%"
+                  alignItems="center"
+                  flexWrap="wrap"
+                  gap={3}
+                >
+                  <Box flex={1} minWidth="140px">
+                    <CategorySelector />
+                  </Box>
+                  <Box flex={1} minWidth="140px">
+                    <SortSelector />
+                  </Box>
+                </HStack>
+
+                {/* Search input */}
+                <Box width="100%">
+                  <SearchInput />
+                </Box>
+              </VStack>
+            </Show>
+
+            <SongGrid />
+          </Box>
+        </VStack>
       </GridItem>
     </Grid>
   );

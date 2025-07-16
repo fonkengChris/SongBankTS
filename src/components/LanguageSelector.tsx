@@ -17,15 +17,19 @@ const LanguageSelector = () => {
       <MenuButton
         as={Button}
         rightIcon={<BsChevronDown />}
-        minH="50px"
-        height="50px"
+        minH={{ base: "40px", md: "50px" }}
+        height={{ base: "40px", md: "50px" }}
         display="inline-flex"
         alignItems="center"
-        width="auto"
+        width="100%"
+        fontSize={{ base: "sm", md: "md" }}
+        variant="outline"
+        _hover={{ bg: "gray.50" }}
+        _active={{ bg: "gray.100" }}
       >
         {selectedLanguage?.name || "Language"}
       </MenuButton>
-      <MenuList>
+      <MenuList maxHeight="300px" overflow="auto">
         <MenuItem onClick={() => setSelectedLanguage(null)}>
           All Languages
         </MenuItem>

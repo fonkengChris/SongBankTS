@@ -1,4 +1,4 @@
-import { SimpleGrid, Text, Box, Spinner } from "@chakra-ui/react";
+import { SimpleGrid, Text, Box, Spinner, VStack } from "@chakra-ui/react";
 import useSongs from "../hooks/useSongs";
 import SongCard from "./SongCard";
 import PremiumSongCard from "./PremiumSongCard";
@@ -59,11 +59,12 @@ const SongGrid = () => {
   if (error) return <Text color="red">{error.message}</Text>;
 
   return (
-    <Box padding="10px">
+    <VStack spacing={6} width="100%">
       <SimpleGrid
-        columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
-        spacing={6}
-        padding="10px"
+        columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
+        spacing={{ base: 4, md: 6 }}
+        width="100%"
+        minChildWidth={{ base: "280px", sm: "250px", md: "280px", lg: "300px" }}
       >
         {/* Regular songs */}
         {isLoading &&
@@ -87,7 +88,7 @@ const SongGrid = () => {
         )}
       </SimpleGrid>
 
-      <Box ref={loadMoreRef} padding="20px" textAlign="center">
+      <Box ref={loadMoreRef} padding="20px" textAlign="center" width="100%">
         {isFetchingNextPage && (
           <Spinner
             thickness="4px"
@@ -98,10 +99,12 @@ const SongGrid = () => {
           />
         )}
         {!hasNextPage && (data?.pages?.length ?? 0) > 0 && (
-          <Text color="gray.600">No more songs to load.</Text>
+          <Text color="gray.600" fontSize={{ base: "sm", md: "md" }}>
+            No more songs to load.
+          </Text>
         )}
       </Box>
-    </Box>
+    </VStack>
   );
 };
 
