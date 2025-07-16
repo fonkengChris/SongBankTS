@@ -19,6 +19,17 @@ import {
   FormControl,
   FormLabel,
   useToast,
+  Button,
+  Text,
+  Heading,
+  Input,
+  Stack,
+  Image,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+  FormErrorMessage,
+  FormHelperText,
 } from "@chakra-ui/react";
 import backgroundImage from "../assets/background_image.jpg";
 
@@ -105,225 +116,188 @@ const ChangePassword = () => {
   };
 
   return (
-    <Box minH="100vh" py={8}>
-      <Container maxW="1200px">
-        <Flex
-          bgSize="cover"
-          bgPosition="center"
-          borderRadius="20px"
-          p={8}
-          direction="column"
-          maxW="600px"
-          mx="auto"
-          boxShadow="xl"
-        >
-          <section
-            style={{
-              backgroundImage: `url(${backgroundImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              borderRadius: "20px",
-            }}
-            className="login-container"
-          >
-            <form onSubmit={handleSubmit} className="login-form">
-              <FormControl>
-                <div className="form-group">
-                  <label
-                    htmlFor="old_password"
-                    style={{
-                      color: "rgba(255, 255, 255, 0.92)",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Old Password:
-                    {validPassword === true && (
-                      <FontAwesomeIcon icon={faCheck} className="valid" />
-                    )}
-                    {validPassword !== true ||
-                      (password === "" && (
-                        <FontAwesomeIcon icon={faTimes} className="invalid" />
-                      ))}
-                  </label>
-                  <div className="password-input-wrapper">
-                    <input
-                      className="form-control"
-                      id="old_password"
-                      onChange={(e) => setOldPassword(e.target.value)}
-                      value={old_password}
-                      required
-                      aria-invalid={validPassword ? "false" : "true"}
-                      aria-describedby="pwdnote"
-                      type={showOldPassword ? "text" : "password"}
-                      placeholder="Enter Old password"
-                    />
-                    <button
-                      type="button"
-                      className="password-toggle"
+    <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
+      <Flex p={8} flex={1} align={"center"} justify={"center"}>
+        <Stack spacing={6} w={"full"} maxW={"md"}>
+          <Heading fontSize={"2xl"}>Change your password</Heading>
+
+          {errMsg && (
+            <Box
+              bg="red.50"
+              border="1px"
+              borderColor="red.200"
+              borderRadius="md"
+              p={3}
+              color="red.600"
+              fontSize="sm"
+            >
+              {errMsg}
+            </Box>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4}>
+              <FormControl
+                id="oldPassword"
+                isRequired
+                isInvalid={old_password && !validOldPassword}
+              >
+                <FormLabel>Current Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    type={showOldPassword ? "text" : "password"}
+                    value={old_password}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    placeholder="Enter current password"
+                    onFocus={() => setOldPasswordFocus(true)}
+                    onBlur={() => setOldPasswordFocus(false)}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label={
+                        showOldPassword ? "Hide password" : "Show password"
+                      }
+                      icon={
+                        <FontAwesomeIcon
+                          icon={showOldPassword ? faEyeSlash : faEye}
+                        />
+                      }
+                      variant="ghost"
+                      size="sm"
                       onClick={() => setShowOldPassword(!showOldPassword)}
-                    >
-                      <FontAwesomeIcon
-                        icon={showOldPassword ? faEyeSlash : faEye}
-                      />
-                    </button>
-                  </div>
-                </div>
-
-                {oldPasswordFocus === true && validPassword === false && (
-                  <p id="pwdnote" className="instructions">
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                    8 to 24 characters.
-                    <br />
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                {oldPasswordFocus && old_password && !validOldPassword && (
+                  <FormHelperText>
+                    <FontAwesomeIcon icon={faInfoCircle} /> 8 to 24 characters.
                     Must include uppercase and lowercase letters, a number and a
                     special character.
-                    <br />
-                    Allowed special characters:{" "}
-                    <span aria-label="exclamation mark">!</span>{" "}
-                    <span aria-label="at symbol">@</span>{" "}
-                    <span aria-label="hashtag">#</span>{" "}
-                    <span aria-label="dollar sign">$</span>{" "}
-                    <span aria-label="percent">%</span>
-                  </p>
+                  </FormHelperText>
+                )}
+                {old_password && !validOldPassword && (
+                  <FormErrorMessage>
+                    <FontAwesomeIcon icon={faTimes} /> Invalid password format
+                  </FormErrorMessage>
                 )}
               </FormControl>
 
-              <FormControl>
-                <div className="form-group">
-                  <label
-                    htmlFor="password"
-                    style={{
-                      color: "rgba(255, 255, 255, 0.92)",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    New Password:
-                    {validPassword === true && (
-                      <FontAwesomeIcon icon={faCheck} className="valid" />
-                    )}
-                    {validPassword !== true ||
-                      (password === "" && (
-                        <FontAwesomeIcon icon={faTimes} className="invalid" />
-                      ))}
-                  </label>
-                  <div className="password-input-wrapper">
-                    <input
-                      className="form-control"
-                      id="password"
-                      onChange={(e) => setPassword(e.target.value)}
-                      value={password}
-                      required
-                      aria-invalid={validPassword ? "false" : "true"}
-                      aria-describedby="pwdnote"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter New password"
-                    />
-                    <button
-                      type="button"
-                      className="password-toggle"
+              <FormControl
+                id="newPassword"
+                isRequired
+                isInvalid={password && !validPassword}
+              >
+                <FormLabel>New Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    onFocus={() => setPasswordFocus(true)}
+                    onBlur={() => setPasswordFocus(false)}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
+                      icon={
+                        <FontAwesomeIcon
+                          icon={showPassword ? faEyeSlash : faEye}
+                        />
+                      }
+                      variant="ghost"
+                      size="sm"
                       onClick={() => setShowPassword(!showPassword)}
-                    >
-                      <FontAwesomeIcon
-                        icon={showPassword ? faEyeSlash : faEye}
-                      />
-                    </button>
-                  </div>
-                </div>
-
-                {passwordFocus === true && validPassword === false && (
-                  <p id="pwdnote" className="instructions">
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                    8 to 24 characters.
-                    <br />
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                {passwordFocus && password && !validPassword && (
+                  <FormHelperText>
+                    <FontAwesomeIcon icon={faInfoCircle} /> 8 to 24 characters.
                     Must include uppercase and lowercase letters, a number and a
                     special character.
-                    <br />
-                    Allowed special characters:{" "}
-                    <span aria-label="exclamation mark">!</span>{" "}
-                    <span aria-label="at symbol">@</span>{" "}
-                    <span aria-label="hashtag">#</span>{" "}
-                    <span aria-label="dollar sign">$</span>{" "}
-                    <span aria-label="percent">%</span>
-                  </p>
+                  </FormHelperText>
+                )}
+                {password && !validPassword && (
+                  <FormErrorMessage>
+                    <FontAwesomeIcon icon={faTimes} /> Password doesn't meet
+                    requirements
+                  </FormErrorMessage>
                 )}
               </FormControl>
 
-              <FormControl>
-                <div className="form-group">
-                  <label
-                    htmlFor="confirm_pwd"
-                    style={{
-                      color: "rgba(255, 255, 255, 0.92)",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Confirm New Password:
-                    {validMatch === true && matchPassword !== "" && (
-                      <FontAwesomeIcon icon={faCheck} className="valid" />
-                    )}
-                    {validMatch === false ||
-                      (matchPassword === "" && (
-                        <FontAwesomeIcon icon={faTimes} className="invalid" />
-                      ))}
-                  </label>
-                  <div className="password-input-wrapper">
-                    <input
-                      className="form-control"
-                      type={showConfirmPassword ? "text" : "password"}
-                      id="confirm_pwd"
-                      onChange={(e) => setMatchPassword(e.target.value)}
-                      value={matchPassword}
-                      required
-                      aria-invalid={validMatch ? "false" : "true"}
-                      aria-describedby="confirmnote"
-                      placeholder="Confirm New password"
-                    />
-                    <button
-                      type="button"
-                      className="password-toggle"
+              <FormControl
+                id="confirmPassword"
+                isRequired
+                isInvalid={matchPassword && !validMatch}
+              >
+                <FormLabel>Confirm New Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={matchPassword}
+                    onChange={(e) => setMatchPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    onFocus={() => setMatchFocus(true)}
+                    onBlur={() => setMatchFocus(false)}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label={
+                        showConfirmPassword ? "Hide password" : "Show password"
+                      }
+                      icon={
+                        <FontAwesomeIcon
+                          icon={showConfirmPassword ? faEyeSlash : faEye}
+                        />
+                      }
+                      variant="ghost"
+                      size="sm"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                    >
-                      <FontAwesomeIcon
-                        icon={showConfirmPassword ? faEyeSlash : faEye}
-                      />
-                    </button>
-                  </div>
-                </div>
-
-                {matchFocus && !validMatch && (
-                  <p id="confirmnote" className="instructions">
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                    Must match the first password input field.
-                  </p>
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                {matchPassword && !validMatch && (
+                  <FormErrorMessage>
+                    <FontAwesomeIcon icon={faTimes} /> Passwords don't match
+                  </FormErrorMessage>
                 )}
               </FormControl>
 
-              <div
-                className="form-group"
-                style={{ display: "flex", gap: "1rem" }}
-              >
-                <button
-                  type="button"
-                  className="btn btn-danger"
+              <Stack direction="row" spacing={4}>
+                <Button
+                  variant="outline"
                   onClick={() => navigate(`/users/${user._id}`)}
-                  style={{ flex: 1 }}
+                  flex={1}
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
+                  colorScheme="red"
+                  variant="solid"
                   type="submit"
-                  className="btn btn-primary"
-                  style={{ flex: 1 }}
+                  flex={1}
                 >
                   Change Password
-                </button>
-              </div>
-            </form>
-          </section>
-        </Flex>
-      </Container>
-    </Box>
+                </Button>
+              </Stack>
+            </Stack>
+          </form>
+        </Stack>
+      </Flex>
+
+      <Flex flex={1} display={{ base: "none", md: "flex" }}>
+        <Image
+          alt={"Change Password Image"}
+          objectFit={"cover"}
+          src={backgroundImage}
+        />
+      </Flex>
+    </Stack>
   );
 };
 

@@ -10,14 +10,31 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import APIClient from "../services/api-client";
 import { AuthResponse, AuthCredentials } from "../types/forms";
-import "../styles/auth.css";
-// import backgroundImage from "../assets/background_image.jpg";
+import {
+  Button,
+  Flex,
+  Text,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Stack,
+  Image,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+  useToast,
+  Divider,
+  Box,
+} from "@chakra-ui/react";
+import backgroundImage from "../assets/background_image.jpg";
 
 const Login = () => {
   const jwt = localStorage.getItem("token");
   if (jwt) return <Navigate to="/songs" />;
 
   const { auth, setAuth } = useAuth();
+  const toast = useToast();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -126,85 +143,108 @@ const Login = () => {
 
   return (
     <GoogleOAuthProvider clientId={clientId || ""}>
-      <div className="auth-container">
-        <div className="auth-form-container">
-          <div className="auth-form-section">
-            <h1 className="auth-heading">Sign In</h1>
-            <form onSubmit={handleSubmit} className="auth-form">
-              {errMsg && (
-                <p ref={errRef} className="error-message" aria-live="assertive">
-                  {errMsg}
-                </p>
-              )}
+      <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
+        <Flex p={8} flex={1} align={'center'} justify={'center'}>
+          <Stack spacing={6} w={'full'} maxW={'md'}>
+            <Heading fontSize={'2xl'}>Sign in to your account</Heading>
+            
+            {errMsg && (
+              <Box
+                bg="red.50"
+                border="1px"
+                borderColor="red.200"
+                borderRadius="md"
+                p={3}
+                color="red.600"
+                fontSize="sm"
+              >
+                {errMsg}
+              </Box>
+            )}
 
-              <div className="form-group">
-                <label htmlFor="username" className="form-label">
-                  Email Address:
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  ref={userRef}
-                  className="form-control"
-                  autoComplete="off"
-                  onChange={(e) => setUser(e.target.value)}
-                  value={user}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">
-                  Password:
-                </label>
-                <div className="password-input-wrapper">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    className="form-control"
-                    onChange={(e) => setPwd(e.target.value)}
-                    value={pwd}
-                    required
+            <form onSubmit={handleSubmit}>
+              <Stack spacing={4}>
+                <FormControl id="email" isRequired>
+                  <FormLabel>Email address</FormLabel>
+                  <Input 
+                    type="email" 
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                    ref={userRef}
                   />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
+                </FormControl>
+                
+                <FormControl id="password" isRequired>
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input 
+                      type={showPassword ? "text" : "password"}
+                      value={pwd}
+                      onChange={(e) => setPwd(e.target.value)}
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        icon={<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
+
+                <Stack spacing={6}>
+                  <Flex justify="space-between" align="center">
+                    <Text color={'blue.500'}>
+                      <Link to="/reset-password">Forgot password?</Link>
+                    </Text>
+                  </Flex>
+                  
+                  <Button 
+                    colorScheme={'red'} 
+                    variant={'solid'}
+                    type="submit"
+                    size="lg"
                   >
-                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                  </button>
-                </div>
-              </div>
-
-              <button type="submit" className="btn-primary">
-                Sign In
-              </button>
-
-              <div className="social-login">
-                <p>Or sign in with:</p>
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setErrMsg("Google Login Failed")}
-                  width="100%"
-                />
-              </div>
-
-              <div className="auth-links">
-                <p>
-                  Need an Account? <Link to="/register">Sign Up</Link>
-                </p>
-                <p>
-                  <Link to="/reset-password">Forgot Password?</Link>
-                </p>
-              </div>
+                    Sign in
+                  </Button>
+                </Stack>
+              </Stack>
             </form>
-          </div>
 
-          {/* <div className="auth-image-section">
-            <img src={backgroundImage} alt="Login" />
-          </div> */}
-        </div>
-      </div>
+            <Divider />
+
+            <Stack spacing={4}>
+              <Text textAlign="center" color="gray.600">
+                Or sign in with:
+              </Text>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setErrMsg("Google Login Failed")}
+                width="100%"
+              />
+            </Stack>
+
+            <Text textAlign="center" color="gray.600">
+              Need an Account?{" "}
+              <Link to="/register">
+                <Text as="span" color="blue.500">
+                  Sign Up
+                </Text>
+              </Link>
+            </Text>
+          </Stack>
+        </Flex>
+        
+        <Flex flex={1} display={{ base: 'none', md: 'flex' }}>
+          <Image
+            alt={'Login Image'}
+            objectFit={'cover'}
+            src={backgroundImage}
+          />
+        </Flex>
+      </Stack>
     </GoogleOAuthProvider>
   );
 };

@@ -26,7 +26,26 @@ import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import { UserPayload, UserResponse, CustomerPayload } from "../types/forms";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import "../styles/auth.css";
+import {
+  Button,
+  Flex,
+  Text,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Image,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+  Divider,
+  Box,
+  Select,
+  Checkbox,
+  FormErrorMessage,
+  FormHelperText,
+} from "@chakra-ui/react";
+import backgroundImage from "../assets/background_image.jpg";
 
 const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
 const customerApiClient = new APIClient<Customer, CustomerPayload>(
@@ -227,265 +246,260 @@ const Register = () => {
     <GoogleOAuthProvider
       clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID || ""}
     >
-      <div className="auth-container">
-        <div className="auth-form-container">
-          <div className="auth-form-section">
-            <h1 className="auth-heading">Registration Form</h1>
-            <form onSubmit={handleSubmit} className="auth-form">
-              {errMsg && (
-                <p ref={errRef} className="error-message" aria-live="assertive">
-                  {errMsg}
-                </p>
-              )}
+      <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
+        <Flex p={8} flex={1} align={"center"} justify={"center"}>
+          <Stack spacing={6} w={"full"} maxW={"md"}>
+            <Heading fontSize={"2xl"}>Create your account</Heading>
 
-              <div className="form-group">
-                <label htmlFor="name">
-                  Name:{" "}
-                  {validName && (
-                    <FontAwesomeIcon icon={faCheck} className="valid" />
-                  )}
-                  {!validName && name && (
-                    <FontAwesomeIcon icon={faTimes} className="invalid" />
-                  )}
-                </label>
-                <input
-                  className="form-control"
-                  type="text"
+            {errMsg && (
+              <Box
+                bg="red.50"
+                border="1px"
+                borderColor="red.200"
+                borderRadius="md"
+                p={3}
+                color="red.600"
+                fontSize="sm"
+              >
+                {errMsg}
+              </Box>
+            )}
+
+            <form onSubmit={handleSubmit}>
+              <Stack spacing={4}>
+                <FormControl
                   id="name"
-                  name="name"
-                  ref={nameRef}
-                  autoComplete="off"
-                  onChange={(e) => setName(e.target.value)}
-                  value={name}
-                  required
-                  onFocus={() => setNameFocus(true)}
-                  onBlur={() => setNameFocus(false)}
-                  aria-describedby="uidnote"
-                  aria-invalid={validName ? "false" : "true"}
-                  placeholder="Enter full name..."
-                />
-              </div>
-              {nameFocus && name && !validName && (
-                <p id="uidnote" className={"instructions"}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  3 to 50 characters.
-                  <br />
-                  Letters, spaces, underscores, hyphens allowed.
-                </p>
-              )}
-
-              <div className="form-group">
-                <label htmlFor="email">
-                  Email:{" "}
-                  {validEmail === true && (
-                    <FontAwesomeIcon icon={faCheck} className="valid" />
-                  )}
-                  {validEmail === false && email !== "" && (
-                    <FontAwesomeIcon icon={faTimes} className="invalid" />
-                  )}
-                </label>
-                <input
-                  className="form-control"
-                  id="email"
-                  name="email"
-                  type="email"
-                  ref={emailRef}
-                  autoComplete="off"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                  required
-                  onFocus={() => setEmailFocus(true)}
-                  onBlur={() => setEmailFocus(false)}
-                  placeholder="Enter Email address ..."
-                  aria-describedby="emailnote"
-                />
-              </div>
-              {emailFocus === true && email !== "" && validEmail === false && (
-                <p id="emailnote" className={"instructions"}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  Must be a valid email address format.
-                  <br />
-                  Example: username@domain.com
-                </p>
-              )}
-
-              <div className="form-group">
-                <label htmlFor="country">Country</label>
-                <select
-                  className="form-control"
-                  id="country"
-                  name="country"
-                  autoComplete="off"
-                  onChange={(e) => setCountry(e.target.value)}
-                  value={country}
-                  onFocus={() => setCountryFocus(true)}
-                  onBlur={() => setCountryFocus(false)}
-                  placeholder="Enter Country ..."
+                  isRequired
+                  isInvalid={name && !validName}
                 >
-                  <option disabled={true} value="">
-                    --Select Country Name--
-                  </option>
-                  {countries.map((country) => (
-                    <option value={country.iso} key={country.iso}>
-                      {country.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">
-                  Password:
-                  {validPassword && (
-                    <FontAwesomeIcon icon={faCheck} className={"valid"} />
-                  )}
-                  {!validPassword && password !== "" && (
-                    <FontAwesomeIcon icon={faTimes} className={"invalid"} />
-                  )}
-                </label>
-                <div className="password-input-wrapper">
-                  <input
-                    className="form-control"
-                    id="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                    required
-                    aria-invalid={validPassword ? "false" : "true"}
-                    aria-describedby="pwdnote"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter password"
-                    onFocus={() => setPasswordFocus(true)}
-                    onBlur={() => setPasswordFocus(false)}
+                  <FormLabel>Full Name</FormLabel>
+                  <Input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    ref={nameRef}
+                    onFocus={() => setNameFocus(true)}
+                    onBlur={() => setNameFocus(false)}
+                    placeholder="Enter full name..."
                   />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                  </button>
-                </div>
-              </div>
-
-              {(passwordFocus || password !== "") && !validPassword && (
-                <p id="pwdnote" className={"instructions"}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  8 to 24 characters.
-                  <br />
-                  Must include uppercase and lowercase letters, a number and a
-                  special character.
-                  <br />
-                  Allowed special characters:{" "}
-                  <span aria-label="exclamation mark">!</span>{" "}
-                  <span aria-label="at symbol">@</span>{" "}
-                  <span aria-label="hashtag">#</span>{" "}
-                  <span aria-label="dollar sign">$</span>{" "}
-                  <span aria-label="percent">%</span>
-                </p>
-              )}
-
-              <div className="form-group">
-                <label htmlFor="confirm_pwd">
-                  Confirm Password:
-                  {validMatch === true && matchPassword !== "" && (
-                    <FontAwesomeIcon icon={faCheck} className={"valid"} />
+                  {nameFocus && name && !validName && (
+                    <FormHelperText>
+                      <FontAwesomeIcon icon={faInfoCircle} /> 3 to 50
+                      characters. Letters, spaces, underscores, hyphens allowed.
+                    </FormHelperText>
                   )}
-                  {validMatch === false ||
-                    (matchPassword === "" && (
-                      <FontAwesomeIcon icon={faTimes} className={"hide"} />
+                  {name && !validName && (
+                    <FormErrorMessage>
+                      <FontAwesomeIcon icon={faTimes} /> Invalid name format
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
+
+                <FormControl
+                  id="email"
+                  isRequired
+                  isInvalid={email && !validEmail}
+                >
+                  <FormLabel>Email address</FormLabel>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    ref={emailRef}
+                    onFocus={() => setEmailFocus(true)}
+                    onBlur={() => setEmailFocus(false)}
+                    placeholder="Enter email address..."
+                  />
+                  {emailFocus && email && !validEmail && (
+                    <FormHelperText>
+                      <FontAwesomeIcon icon={faInfoCircle} /> Must be a valid
+                      email address format.
+                    </FormHelperText>
+                  )}
+                  {email && !validEmail && (
+                    <FormErrorMessage>
+                      <FontAwesomeIcon icon={faTimes} /> Invalid email format
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
+
+                <FormControl id="country" isRequired>
+                  <FormLabel>Country</FormLabel>
+                  <Select
+                    placeholder="Select Country"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    onFocus={() => setCountryFocus(true)}
+                    onBlur={() => setCountryFocus(false)}
+                  >
+                    {countries.map((country) => (
+                      <option value={country.iso} key={country.iso}>
+                        {country.name}
+                      </option>
                     ))}
-                </label>
-                <div className="password-input-wrapper">
-                  <input
-                    className="form-control"
-                    type={showConfirmPassword ? "text" : "password"}
-                    id="confirm_pwd"
-                    onChange={(e) => setMatchPassword(e.target.value)}
-                    value={matchPassword}
-                    required
-                    aria-invalid={validMatch ? "false" : "true"}
-                    aria-describedby="confirmnote"
-                    placeholder="Confirm password"
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    <FontAwesomeIcon
-                      icon={showConfirmPassword ? faEyeSlash : faEye}
-                    />
-                  </button>
-                </div>
-              </div>
-              {matchFocus && !validMatch && (
-                <p id="confirmnote" className={"instructions"}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-                  Must match the first password input field.
-                </p>
-              )}
+                  </Select>
+                </FormControl>
 
-              <div className="form-group">
-                <div className="checkbox-wrapper">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    checked={acceptedTerms}
+                <FormControl
+                  id="password"
+                  isRequired
+                  isInvalid={password && !validPassword}
+                >
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onFocus={() => setPasswordFocus(true)}
+                      onBlur={() => setPasswordFocus(false)}
+                      placeholder="Enter password"
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
+                        icon={
+                          <FontAwesomeIcon
+                            icon={showPassword ? faEyeSlash : faEye}
+                          />
+                        }
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                  {passwordFocus && password && !validPassword && (
+                    <FormHelperText>
+                      <FontAwesomeIcon icon={faInfoCircle} /> 8 to 24
+                      characters. Must include uppercase and lowercase letters,
+                      a number and a special character.
+                    </FormHelperText>
+                  )}
+                  {password && !validPassword && (
+                    <FormErrorMessage>
+                      <FontAwesomeIcon icon={faTimes} /> Password doesn't meet
+                      requirements
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
+
+                <FormControl
+                  id="confirmPassword"
+                  isRequired
+                  isInvalid={matchPassword && !validMatch}
+                >
+                  <FormLabel>Confirm Password</FormLabel>
+                  <InputGroup>
+                    <Input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={matchPassword}
+                      onChange={(e) => setMatchPassword(e.target.value)}
+                      placeholder="Confirm password"
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        aria-label={
+                          showConfirmPassword
+                            ? "Hide password"
+                            : "Show password"
+                        }
+                        icon={
+                          <FontAwesomeIcon
+                            icon={showConfirmPassword ? faEyeSlash : faEye}
+                          />
+                        }
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                  {matchPassword && !validMatch && (
+                    <FormErrorMessage>
+                      <FontAwesomeIcon icon={faTimes} /> Passwords don't match
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
+
+                <FormControl isInvalid={termsError}>
+                  <Checkbox
+                    isChecked={acceptedTerms}
                     onChange={(e) => {
                       setAcceptedTerms(e.target.checked);
                       setTermsError(false);
                     }}
-                  />
-                  <label htmlFor="terms">
+                  >
                     I agree to the{" "}
                     <Link to="/terms" target="_blank">
-                      Terms and Conditions
+                      <Text as="span" color="blue.500">
+                        Terms and Conditions
+                      </Text>
                     </Link>
-                  </label>
-                </div>
-                {termsError && (
-                  <p className="error-message">
-                    You must accept the Terms and Conditions to continue
-                  </p>
-                )}
-              </div>
+                  </Checkbox>
+                  {termsError && (
+                    <FormErrorMessage>
+                      You must accept the Terms and Conditions to continue
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
 
-              <button
-                type="submit"
-                className="btn-primary"
-                disabled={!isFormValid() || loading}
-              >
-                {loading ? "Signing Up..." : "Register Now"}
-              </button>
-
-              <div className="social-login">
-                <p>Or create account with:</p>
-                {googleLoaded && (
-                  <GoogleLogin
-                    text="signup_with"
-                    shape="rectangular"
-                    theme="outline"
-                    size="large"
-                    width="100%"
-                    onSuccess={handleGoogleSuccess}
-                    onError={() => setErrMsg("Google Sign Up Failed")}
-                  />
-                )}
-              </div>
-
-              <div className="auth-links">
-                <p>
-                  Already have an account? <Link to="/auth">Sign In</Link>
-                </p>
-              </div>
+                <Button
+                  colorScheme={"red"}
+                  variant={"solid"}
+                  type="submit"
+                  size="lg"
+                  isLoading={loading}
+                  loadingText="Signing Up..."
+                  isDisabled={!isFormValid()}
+                >
+                  Create Account
+                </Button>
+              </Stack>
             </form>
-          </div>
 
-          {/* <div className="auth-image-section">
-            <img src={backgroundImage} alt="Registration" />
-          </div> */}
-        </div>
-      </div>
+            <Divider />
+
+            <Stack spacing={4}>
+              <Text textAlign="center" color="gray.600">
+                Or create account with:
+              </Text>
+              {googleLoaded && (
+                <GoogleLogin
+                  text="signup_with"
+                  shape="rectangular"
+                  theme="outline"
+                  size="large"
+                  width="100%"
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setErrMsg("Google Sign Up Failed")}
+                />
+              )}
+            </Stack>
+
+            <Text textAlign="center" color="gray.600">
+              Already have an account?{" "}
+              <Link to="/auth">
+                <Text as="span" color="blue.500">
+                  Sign In
+                </Text>
+              </Link>
+            </Text>
+          </Stack>
+        </Flex>
+
+        <Flex flex={1} display={{ base: "none", md: "flex" }}>
+          <Image
+            alt={"Registration Image"}
+            objectFit={"cover"}
+            src={backgroundImage}
+          />
+        </Flex>
+      </Stack>
     </GoogleOAuthProvider>
   );
 };
