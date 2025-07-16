@@ -270,7 +270,12 @@ const AdminPage: React.FC = () => {
         >
           {/* Mobile Header with Menu Button and Selector */}
           <Box bg="white" p={4} borderRadius="lg" mb={4} boxShadow="sm">
-            <Flex align="center" justify="space-between" mb={4}>
+            {/* First line: Avatar, Welcome message, and Menu button */}
+            <Flex
+              align="center"
+              justify="space-between"
+              mb={{ base: 4, lg: 0 }}
+            >
               <HStack spacing={4}>
                 <Wrap>
                   <WrapItem>
@@ -298,8 +303,8 @@ const AdminPage: React.FC = () => {
               />
             </Flex>
 
-            {/* Navigation Selector for Mobile/Tablet */}
-            <Box display={{ base: "block", lg: "none" }}>
+            {/* Second line: Navigation Selector for Mobile/Tablet */}
+            <Box display={{ base: "block", lg: "none" }} mb={4}>
               <Select
                 value={location.pathname}
                 onChange={(e) => handleNavigationChange(e.target.value)}
