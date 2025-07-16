@@ -15,13 +15,13 @@ app.use((req, res, next) => {
   res.header(
     "Content-Security-Policy",
     "default-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com; " +
-      "img-src 'self' data: https: http: blob: https://sheet-music-library-ad225c202768.herokuapp.com https://storage.googleapis.com; " +
+      "img-src 'self' data: https: http: blob: https://sheet-music-library-ad225c202768.herokuapp.com https://storage.googleapis.com https://my-song-library-media.s3.amazonaws.com https://*.s3.amazonaws.com; " +
       "media-src 'self' https://my-song-library-media.s3.amazonaws.com https://*.s3.amazonaws.com; " +
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleusercontent.com https://*.paypal.com https://www.paypalobjects.com https://www.youtube.com https://s.ytimg.com; " +
       "style-src 'self' 'unsafe-inline' https://www.paypalobjects.com https://maxcdn.bootstrapcdn.com https://fonts.googleapis.com; " +
       "font-src 'self' https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com; " +
       "frame-src 'self' https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com https://www.youtube.com https://www.youtube-nocookie.com; " +
-      "connect-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com;"
+      "connect-src 'self' https://sheet-music-library-ad225c202768.herokuapp.com https://accounts.google.com https://*.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com https://my-song-library-media.s3.amazonaws.com https://*.s3.amazonaws.com;"
   );
   res.header("Access-Control-Allow-Origin", "*");
   res.header(

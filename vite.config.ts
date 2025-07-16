@@ -43,6 +43,24 @@ export default defineConfig(({ mode }) => {
                   maxEntries: 100,
                   maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
                 },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
+            {
+              urlPattern:
+                /^https:\/\/my-song-library-media\.s3\.amazonaws\.com\/.*\.(png|jpg|jpeg|svg|gif|webp)$/,
+              handler: "CacheFirst",
+              options: {
+                cacheName: "s3-image-cache",
+                expiration: {
+                  maxEntries: 200,
+                  maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
               },
             },
           ],
