@@ -24,11 +24,11 @@ const CategoryList = () => {
 
   return (
     <VStack spacing={4} align="stretch" p={{ base: 3, md: 4 }}>
-      <Heading 
-        marginY={3} 
-        fontSize={{ base: "xl", md: "2xl" }} 
+      <Heading
+        marginY={3}
+        fontSize={{ base: "xl", md: "2xl" }}
         textAlign="left"
-        color="gray.800"
+        color="blue.700"
       >
         Categories
       </Heading>
@@ -59,13 +59,21 @@ const CategoryList = () => {
                   <Button
                     whiteSpace="normal"
                     textAlign="left"
-                    fontSize={category._id === selectedCategoryId ? { base: "lg", md: "xl" } : { base: "md", md: "lg" }}
+                    fontSize={
+                      category._id === selectedCategoryId
+                        ? { base: "lg", md: "xl" }
+                        : { base: "md", md: "lg" }
+                    }
                     fontWeight={
                       category._id === selectedCategoryId ? "bold" : "normal"
                     }
                     onClick={() => setSelectedCategory(category._id)}
                     variant="link"
-                    color={category._id === selectedCategoryId ? "blue.600" : "gray.600"}
+                    color={
+                      category._id === selectedCategoryId
+                        ? "blue.600"
+                        : "gray.600"
+                    }
                     _hover={{ color: "blue.800" }}
                     width="100%"
                     justifyContent="flex-start"

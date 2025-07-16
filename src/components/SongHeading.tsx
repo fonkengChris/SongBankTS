@@ -31,7 +31,7 @@ const SongHeading = () => {
         as="h1"
         lineHeight="1.2"
         fontWeight="bold"
-        color="gray.800"
+        color="blue.700"
       >
         {heading}
       </Heading>
