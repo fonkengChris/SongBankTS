@@ -17,6 +17,20 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useToast,
+  useBreakpointValue,
+  Stack,
+  Text,
+  Badge,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Card,
+  CardBody,
+  SimpleGrid,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { Link as RouterLink, Navigate } from "react-router-dom";
 import useUsers from "../hooks/useUsers"; // Custom hook to fetch users data
@@ -24,6 +38,7 @@ import User from "../entities/User"; // Define your User interface/entity here
 import APIClient from "../services/api-client";
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
+import { FiMoreVertical, FiEdit, FiTrash2 } from "react-icons/fi";
 
 const UsersManagementPage = () => {
   // Add authorization check at the top of the component
@@ -41,6 +56,10 @@ const UsersManagementPage = () => {
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const apiClient = new APIClient<User>("/api/users");
+
+  // Responsive breakpoints
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isTablet = useBreakpointValue({ base: false, md: true, lg: false });
 
   useEffect(() => {
     // Define an async function to fetch users
@@ -86,67 +105,180 @@ const UsersManagementPage = () => {
     }
   };
 
+  // Mobile card component
+  const UserCard = ({ user }: { user: User }) => (
+    <Card shadow="sm" border="1px" borderColor="gray.200">
+      <CardBody>
+        <VStack align="stretch" spacing={3}>
+          <HStack justify="space-between">
+            <VStack align="start" spacing={1}>
+              <Text fontWeight="bold" fontSize="lg" color="blue.600">
+                {user.name}
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                {user.email}
+              </Text>
+            </VStack>
+            <Badge
+              colorScheme={user.role === "superAdmin" ? "red" : "blue"}
+              variant="subtle"
+            >
+              {user.role}
+            </Badge>
+          </HStack>
+
+          <Text fontSize="xs" color="gray.500" fontFamily="mono">
+            ID: {user._id.substring(0, 8)}...
+          </Text>
+
+          <HStack spacing={2}>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              leftIcon={<FiEdit />}
+              as={RouterLink}
+              to={`/admin/users/edit/${user._id}`}
+              flex={1}
+            >
+              Edit
+            </Button>
+            <Button
+              colorScheme="red"
+              size="sm"
+              leftIcon={<FiTrash2 />}
+              onClick={() => handleDeleteClick(user._id)}
+            >
+              Delete
+            </Button>
+          </HStack>
+        </VStack>
+      </CardBody>
+    </Card>
+  );
+
   return (
-    <Box bg="gray.100" minHeight="100vh" p={4}>
-      <Box bg="white" shadow="md" p={4} mb={4}>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Heading color={"blue.400"} size="lg">
+    <Box>
+      {/* Header */}
+      <Box
+        bg="white"
+        shadow="sm"
+        p={{ base: 4, md: 6 }}
+        mb={4}
+        borderRadius="lg"
+      >
+        <Flex
+          direction={{ base: "column", sm: "row" }}
+          justify="space-between"
+          align={{ base: "stretch", sm: "center" }}
+          gap={4}
+        >
+          <Heading color="blue.600" size="lg">
             Users Management
           </Heading>
-          <Button colorScheme="blue" as={RouterLink} to="/admin/users/add">
+          <Button
+            colorScheme="blue"
+            as={RouterLink}
+            to="/admin/users/add"
+            size={{ base: "md", md: "lg" }}
+          >
             Add User
           </Button>
         </Flex>
       </Box>
 
-      <Box bg="white" shadow="md" p={4}>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>ID</Th>
-              <Th>Name</Th>
-              <Th>Email</Th>
-              <Th>Role</Th>
-              <Th>Actions</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {users?.length > 0 ? (
-              users.map((user) => (
-                <Tr key={user._id}>
-                  <Td color={"blue.400"}>{user._id}</Td>
-                  <Td color={"blue.400"}>{user.name}</Td>
-                  <Td color={"blue.400"}>{user.email}</Td>
-                  <Td color={"blue.400"}>{user.role}</Td>
-                  <Td>
-                    <Button
-                      colorScheme="teal"
-                      size="sm"
-                      mr={2}
-                      as={RouterLink}
-                      to={`/admin/users/edit/${user._id}`}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      colorScheme="red"
-                      size="sm"
-                      onClick={() => handleDeleteClick(user._id)}
-                    >
-                      Delete
-                    </Button>
-                  </Td>
+      {/* Content */}
+      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+        {isMobile ? (
+          // Mobile layout with cards
+          <Box p={4}>
+            <SimpleGrid columns={1} spacing={4}>
+              {users?.length > 0 ? (
+                users.map((user) => <UserCard key={user._id} user={user} />)
+              ) : (
+                <Box textAlign="center" py={8}>
+                  <Text color="gray.500">No users found.</Text>
+                </Box>
+              )}
+            </SimpleGrid>
+          </Box>
+        ) : (
+          // Desktop/Tablet layout with table
+          <Box overflowX="auto">
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th color="blue.600">Name</Th>
+                  <Th color="blue.600">Email</Th>
+                  <Th color="blue.600">Role</Th>
+                  <Th
+                    color="blue.600"
+                    display={{ base: "none", lg: "table-cell" }}
+                  >
+                    ID
+                  </Th>
+                  <Th color="blue.600">Actions</Th>
                 </Tr>
-              ))
-            ) : (
-              <Tr>
-                <Td colSpan={5} textAlign="center">
-                  No users found.
-                </Td>
-              </Tr>
-            )}
-          </Tbody>
-        </Table>
+              </Thead>
+              <Tbody>
+                {users?.length > 0 ? (
+                  users.map((user) => (
+                    <Tr key={user._id}>
+                      <Td color="blue.600" fontWeight="medium">
+                        {user.name}
+                      </Td>
+                      <Td color="blue.600">{user.email}</Td>
+                      <Td>
+                        <Badge
+                          colorScheme={
+                            user.role === "superAdmin" ? "red" : "blue"
+                          }
+                          variant="subtle"
+                        >
+                          {user.role}
+                        </Badge>
+                      </Td>
+                      <Td
+                        color="blue.600"
+                        display={{ base: "none", lg: "table-cell" }}
+                      >
+                        <Text fontSize="xs" fontFamily="mono">
+                          {user._id.substring(0, 8)}...
+                        </Text>
+                      </Td>
+                      <Td>
+                        <HStack spacing={2}>
+                          <Button
+                            colorScheme="teal"
+                            size="sm"
+                            leftIcon={<FiEdit />}
+                            as={RouterLink}
+                            to={`/admin/users/edit/${user._id}`}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            colorScheme="red"
+                            size="sm"
+                            leftIcon={<FiTrash2 />}
+                            onClick={() => handleDeleteClick(user._id)}
+                          >
+                            Delete
+                          </Button>
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  ))
+                ) : (
+                  <Tr>
+                    <Td colSpan={5} textAlign="center" py={8}>
+                      <Text color="gray.500">No users found.</Text>
+                    </Td>
+                  </Tr>
+                )}
+              </Tbody>
+            </Table>
+          </Box>
+        )}
       </Box>
 
       <AlertDialog

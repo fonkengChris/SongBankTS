@@ -17,11 +17,29 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useToast,
+  useBreakpointValue,
+  Text,
+  Card,
+  CardBody,
+  SimpleGrid,
+  HStack,
+  VStack,
+  Badge,
+  Spinner,
+  Stack,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useMediaFiles from "../hooks/useMediaFiles";
 import SongMedia from "../entities/SongMedia";
 import APIClient from "../services/api-client";
+import {
+  FiEdit,
+  FiTrash2,
+  FiFile,
+  FiMusic,
+  FiImage,
+  FiDatabase,
+} from "react-icons/fi";
 
 const MediaFilesManagementPage = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -31,6 +49,9 @@ const MediaFilesManagementPage = () => {
   const toast = useToast();
   const apiClient = new APIClient<SongMedia>("/api/media_files");
   const { mediaFiles, loading, error } = useMediaFiles();
+
+  // Responsive breakpoints
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
     setLocalMediaFiles(mediaFiles || []);
@@ -48,7 +69,11 @@ const MediaFilesManagementPage = () => {
   }, [error, toast]);
 
   if (loading) {
-    return <Box p={4}>Loading...</Box>;
+    return (
+      <Box p={4} display="flex" justifyContent="center">
+        <Spinner size="xl" />
+      </Box>
+    );
   }
 
   const handleDeleteClick = (mediaId: string) => {
@@ -83,63 +108,219 @@ const MediaFilesManagementPage = () => {
     }
   };
 
+  // Mobile card component
+  const MediaCard = ({ media }: { media: SongMedia }) => (
+    <Card shadow="sm" border="1px" borderColor="gray.200">
+      <CardBody>
+        <VStack align="stretch" spacing={4}>
+          <HStack justify="space-between">
+            <HStack spacing={3}>
+              <FiDatabase size={20} color="#3182CE" />
+              <Text fontWeight="bold" fontSize="lg" color="blue.600">
+                {media.name}
+              </Text>
+            </HStack>
+          </HStack>
+
+          <Stack spacing={3}>
+            <HStack justify="space-between">
+              <HStack spacing={2}>
+                <FiFile size={16} color="#38A169" />
+                <Text fontSize="sm" color="gray.600">
+                  Document:
+                </Text>
+              </HStack>
+              <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
+                {media.documentFile || "N/A"}
+              </Text>
+            </HStack>
+
+            <HStack justify="space-between">
+              <HStack spacing={2}>
+                <FiMusic size={16} color="#E53E3E" />
+                <Text fontSize="sm" color="gray.600">
+                  Audio:
+                </Text>
+              </HStack>
+              <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
+                {media.audioFile || "N/A"}
+              </Text>
+            </HStack>
+
+            <HStack justify="space-between">
+              <HStack spacing={2}>
+                <FiImage size={16} color="#D69E2E" />
+                <Text fontSize="sm" color="gray.600">
+                  Image:
+                </Text>
+              </HStack>
+              <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
+                {media.previewImage || "N/A"}
+              </Text>
+            </HStack>
+          </Stack>
+
+          <HStack spacing={2}>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              leftIcon={<FiEdit />}
+              as={RouterLink}
+              to={`/admin/media_files/edit/${media._id}`}
+              flex={1}
+            >
+              Edit
+            </Button>
+            <Button
+              colorScheme="red"
+              size="sm"
+              leftIcon={<FiTrash2 />}
+              onClick={() => handleDeleteClick(media._id)}
+            >
+              Delete
+            </Button>
+          </HStack>
+        </VStack>
+      </CardBody>
+    </Card>
+  );
+
   return (
-    <Box bg="gray.100" minHeight="100vh" p={4}>
-      <Box bg="white" shadow="md" p={4} mb={4}>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Heading color={"blue.400"} size="lg">
+    <Box>
+      {/* Header */}
+      <Box
+        bg="white"
+        shadow="sm"
+        p={{ base: 4, md: 6 }}
+        mb={4}
+        borderRadius="lg"
+      >
+        <Flex
+          direction={{ base: "column", sm: "row" }}
+          justify="space-between"
+          align={{ base: "stretch", sm: "center" }}
+          gap={4}
+        >
+          <Heading color="blue.600" size="lg">
             Media Files Management
           </Heading>
           <Button
             colorScheme="blue"
             as={RouterLink}
             to="/admin/media_files/add"
+            size={{ base: "md", md: "lg" }}
           >
-            Add media files
+            Add Media Files
           </Button>
         </Flex>
       </Box>
 
-      <Box bg="white" shadow="md" p={4}>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Name</Th>
-              <Th>Document</Th>
-              <Th>Audio</Th>
-              <Th>Image</Th>
-              <Th>Actions</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {localMediaFiles?.map((media) => (
-              <Tr key={media._id}>
-                <Td color={"blue.400"}>{media.name}</Td>
-                <Td color={"blue.400"}>{media.documentFile}</Td>
-                <Td color={"blue.400"}>{media.audioFile}</Td>
-                <Td color={"blue.400"}>{media.previewImage}</Td>
-                <Td>
-                  <Button
-                    as={RouterLink}
-                    to={`/admin/media_files/edit/${media._id}`}
-                    colorScheme="teal"
-                    size="sm"
-                    mr={2}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    colorScheme="red"
-                    size="sm"
-                    onClick={() => handleDeleteClick(media._id)}
-                  >
-                    Delete
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+      {/* Content */}
+      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+        {isMobile ? (
+          // Mobile layout with cards
+          <Box p={4}>
+            <SimpleGrid columns={1} spacing={4}>
+              {localMediaFiles && localMediaFiles.length > 0 ? (
+                localMediaFiles.map((media) => (
+                  <MediaCard key={media._id} media={media} />
+                ))
+              ) : (
+                <Box textAlign="center" py={8}>
+                  <Text color="gray.500">No media files found.</Text>
+                </Box>
+              )}
+            </SimpleGrid>
+          </Box>
+        ) : (
+          // Desktop/Tablet layout with table
+          <Box overflowX="auto">
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th color="blue.600">
+                    <HStack spacing={2}>
+                      <FiDatabase />
+                      <Text>Name</Text>
+                    </HStack>
+                  </Th>
+                  <Th color="blue.600">
+                    <HStack spacing={2}>
+                      <FiFile />
+                      <Text>Document</Text>
+                    </HStack>
+                  </Th>
+                  <Th color="blue.600">
+                    <HStack spacing={2}>
+                      <FiMusic />
+                      <Text>Audio</Text>
+                    </HStack>
+                  </Th>
+                  <Th color="blue.600">
+                    <HStack spacing={2}>
+                      <FiImage />
+                      <Text>Image</Text>
+                    </HStack>
+                  </Th>
+                  <Th color="blue.600">Actions</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {localMediaFiles && localMediaFiles.length > 0 ? (
+                  localMediaFiles.map((media) => (
+                    <Tr key={media._id}>
+                      <Td color="blue.600" fontWeight="medium">
+                        {media.name}
+                      </Td>
+                      <Td color="blue.600" maxW="200px">
+                        <Text noOfLines={1} fontSize="sm">
+                          {media.documentFile || "N/A"}
+                        </Text>
+                      </Td>
+                      <Td color="blue.600" maxW="200px">
+                        <Text noOfLines={1} fontSize="sm">
+                          {media.audioFile || "N/A"}
+                        </Text>
+                      </Td>
+                      <Td color="blue.600" maxW="200px">
+                        <Text noOfLines={1} fontSize="sm">
+                          {media.previewImage || "N/A"}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <HStack spacing={2}>
+                          <Button
+                            as={RouterLink}
+                            to={`/admin/media_files/edit/${media._id}`}
+                            colorScheme="teal"
+                            size="sm"
+                            leftIcon={<FiEdit />}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            colorScheme="red"
+                            size="sm"
+                            leftIcon={<FiTrash2 />}
+                            onClick={() => handleDeleteClick(media._id)}
+                          >
+                            Delete
+                          </Button>
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  ))
+                ) : (
+                  <Tr>
+                    <Td colSpan={5} textAlign="center" py={8}>
+                      <Text color="gray.500">No media files found.</Text>
+                    </Td>
+                  </Tr>
+                )}
+              </Tbody>
+            </Table>
+          </Box>
+        )}
       </Box>
 
       <AlertDialog
