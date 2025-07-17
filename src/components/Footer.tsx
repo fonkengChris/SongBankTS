@@ -133,7 +133,7 @@ const Footer = () => {
             direction={{ base: "column", md: "row" }}
             justify="space-between"
             align={{ base: "center", md: "center" }}
-            spacing={{ base: 4, md: 0 }}
+            gap={{ base: 4, md: 0 }}
           >
             <Text
               color={textColor}
