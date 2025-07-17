@@ -108,56 +108,120 @@ const Contact = () => {
   };
 
   return (
-    <Container maxW="container.xl" py={10}>
-      <VStack spacing={4} mb={12}>
-        <Heading as="h1" size="xl" textAlign="center">
+    <Container maxW="container.xl" py={12}>
+      <VStack spacing={6} mb={16}>
+        <Heading
+          as="h1"
+          size="xl"
+          textAlign="center"
+          fontWeight="800"
+          letterSpacing="-0.03em"
+          lineHeight="1.1"
+          mb={4}
+        >
           Contact Us
         </Heading>
-        <Text textAlign="center" fontSize="lg">
+        <Text
+          textAlign="center"
+          fontSize="xl"
+          color="gray.400"
+          fontWeight="500"
+          letterSpacing="0.01em"
+          maxW="600px"
+        >
           Any questions or remarks? Just write us a message!
         </Text>
 
         {/* Contact Form */}
-        <Box w="100%" maxW="600px" mt={6}>
-          <Stack spacing={4}>
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+        <Box w="100%" maxW="600px" mt={8}>
+          <Stack spacing={6}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
               <FormControl isRequired>
-                <FormLabel>Email</FormLabel>
+                <FormLabel
+                  fontSize="md"
+                  fontWeight="600"
+                  color="gray.300"
+                  letterSpacing="0.01em"
+                >
+                  Email
+                </FormLabel>
                 <Input
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Enter a valid email address"
                   bg="gray.700"
-                  border="none"
-                  borderRadius="md"
+                  border="1px solid"
+                  borderColor="gray.600"
+                  borderRadius="lg"
                   type="email"
+                  fontSize="md"
+                  fontWeight="400"
+                  _focus={{
+                    borderColor: "blue.400",
+                    boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+                  }}
+                  _hover={{ borderColor: "gray.500" }}
+                  transition="all 0.2s ease"
                 />
               </FormControl>
               <FormControl isRequired>
-                <FormLabel>Name</FormLabel>
+                <FormLabel
+                  fontSize="md"
+                  fontWeight="600"
+                  color="gray.300"
+                  letterSpacing="0.01em"
+                >
+                  Name
+                </FormLabel>
                 <Input
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Enter your Name"
                   bg="gray.700"
-                  border="none"
-                  borderRadius="md"
+                  border="1px solid"
+                  borderColor="gray.600"
+                  borderRadius="lg"
+                  fontSize="md"
+                  fontWeight="400"
+                  _focus={{
+                    borderColor: "blue.400",
+                    boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+                  }}
+                  _hover={{ borderColor: "gray.500" }}
+                  transition="all 0.2s ease"
                 />
               </FormControl>
             </SimpleGrid>
             <FormControl isRequired>
-              <FormLabel>Message</FormLabel>
+              <FormLabel
+                fontSize="md"
+                fontWeight="600"
+                color="gray.300"
+                letterSpacing="0.01em"
+              >
+                Message
+              </FormLabel>
               <Textarea
                 name="message"
                 value={formData.message}
                 onChange={handleInputChange}
                 placeholder="Write your message here..."
                 bg="gray.700"
-                border="none"
-                borderRadius="md"
-                rows={4}
+                border="1px solid"
+                borderColor="gray.600"
+                borderRadius="lg"
+                rows={6}
+                fontSize="md"
+                fontWeight="400"
+                resize="vertical"
+                _focus={{
+                  borderColor: "blue.400",
+                  boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+                }}
+                _hover={{ borderColor: "gray.500" }}
+                transition="all 0.2s ease"
               />
             </FormControl>
             <Button
@@ -169,6 +233,20 @@ const Contact = () => {
               onClick={handleSubmit}
               isLoading={isLoading}
               loadingText="Sending..."
+              fontSize="lg"
+              fontWeight="600"
+              letterSpacing="0.01em"
+              py={6}
+              _hover={{
+                bg: "teal.500",
+                transform: "translateY(-2px)",
+                boxShadow: "0 8px 25px rgba(20, 184, 166, 0.3)",
+              }}
+              _active={{
+                bg: "teal.600",
+                transform: "translateY(0)",
+              }}
+              transition="all 0.2s ease"
             >
               SUBMIT
             </Button>
@@ -177,46 +255,98 @@ const Contact = () => {
       </VStack>
 
       {/* Contact Information */}
-      <Box bg="gray.100" p={10} borderRadius="lg">
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
-          <VStack align="center" spacing={4}>
-            <Circle size="60px" bg="teal.400">
-              <Icon as={FaRunning} color="white" boxSize={6} />
+      <Box
+        bg="gray.800"
+        p={12}
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="gray.700"
+      >
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={12}>
+          <VStack align="center" spacing={6}>
+            <Circle
+              size="80px"
+              bg="teal.400"
+              boxShadow="0 8px 25px rgba(20, 184, 166, 0.3)"
+            >
+              <Icon as={FaRunning} color="white" boxSize={8} />
             </Circle>
-            <Heading size="md" color="teal.400">
-              RESOURSE TEAM
+            <Heading
+              size="md"
+              color="teal.400"
+              fontWeight="700"
+              letterSpacing="-0.01em"
+              textAlign="center"
+            >
+              RESOURCE TEAM
             </Heading>
-            <VStack spacing={1} align="center">
-              <Text color="gray.600">Christian Fonkeng</Text>
-              <Text color="gray.600">Blaise Dong</Text>
-              <Text color="gray.600">Martial Wanji </Text>
+            <VStack spacing={2} align="center">
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                Christian Fonkeng
+              </Text>
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                Blaise Dong
+              </Text>
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                Martial Wanji
+              </Text>
             </VStack>
           </VStack>
 
-          <VStack align="center" spacing={4}>
-            <Circle size="60px" bg="teal.400">
-              <Icon as={FaPhone} color="white" boxSize={6} />
+          <VStack align="center" spacing={6}>
+            <Circle
+              size="80px"
+              bg="teal.400"
+              boxShadow="0 8px 25px rgba(20, 184, 166, 0.3)"
+            >
+              <Icon as={FaPhone} color="white" boxSize={8} />
             </Circle>
-            <Heading size="md" color="teal.400">
+            <Heading
+              size="md"
+              color="teal.400"
+              fontWeight="700"
+              letterSpacing="-0.01em"
+              textAlign="center"
+            >
               PHONE (LANDLINE)
             </Heading>
-            <VStack spacing={1} align="center">
-              <Text color="gray.600">+44 7735086910</Text>
-              <Text color="gray.600">+237 681389551</Text>
-              <Text color="gray.600">+237 672260392</Text>
+            <VStack spacing={2} align="center">
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                +44 7735086910
+              </Text>
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                +237 681389551
+              </Text>
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                +237 672260392
+              </Text>
             </VStack>
           </VStack>
 
-          <VStack align="center" spacing={4}>
-            <Circle size="60px" bg="teal.400">
-              <Icon as={FaMapMarkerAlt} color="white" boxSize={6} />
+          <VStack align="center" spacing={6}>
+            <Circle
+              size="80px"
+              bg="teal.400"
+              boxShadow="0 8px 25px rgba(20, 184, 166, 0.3)"
+            >
+              <Icon as={FaMapMarkerAlt} color="white" boxSize={8} />
             </Circle>
-            <Heading size="md" color="teal.400">
+            <Heading
+              size="md"
+              color="teal.400"
+              fontWeight="700"
+              letterSpacing="-0.01em"
+              textAlign="center"
+            >
               OFFICE LOCATION
             </Heading>
-            <VStack spacing={1} align="center">
-              <Text color="gray.600">The Sheet Music Pro</Text>
-              <Text color="gray.600">23 Clifford Street, Leicester, UK</Text>
+            <VStack spacing={2} align="center">
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                The Sheet Music Pro
+              </Text>
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                23 Clifford Street, Leicester, UK
+              </Text>
             </VStack>
           </VStack>
         </SimpleGrid>

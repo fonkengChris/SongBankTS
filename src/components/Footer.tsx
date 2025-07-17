@@ -24,112 +24,190 @@ const Footer = () => {
       borderStyle={"solid"}
       borderColor={borderColor}
       mt="auto"
+      py={8}
     >
-      <Container maxW={"6xl"} py={{ base: 6, md: 8 }}>
-        <Stack spacing={{ base: 6, md: 8 }}>
+      <Container maxW={"6xl"} py={{ base: 8, md: 12 }}>
+        <Stack spacing={{ base: 8, md: 12 }}>
           {/* Navigation Links */}
           <SimpleGrid
             columns={{ base: 2, sm: 3, md: 6 }}
-            spacing={{ base: 4, md: 6 }}
+            spacing={{ base: 6, md: 8 }}
             justifyItems={{ base: "center", md: "center" }}
           >
             <Link
               href={"/"}
               color={linkColor}
-              _hover={{ color: linkHoverColor, textDecoration: "none" }}
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
-              transition="color 0.2s"
+              _hover={{
+                color: linkHoverColor,
+                textDecoration: "none",
+                transform: "translateY(-1px)",
+              }}
+              fontSize={{ base: "md", md: "lg" }}
+              fontWeight="600"
+              letterSpacing="0.01em"
+              transition="all 0.2s ease"
             >
               Home
             </Link>
             <Link
               href={"/contact"}
               color={linkColor}
-              _hover={{ color: linkHoverColor, textDecoration: "none" }}
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
-              transition="color 0.2s"
+              _hover={{
+                color: linkHoverColor,
+                textDecoration: "none",
+                transform: "translateY(-1px)",
+              }}
+              fontSize={{ base: "md", md: "lg" }}
+              fontWeight="600"
+              letterSpacing="0.01em"
+              transition="all 0.2s ease"
             >
               Contact
             </Link>
             <Link
               href={"/upload"}
               color={linkColor}
-              _hover={{ color: linkHoverColor, textDecoration: "none" }}
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
-              transition="color 0.2s"
+              _hover={{
+                color: linkHoverColor,
+                textDecoration: "none",
+                transform: "translateY(-1px)",
+              }}
+              fontSize={{ base: "md", md: "lg" }}
+              fontWeight="600"
+              letterSpacing="0.01em"
+              transition="all 0.2s ease"
             >
               Upload
             </Link>
             <Link
               href={"/about"}
               color={linkColor}
-              _hover={{ color: linkHoverColor, textDecoration: "none" }}
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
-              transition="color 0.2s"
+              _hover={{
+                color: linkHoverColor,
+                textDecoration: "none",
+                transform: "translateY(-1px)",
+              }}
+              fontSize={{ base: "md", md: "lg" }}
+              fontWeight="600"
+              letterSpacing="0.01em"
+              transition="all 0.2s ease"
             >
               About
             </Link>
             <Link
-              href={"/privacy"}
+              href={"/songs"}
               color={linkColor}
-              _hover={{ color: linkHoverColor, textDecoration: "none" }}
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
-              transition="color 0.2s"
+              _hover={{
+                color: linkHoverColor,
+                textDecoration: "none",
+                transform: "translateY(-1px)",
+              }}
+              fontSize={{ base: "md", md: "lg" }}
+              fontWeight="600"
+              letterSpacing="0.01em"
+              transition="all 0.2s ease"
             >
-              Privacy
+              Songs
             </Link>
             <Link
-              href={"/copyright"}
+              href={"/auth"}
               color={linkColor}
-              _hover={{ color: linkHoverColor, textDecoration: "none" }}
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
-              transition="color 0.2s"
+              _hover={{
+                color: linkHoverColor,
+                textDecoration: "none",
+                transform: "translateY(-1px)",
+              }}
+              fontSize={{ base: "md", md: "lg" }}
+              fontWeight="600"
+              letterSpacing="0.01em"
+              transition="all 0.2s ease"
             >
-              Copyright
+              Login
             </Link>
           </SimpleGrid>
 
-          {/* Divider */}
           <Divider borderColor={borderColor} />
 
-          {/* Copyright Text */}
-          <Flex 
-            justify="center" 
-            align="center"
-            direction={{ base: "column", sm: "row" }}
-            gap={{ base: 2, sm: 4 }}
-            textAlign={{ base: "center", sm: "center" }}
+          {/* Copyright and Additional Links */}
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            justify="space-between"
+            align={{ base: "center", md: "center" }}
+            spacing={{ base: 4, md: 0 }}
           >
             <Text
               color={textColor}
-              fontSize={{ base: "xs", sm: "sm", md: "md" }}
-              fontWeight="medium"
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="500"
+              letterSpacing="0.01em"
+              textAlign={{ base: "center", md: "left" }}
             >
-              © {new Date().getFullYear()} SheetMusicLibrary
+              © 2024 SheetMusicLibrary. All rights reserved.
             </Text>
-            <Text
-              color={textColor}
-              fontSize={{ base: "xs", sm: "sm", md: "md" }}
-              fontWeight="medium"
-              display={{ base: "none", sm: "block" }}
-              mx={2}
+            <Flex
+              direction={{ base: "column", sm: "row" }}
+              gap={{ base: 2, sm: 6 }}
+              mt={{ base: 4, md: 0 }}
             >
-              •
-            </Text>
-            <Text
-              color={textColor}
-              fontSize={{ base: "xs", sm: "sm", md: "md" }}
-              fontWeight="medium"
-            >
-              All rights reserved
-            </Text>
+              <Link
+                href={"/terms"}
+                color={linkColor}
+                _hover={{
+                  color: linkHoverColor,
+                  textDecoration: "none",
+                  transform: "translateY(-1px)",
+                }}
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="500"
+                letterSpacing="0.01em"
+                transition="all 0.2s ease"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href={"/privacy"}
+                color={linkColor}
+                _hover={{
+                  color: linkHoverColor,
+                  textDecoration: "none",
+                  transform: "translateY(-1px)",
+                }}
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="500"
+                letterSpacing="0.01em"
+                transition="all 0.2s ease"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href={"/copyright"}
+                color={linkColor}
+                _hover={{
+                  color: linkHoverColor,
+                  textDecoration: "none",
+                  transform: "translateY(-1px)",
+                }}
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="500"
+                letterSpacing="0.01em"
+                transition="all 0.2s ease"
+              >
+                Copyright
+              </Link>
+            </Flex>
           </Flex>
+
+          {/* Additional Info */}
+          <Text
+            color={textColor}
+            fontSize="sm"
+            fontWeight="400"
+            textAlign="center"
+            letterSpacing="0.01em"
+            opacity={0.8}
+          >
+            Made with ❤️ for musicians worldwide
+          </Text>
         </Stack>
       </Container>
     </Box>

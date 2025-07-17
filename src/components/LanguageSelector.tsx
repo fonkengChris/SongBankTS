@@ -17,26 +17,52 @@ const LanguageSelector = () => {
       <MenuButton
         as={Button}
         rightIcon={<BsChevronDown />}
-        minH={{ base: "40px", md: "50px" }}
-        height={{ base: "40px", md: "50px" }}
+        minH={{ base: "48px", md: "56px" }}
+        height={{ base: "48px", md: "56px" }}
         display="inline-flex"
         alignItems="center"
         width="100%"
-        fontSize={{ base: "sm", md: "md" }}
+        fontSize={{ base: "md", md: "lg" }}
+        fontWeight="500"
+        letterSpacing="0.01em"
         variant="outline"
-        _hover={{ bg: "gray.50" }}
-        _active={{ bg: "gray.100" }}
+        borderColor="gray.600"
+        color="gray.300"
+        bg="gray.700"
+        _hover={{
+          bg: "gray.600",
+          borderColor: "gray.500",
+          transform: "translateY(-1px)",
+        }}
+        _active={{
+          bg: "gray.500",
+          borderColor: "blue.400",
+        }}
+        transition="all 0.2s ease"
       >
         {selectedLanguage?.name || "Language"}
       </MenuButton>
-      <MenuList maxHeight="300px" overflow="auto">
-        <MenuItem onClick={() => setSelectedLanguage(null)}>
+      <MenuList
+        maxHeight="300px"
+        overflow="auto"
+        bg="gray.800"
+        borderColor="gray.600"
+      >
+        <MenuItem
+          onClick={() => setSelectedLanguage(null)}
+          _hover={{ bg: "gray.700" }}
+          color="gray.300"
+          fontWeight="500"
+        >
           All Languages
         </MenuItem>
         {languages?.map((language) => (
           <MenuItem
             onClick={() => setSelectedLanguage(language._id)}
             key={language._id}
+            _hover={{ bg: "gray.700" }}
+            color="gray.300"
+            fontWeight="500"
           >
             {language.name}
           </MenuItem>

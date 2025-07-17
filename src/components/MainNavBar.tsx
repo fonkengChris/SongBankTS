@@ -44,13 +44,22 @@ const MainNavBar = ({ user }: Props) => {
 
   const NavLinks = () => (
     <List>
-      <Flex direction={{ base: "column", md: "row" }} gap={2}>
+      <Flex direction={{ base: "column", md: "row" }} gap={3}>
         <ListItem>
           <Button
-            colorScheme="cyan"
-            variant="solid"
-            bg="cyan.600"
-            color="white"
+            colorScheme="blue"
+            variant="ghost"
+            color="gray.300"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+              transform: "translateY(-1px)",
+            }}
+            _active={{ bg: "blue.600" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
             width="100%"
           >
             <NavLink to="/">Home</NavLink>
@@ -58,10 +67,19 @@ const MainNavBar = ({ user }: Props) => {
         </ListItem>
         <ListItem>
           <Button
-            colorScheme="cyan"
-            variant="solid"
-            bg="cyan.600"
-            color="white"
+            colorScheme="blue"
+            variant="ghost"
+            color="gray.300"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+              transform: "translateY(-1px)",
+            }}
+            _active={{ bg: "blue.600" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
             width="100%"
           >
             <NavLink to="/songs">Songs</NavLink>
@@ -69,10 +87,19 @@ const MainNavBar = ({ user }: Props) => {
         </ListItem>
         <ListItem>
           <Button
-            colorScheme="cyan"
-            variant="solid"
-            bg="cyan.600"
-            color="white"
+            colorScheme="blue"
+            variant="ghost"
+            color="gray.300"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+              transform: "translateY(-1px)",
+            }}
+            _active={{ bg: "blue.600" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
             width="100%"
           >
             <NavLink to="/about">About</NavLink>
@@ -80,10 +107,19 @@ const MainNavBar = ({ user }: Props) => {
         </ListItem>
         <ListItem>
           <Button
-            colorScheme="cyan"
-            variant="solid"
-            bg="cyan.600"
-            color="white"
+            colorScheme="blue"
+            variant="ghost"
+            color="gray.300"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+              transform: "translateY(-1px)",
+            }}
+            _active={{ bg: "blue.600" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
             width="100%"
           >
             <NavLink to="/contact">Contact</NavLink>
@@ -91,10 +127,19 @@ const MainNavBar = ({ user }: Props) => {
         </ListItem>
         <ListItem>
           <Button
-            colorScheme="cyan"
-            variant="solid"
-            bg="cyan.600"
-            color="white"
+            colorScheme="blue"
+            variant="ghost"
+            color="gray.300"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+              transform: "translateY(-1px)",
+            }}
+            _active={{ bg: "blue.600" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
             width="100%"
           >
             <NavLink to="/upload">Upload</NavLink>
@@ -103,10 +148,19 @@ const MainNavBar = ({ user }: Props) => {
         {(user?.role === "admin" || user?.role === "superAdmin") && (
           <ListItem>
             <Button
-              colorScheme="cyan"
-              variant="solid"
-              bg="cyan.600"
-              color="white"
+              colorScheme="purple"
+              variant="ghost"
+              color="gray.300"
+              _hover={{
+                bg: "purple.500",
+                color: "white",
+                transform: "translateY(-1px)",
+              }}
+              _active={{ bg: "purple.600" }}
+              fontWeight="600"
+              fontSize="md"
+              letterSpacing="0.01em"
+              transition="all 0.2s ease"
               width="100%"
             >
               <NavLink to="/admin">Admin</NavLink>
@@ -119,13 +173,24 @@ const MainNavBar = ({ user }: Props) => {
 
   const AuthButtons = () => (
     <List>
-      <Flex direction={{ base: "column", md: "row" }} gap={2}>
+      <Flex direction={{ base: "column", md: "row" }} gap={3}>
         <ListItem>
           <Button
-            colorScheme="cyan"
-            variant="solid"
-            bg="cyan.600"
-            color="white"
+            colorScheme="blue"
+            variant="outline"
+            borderColor="blue.400"
+            color="blue.400"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+              borderColor: "blue.500",
+              transform: "translateY(-1px)",
+            }}
+            _active={{ bg: "blue.600" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
             width="100%"
           >
             <NavLink to="/auth">Login</NavLink>
@@ -133,10 +198,20 @@ const MainNavBar = ({ user }: Props) => {
         </ListItem>
         <ListItem>
           <Button
-            colorScheme="cyan"
+            colorScheme="green"
             variant="solid"
-            bg="cyan.600"
+            bg="green.500"
             color="white"
+            _hover={{
+              bg: "green.600",
+              transform: "translateY(-1px)",
+              boxShadow: "0 4px 12px rgba(34, 197, 94, 0.3)",
+            }}
+            _active={{ bg: "green.700" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
             width="100%"
           >
             <NavLink to="/register">Register</NavLink>
@@ -148,20 +223,38 @@ const MainNavBar = ({ user }: Props) => {
 
   return (
     <Flex
-      padding="10px"
+      padding="16px"
       wrap="wrap"
       alignItems="center"
       justifyContent="space-between"
-      gap={2}
+      gap={4}
+      bg="gray.900"
+      borderBottom="1px solid"
+      borderColor="gray.700"
+      boxShadow="0 2px 8px rgba(0, 0, 0, 0.1)"
     >
       {/* Logo and Title Section */}
-      <Flex alignItems="center" marginRight={4}>
+      <Flex alignItems="center" marginRight={6}>
         <Link to="/songs/">
-          <Image src={logo} boxSize="60px" marginRight={2} />
+          <Image
+            src={logo}
+            boxSize="60px"
+            marginRight={3}
+            transition="transform 0.2s ease"
+            _hover={{ transform: "scale(1.05)" }}
+          />
         </Link>
         <Show above="sm">
           <Link to="/songs/">
-            <Text as="b" color="brown" fontSize={{ base: "2xl", md: "4xl" }}>
+            <Text
+              fontWeight="800"
+              color="blue.400"
+              fontSize={{ base: "2xl", md: "4xl" }}
+              letterSpacing="-0.03em"
+              textShadow="0 2px 4px rgba(0, 0, 0, 0.3)"
+              transition="color 0.2s ease"
+              _hover={{ color: "blue.300" }}
+            >
               SheetMusicLibrary
             </Text>
           </Link>
@@ -183,8 +276,14 @@ const MainNavBar = ({ user }: Props) => {
               aria-label="Options"
               icon={<HamburgerIcon />}
               variant="outline"
+              borderColor="gray.600"
+              color="gray.300"
+              _hover={{
+                bg: "gray.700",
+                borderColor: "gray.500",
+              }}
             />
-            <MenuList>
+            <MenuList bg="gray.800" borderColor="gray.600">
               <NavLinks />
               {!user?._id && <AuthButtons />}
             </MenuList>
@@ -195,23 +294,47 @@ const MainNavBar = ({ user }: Props) => {
         <Show above="md">{!user?._id && <AuthButtons />}</Show>
 
         {user?._id && (
-          <Flex alignItems="center" gap={2}>
+          <Flex alignItems="center" gap={3}>
             <Show above="md">
-              <Heading as="h2" size={{ base: "sm", lg: "lg" }}>
+              <Heading
+                as="h2"
+                size={{ base: "sm", lg: "md" }}
+                fontWeight="600"
+                color="gray.300"
+                letterSpacing="0.01em"
+              >
                 Welcome: {getFirstName(user.name)}
               </Heading>
             </Show>
             <Menu>
               <MenuButton>
-                <Avatar name={user.name} size={{ base: "sm", md: "md" }} />
+                <Avatar
+                  name={user.name}
+                  size={{ base: "sm", md: "md" }}
+                  bg="blue.500"
+                  color="white"
+                  fontWeight="600"
+                  transition="transform 0.2s ease"
+                  _hover={{ transform: "scale(1.05)" }}
+                />
               </MenuButton>
-              <MenuList>
+              <MenuList bg="gray.800" borderColor="gray.600">
                 {ListOfActions.map((action) => (
-                  <MenuItem key={action.value}>
+                  <MenuItem
+                    key={action.value}
+                    _hover={{ bg: "gray.700" }}
+                    color="gray.300"
+                    fontWeight="500"
+                  >
                     <NavLink to={action.value}>{action.label}</NavLink>
                   </MenuItem>
                 ))}
-                <MenuItem onClick={handleLogout}>
+                <MenuItem
+                  onClick={handleLogout}
+                  _hover={{ bg: "red.600" }}
+                  color="red.400"
+                  fontWeight="500"
+                >
                   <Text>Logout</Text>
                 </MenuItem>
               </MenuList>

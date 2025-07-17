@@ -25,19 +25,38 @@ const SearchInput = () => {
       <InputGroup>
         <InputLeftElement
           children={<BsSearch />}
-          height={{ base: "40px", md: "50px" }}
+          height={{ base: "48px", md: "56px" }}
+          color="gray.400"
         />
         <Input
           ref={ref}
-          borderRadius={20}
-          placeholder="Search songs ..."
+          borderRadius="full"
+          placeholder="Search songs..."
           variant="filled"
-          height={{ base: "40px", md: "50px" }}
-          minH={{ base: "40px", md: "50px" }}
-          fontSize={{ base: "sm", md: "md" }}
+          height={{ base: "48px", md: "56px" }}
+          minH={{ base: "48px", md: "56px" }}
+          fontSize={{ base: "md", md: "lg" }}
+          fontWeight="400"
+          letterSpacing="0.01em"
           defaultValue={searchText || ""}
-          _focus={{ bg: "white", borderColor: "blue.500" }}
-          _hover={{ bg: "gray.50" }}
+          bg="gray.700"
+          border="1px solid"
+          borderColor="gray.600"
+          color="white"
+          _placeholder={{ 
+            color: "gray.400",
+            fontWeight: "400"
+          }}
+          _focus={{ 
+            bg: "gray.600", 
+            borderColor: "blue.400",
+            boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)"
+          }}
+          _hover={{ 
+            bg: "gray.600",
+            borderColor: "gray.500"
+          }}
+          transition="all 0.2s ease"
         />
       </InputGroup>
     </form>

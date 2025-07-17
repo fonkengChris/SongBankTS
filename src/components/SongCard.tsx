@@ -22,10 +22,25 @@ interface Props {
 
 const SongCard = ({ song, mediaFile }: Props) => {
   return (
-    <Card height="100%" display="flex" flexDirection="column">
+    <Card
+      height="100%"
+      display="flex"
+      flexDirection="column"
+      bg="gray.800"
+      border="1px solid"
+      borderColor="gray.700"
+      borderRadius="xl"
+      overflow="hidden"
+      transition="all 0.3s ease"
+      _hover={{
+        transform: "translateY(-4px)",
+        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.3)",
+        borderColor: "gray.600",
+      }}
+    >
       <Box position="relative" overflow="hidden">
         <Link to={"/media_files/" + mediaFile._id}>
-          <Image 
+          <Image
             width="100%"
             height={{ base: "200px", sm: "220px", md: "240px", lg: "260px" }}
             objectFit="cover"
@@ -35,42 +50,64 @@ const SongCard = ({ song, mediaFile }: Props) => {
           />
         </Link>
       </Box>
-      <CardBody flex={1} display="flex" flexDirection="column" p={{ base: 3, md: 4 }}>
-        <VStack align="stretch" spacing={2} flex={1}>
-          <ChakraLink 
-            as={Link} 
+      <CardBody
+        flex={1}
+        display="flex"
+        flexDirection="column"
+        p={{ base: 4, md: 5 }}
+      >
+        <VStack align="stretch" spacing={3} flex={1}>
+          <ChakraLink
+            as={Link}
             to={"/media_files/" + mediaFile._id}
-            fontSize={{ base: "sm", md: "md" }}
-            fontWeight="semibold"
-            color="blue.600"
-            _hover={{ color: "blue.800", textDecoration: "underline" }}
+            fontSize={{ base: "md", md: "lg" }}
+            fontWeight="700"
+            color="blue.400"
+            _hover={{
+              color: "blue.300",
+              textDecoration: "none",
+              transform: "translateX(2px)",
+            }}
+            transition="all 0.2s ease"
             noOfLines={2}
+            letterSpacing="-0.01em"
           >
             {mediaFile.name}
           </ChakraLink>
-          <Text 
-            fontSize={{ base: "xs", md: "sm" }}
-            color="gray.600"
+          <Text
+            fontSize={{ base: "sm", md: "md" }}
+            color="gray.400"
             noOfLines={1}
+            fontWeight="500"
+            letterSpacing="0.01em"
           >
             {mediaFile.notation?.title || "No notation"}
           </Text>
           {song.authorName !== "Unknown" && (
-            <Text 
-              fontSize={{ base: "xs", md: "sm" }}
+            <Text
+              fontSize={{ base: "sm", md: "md" }}
               color="gray.500"
               noOfLines={1}
+              fontWeight="400"
+              fontStyle="italic"
             >
               {song.authorName}
             </Text>
           )}
         </VStack>
-        <HStack justifyContent="space-between" mt={3} pt={2} borderTop="1px solid" borderColor="gray.100">
+        <HStack
+          justifyContent="space-between"
+          mt={4}
+          pt={4}
+          borderTop="1px solid"
+          borderColor="gray.600"
+        >
           <CriticScore score={song.metacritic ?? 0} />
-          <Text 
-            color="green.500" 
-            fontWeight="bold"
-            fontSize={{ base: "sm", md: "md" }}
+          <Text
+            color="green.400"
+            fontWeight="700"
+            fontSize={{ base: "md", md: "lg" }}
+            letterSpacing="0.01em"
           >
             Free
           </Text>
