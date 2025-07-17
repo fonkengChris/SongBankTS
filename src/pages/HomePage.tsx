@@ -15,9 +15,9 @@ const HomePage = () => {
     <Box minH="100vh" display="flex" flexDirection="column">
       <Box flex="1" p={8}>
         <VStack spacing={8} align="stretch">
-          <Heading 
-            as="h1" 
-            size="2xl" 
+          <Heading
+            as="h1"
+            size="2xl"
             mb={6}
             fontWeight="800"
             letterSpacing="-0.03em"
@@ -26,9 +26,9 @@ const HomePage = () => {
           >
             Welcome to SheetMusicLibrary
           </Heading>
-          <Text 
-            fontSize="xl" 
-            color="gray.400" 
+          <Text
+            fontSize="xl"
+            color="gray.400"
             mb={8}
             textAlign="center"
             fontWeight="500"
@@ -39,14 +39,14 @@ const HomePage = () => {
             Your digital destination for a wide variety of sheet music.
           </Text>
 
-          <Text 
+          <Text
             mb={6}
             fontSize="lg"
             lineHeight="1.7"
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="center"
+            textAlign="justify"
           >
             At SheetMusicLibrary, we believe that music should be easy to find,
             share, and play. Our platform is designed for{" "}
@@ -57,14 +57,14 @@ const HomePage = () => {
             from different genres and traditions.
           </Text>
 
-          <Text 
+          <Text
             mb={6}
             fontSize="lg"
             lineHeight="1.7"
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="center"
+            textAlign="justify"
           >
             Whether you're looking for{" "}
             <strong>
@@ -77,14 +77,14 @@ const HomePage = () => {
             diverse musical needs.
           </Text>
 
-          <Text 
+          <Text
             mb={6}
             fontSize="lg"
             lineHeight="1.7"
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="center"
+            textAlign="justify"
           >
             We are inspired by platforms like{" "}
             <strong>IMSLP.org and Hymnary.org</strong>, but we focus on making
@@ -101,14 +101,14 @@ const HomePage = () => {
             perform.
           </Text>
 
-          <Text 
+          <Text
             mb={8}
             fontSize="lg"
             lineHeight="1.7"
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="center"
+            textAlign="justify"
           >
             We also aim to make copyrighted songs available for African
             audiences by including
@@ -117,10 +117,10 @@ const HomePage = () => {
           </Text>
 
           <VStack spacing={6} align="center">
-            <Button 
-              as={RouterLink} 
-              to="/about" 
-              colorScheme="blue" 
+            <Button
+              as={RouterLink}
+              to="/about"
+              colorScheme="blue"
               size="lg"
               fontSize="lg"
               fontWeight="600"
@@ -130,16 +130,16 @@ const HomePage = () => {
               letterSpacing="0.01em"
               _hover={{
                 transform: "translateY(-2px)",
-                boxShadow: "0 8px 25px rgba(49, 130, 206, 0.3)"
+                boxShadow: "0 8px 25px rgba(49, 130, 206, 0.3)",
               }}
               transition="all 0.2s ease"
             >
               Learn More About Us
             </Button>
-            <Button 
-              as={RouterLink} 
-              to="/songs" 
-              colorScheme="teal" 
+            <Button
+              as={RouterLink}
+              to="/songs"
+              colorScheme="teal"
               size="lg"
               fontSize="lg"
               fontWeight="600"
@@ -149,7 +149,7 @@ const HomePage = () => {
               letterSpacing="0.01em"
               _hover={{
                 transform: "translateY(-2px)",
-                boxShadow: "0 8px 25px rgba(20, 184, 166, 0.3)"
+                boxShadow: "0 8px 25px rgba(20, 184, 166, 0.3)",
               }}
               transition="all 0.2s ease"
             >
@@ -169,7 +169,7 @@ const HomePage = () => {
                 letterSpacing="0.01em"
                 _hover={{
                   transform: "translateY(-2px)",
-                  boxShadow: "0 8px 25px rgba(34, 197, 94, 0.3)"
+                  boxShadow: "0 8px 25px rgba(34, 197, 94, 0.3)",
                 }}
                 transition="all 0.2s ease"
               >
