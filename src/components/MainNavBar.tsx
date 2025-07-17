@@ -14,6 +14,7 @@ import {
   IconButton,
   Text,
   Box,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
@@ -25,6 +26,8 @@ interface Props {
 }
 
 const MainNavBar = ({ user }: Props) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const ListOfActions = [
     { value: "users/" + user?._id, label: "User Profile" },
     { value: "/change_password/", label: "Change Password" },
@@ -40,6 +43,11 @@ const MainNavBar = ({ user }: Props) => {
 
   const getFirstName = (fullName: string) => {
     return fullName.split(" ")[0];
+  };
+
+  const handleNavigation = (path: string) => {
+    onClose(); // Close the mobile menu
+    navigate(path);
   };
 
   const NavLinks = () => (
@@ -61,8 +69,9 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/")}
           >
-            <NavLink to="/">Home</NavLink>
+            Home
           </Button>
         </ListItem>
         <ListItem>
@@ -81,8 +90,9 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/songs")}
           >
-            <NavLink to="/songs">Songs</NavLink>
+            Songs
           </Button>
         </ListItem>
         <ListItem>
@@ -101,8 +111,9 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/about")}
           >
-            <NavLink to="/about">About</NavLink>
+            About
           </Button>
         </ListItem>
         <ListItem>
@@ -121,8 +132,9 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/contact")}
           >
-            <NavLink to="/contact">Contact</NavLink>
+            Contact
           </Button>
         </ListItem>
         <ListItem>
@@ -141,8 +153,9 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/upload")}
           >
-            <NavLink to="/upload">Upload</NavLink>
+            Upload
           </Button>
         </ListItem>
         {(user?.role === "admin" || user?.role === "superAdmin") && (
@@ -162,8 +175,9 @@ const MainNavBar = ({ user }: Props) => {
               letterSpacing="0.01em"
               transition="all 0.2s ease"
               width="100%"
+              onClick={() => handleNavigation("/admin")}
             >
-              <NavLink to="/admin">Admin</NavLink>
+              Admin
             </Button>
           </ListItem>
         )}
@@ -192,8 +206,9 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/auth")}
           >
-            <NavLink to="/auth">Login</NavLink>
+            Login
           </Button>
         </ListItem>
         <ListItem>
@@ -213,8 +228,9 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/register")}
           >
-            <NavLink to="/register">Register</NavLink>
+            Register
           </Button>
         </ListItem>
       </Flex>
@@ -270,7 +286,7 @@ const MainNavBar = ({ user }: Props) => {
       <Flex alignItems="center" gap={4} flex={1} justifyContent="flex-end">
         {/* Mobile Menu */}
         <Show below="md">
-          <Menu>
+          <Menu isOpen={isOpen} onClose={onClose}>
             <MenuButton
               as={IconButton}
               aria-label="Options"
@@ -282,6 +298,7 @@ const MainNavBar = ({ user }: Props) => {
                 bg: "gray.700",
                 borderColor: "gray.500",
               }}
+              onClick={onOpen}
             />
             <MenuList bg="gray.800" borderColor="gray.600">
               <NavLinks />
@@ -325,8 +342,9 @@ const MainNavBar = ({ user }: Props) => {
                     _hover={{ bg: "gray.700" }}
                     color="gray.300"
                     fontWeight="500"
+                    onClick={() => handleNavigation(action.value)}
                   >
-                    <NavLink to={action.value}>{action.label}</NavLink>
+                    {action.label}
                   </MenuItem>
                 ))}
                 <MenuItem
