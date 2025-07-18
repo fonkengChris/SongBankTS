@@ -64,7 +64,8 @@ axiosInstance.interceptors.response.use(
 );
 
 export interface PaginatedResponse<T> {
-  songs: T[];
+  songs?: T[];
+  videos?: T[];
   pagination: {
     currentPage: number;
     totalPages: number;
@@ -84,22 +85,23 @@ export default class APIClient<T, R = T> {
       .get<PaginatedResponse<T>>(url, config)
       .then((res) => res.data)
       .catch((error) => {
-        console.error("Error fetching songs:", error);
+        console.error("Error fetching data:", error);
         throw error;
       });
   };
 
   getAllSongsWithoutPagination = (config?: AxiosRequestConfig) => {
     return axiosInstance
-      .get<{ songs: T[] } | T[]>(`${this.endpoint}/all`, config)
+      .get<{ songs: T[] } | { videos: T[] } | T[]>(`${this.endpoint}/all`, config)
       .then((res) => {
-        // If the response is an object with a songs property, return that, else return the array directly
+        // If the response is an object with a songs or videos property, return that, else return the array directly
         if (Array.isArray(res.data)) return res.data;
         if ('songs' in res.data) return res.data.songs;
+        if ('videos' in res.data) return res.data.videos;
         return [];
       })
       .catch((error) => {
-        console.error("Error fetching all songs:", error);
+        console.error("Error fetching all data:", error);
         throw error;
       });
   };

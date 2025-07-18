@@ -29,7 +29,11 @@ const VideoFormPage = () => {
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: existingVideo, isLoading } = useVideo(id);
+  console.log("VideoFormPage rendered, id:", id);
+
+  const { data: existingVideo, isLoading, error } = useVideo(id);
+
+  console.log("VideoFormPage - existingVideo:", existingVideo, "isLoading:", isLoading, "error:", error);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -43,6 +47,7 @@ const VideoFormPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    console.log("VideoFormPage useEffect - existingVideo:", existingVideo);
     if (existingVideo) {
       setFormData({
         title: existingVideo.title || "",
@@ -135,13 +140,27 @@ const VideoFormPage = () => {
     }
   };
 
+  console.log("VideoFormPage - about to render, isLoading:", isLoading);
+
   if (isLoading) {
+    console.log("VideoFormPage - showing loading spinner");
     return (
       <Box display="flex" justifyContent="center" p={8}>
         <Spinner size="xl" />
       </Box>
     );
   }
+
+  if (error) {
+    console.log("VideoFormPage - showing error:", error);
+    return (
+      <Box p={4}>
+        <Heading size="md" color="red.500">Error loading video: {error.message}</Heading>
+      </Box>
+    );
+  }
+
+  console.log("VideoFormPage - rendering form");
 
   return (
     <Box maxW="container.md" mx="auto" p={6}>
