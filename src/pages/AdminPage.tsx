@@ -47,6 +47,7 @@ import {
   FiUserPlus,
   FiArrowLeft,
   FiMenu,
+  FiVideo,
 } from "react-icons/fi";
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
@@ -109,6 +110,12 @@ const AdminPage: React.FC = () => {
       path: "/admin/media_files",
       label: "Media Files",
       icon: FiDatabase,
+      section: "LIBRARY",
+    },
+    {
+      path: "/admin/videos",
+      label: "Videos",
+      icon: FiVideo,
       section: "LIBRARY",
     },
   ];
@@ -239,6 +246,17 @@ const AdminPage: React.FC = () => {
             isActive={location.pathname === "/admin/media_files"}
           >
             Media Files
+          </Button>
+          <Button
+            variant="ghost"
+            justifyContent="flex-start"
+            leftIcon={<Icon as={FiVideo} />}
+            color="whiteAlpha.900"
+            _hover={{ bg: "blue.800" }}
+            onClick={() => handleNavigationChange("/admin/videos")}
+            isActive={location.pathname === "/admin/videos"}
+          >
+            Videos
           </Button>
         </VStack>
       </Box>

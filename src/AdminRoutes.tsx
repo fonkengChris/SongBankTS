@@ -13,6 +13,8 @@ import NotationFormPage from "./admin_pages/NotationFormPage";
 import LanguageFormPage from "./admin_pages/LanguageFormPage";
 import CustomerFormPage from "./admin_pages/CustomerFormPage";
 import UserFormPage from "./admin_pages/UserFormPage";
+import VideosManagementPage from "./admin_pages/VideosManagementPage";
+import VideoFormPage from "./admin_pages/VideoFormPage";
 
 // Define paths based on the links in your AdminPage component
 const adminRoutes: RouteObject[] = [
@@ -61,6 +63,12 @@ const adminRoutes: RouteObject[] = [
     path: "media_files/edit/:id",
     element: <MediaFileFormPage />,
   },
+  {
+    path: "videos",
+    element: <VideosManagementPage />,
+  },
+  { path: "videos/add", element: <VideoFormPage /> },
+  { path: "videos/edit/:id", element: <VideoFormPage /> },
 ];
 
 export default adminRoutes;

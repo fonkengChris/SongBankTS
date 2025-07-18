@@ -19,6 +19,7 @@ import AboutPage from "./pages/AboutPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import CopyrightPage from "./pages/CopyrightPage";
 import Terms from "./pages/Terms";
+import TutorialPage from "./pages/TutorialPage";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
       { path: "users/:id", element: <UserProfile /> },
       { path: "edit_profile", element: <EditProfile /> },
       { path: "songs", element: <SongsPage /> },
+      { path: "tutorials", element: <TutorialPage /> },
       { path: "/media_files/:id", element: <SongDetailPage /> },
       { path: "reset-password", element: <ResetPassword /> },
       { path: "about", element: <AboutPage /> },

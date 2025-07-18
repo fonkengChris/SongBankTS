@@ -155,6 +155,25 @@ const HomePage = () => {
             >
               Browse Our Collection
             </Button>
+            <Button
+              as={RouterLink}
+              to="/tutorials"
+              colorScheme="orange"
+              size="lg"
+              fontSize="lg"
+              fontWeight="600"
+              px={8}
+              py={4}
+              borderRadius="full"
+              letterSpacing="0.01em"
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "0 8px 25px rgba(251, 146, 60, 0.3)",
+              }}
+              transition="all 0.2s ease"
+            >
+              Watch Tutorials
+            </Button>
             {!isLoggedIn && (
               <Button
                 as={RouterLink}
