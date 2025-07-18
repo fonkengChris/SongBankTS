@@ -21,8 +21,6 @@ import {
 import { useState } from "react";
 import { FaPlay, FaEye, FaHeart, FaClock } from "react-icons/fa";
 import VideoGrid from "../components/VideoGrid";
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { BsSearch } from "react-icons/bs";
 import CategorySelector from "../components/CategorySelector";
 import LanguageSelector from "../components/LanguageSelector";
 import LevelSelector from "../components/LevelSelector";
@@ -33,7 +31,6 @@ import useLanguages from "../hooks/useLanguages";
 import Video from "../entities/Video";
 
 const TutorialPage = () => {
-  const [searchText, setSearchText] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedLanguageId, setSelectedLanguageId] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
@@ -49,7 +46,6 @@ const TutorialPage = () => {
     languageId: selectedLanguageId,
     level: selectedLevel,
     sortOrder,
-    searchText,
   };
 
   const {
@@ -95,11 +91,11 @@ const TutorialPage = () => {
       <VStack spacing={8} align="stretch">
         <Box textAlign="center">
           <Heading as="h1" size="2xl" mb={4}>
-            Video Tutorials
+            App Tutorials
           </Heading>
           <Text fontSize="lg" color="gray.500">
-            Learn music theory, techniques, and performance skills through our
-            comprehensive video tutorials
+            Learn how to use SheetMusicLibrary effectively with our step-by-step
+            video guides
           </Text>
         </Box>
 
@@ -112,43 +108,9 @@ const TutorialPage = () => {
           borderColor="gray.700"
         >
           <VStack spacing={4}>
-            <InputGroup>
-              <InputLeftElement
-                children={<BsSearch />}
-                height={{ base: "48px", md: "56px" }}
-                color="gray.400"
-              />
-              <Input
-                borderRadius="full"
-                placeholder="Search tutorials..."
-                variant="filled"
-                height={{ base: "48px", md: "56px" }}
-                minH={{ base: "48px", md: "56px" }}
-                fontSize={{ base: "md", md: "lg" }}
-                fontWeight="400"
-                letterSpacing="0.01em"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                bg="gray.700"
-                border="1px solid"
-                borderColor="gray.600"
-                color="white"
-                _placeholder={{
-                  color: "gray.400",
-                  fontWeight: "400",
-                }}
-                _focus={{
-                  bg: "gray.600",
-                  borderColor: "blue.400",
-                  boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
-                }}
-                _hover={{
-                  bg: "gray.600",
-                  borderColor: "gray.500",
-                }}
-                transition="all 0.2s ease"
-              />
-            </InputGroup>
+            <Text fontSize="md" color="gray.400" textAlign="center">
+              Filter tutorials by category, language, or difficulty level
+            </Text>
             <HStack spacing={4} wrap="wrap" justify="center">
               <CategorySelector />
               <LanguageSelector />

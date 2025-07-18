@@ -10,7 +10,6 @@ interface VideoQuery {
   languageId?: string;
   level?: string;
   sortOrder?: string;
-  searchText?: string;
 }
 
 interface VideoPaginatedResponse {
@@ -35,7 +34,6 @@ const useVideos = (videoQuery: VideoQuery = {}) => {
             language: videoQuery.languageId,
             level: videoQuery.level,
             sortOrder: videoQuery.sortOrder,
-            searchText: videoQuery.searchText,
           },
         })
         .then((response: any) => ({
