@@ -12,7 +12,7 @@ import {
   Icon,
   Flex,
 } from "@chakra-ui/react";
-import { FaPlay, FaEye, FaHeart, FaClock } from "react-icons/fa";
+import { FaPlay, FaClock } from "react-icons/fa";
 import Video from "../entities/Video";
 
 interface Props {
@@ -30,13 +30,9 @@ const VideoCard = ({ video, onClick }: Props) => {
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case "beginner":
+      case "regular":
         return "green";
-      case "intermediate":
-        return "yellow";
-      case "advanced":
-        return "orange";
-      case "expert":
+      case "admin":
         return "red";
       default:
         return "gray";
@@ -105,34 +101,24 @@ const VideoCard = ({ video, onClick }: Props) => {
             <Badge colorScheme={getLevelColor(video.level)}>
               {video.level.charAt(0).toUpperCase() + video.level.slice(1)}
             </Badge>
-            {video.category && (
-              <Badge colorScheme="blue" variant="outline">
-                {video.category.title}
-              </Badge>
-            )}
-            {video.language && (
-              <Badge colorScheme="purple" variant="outline">
-                {video.language.name}
-              </Badge>
-            )}
           </HStack>
 
-          <Text fontSize="sm" color="gray.400">
-            By {video.instructor}
-          </Text>
+          {video.createdAt && (
+            <Text fontSize="sm" color="gray.400">
+              Created: {new Date(video.createdAt).toLocaleDateString()}
+            </Text>
+          )}
         </VStack>
       </CardBody>
 
       <CardFooter pt={0}>
         <HStack spacing={4} color="gray.500" fontSize="sm">
-          <Flex align="center" gap={1}>
-            <Icon as={FaEye} boxSize={3} />
-            <Text>{video.views || 0}</Text>
-          </Flex>
-          <Flex align="center" gap={1}>
-            <Icon as={FaHeart} boxSize={3} />
-            <Text>{video.likesCount || 0}</Text>
-          </Flex>
+          {video.duration && (
+            <Flex align="center" gap={1}>
+              <Icon as={FaClock} boxSize={3} />
+              <Text>{formatDuration(video.duration)}</Text>
+            </Flex>
+          )}
         </HStack>
       </CardFooter>
     </Card>

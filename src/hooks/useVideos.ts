@@ -6,8 +6,6 @@ import Video from "../entities/Video";
 const apiClient = new APIClient<Video>(VIDEOS_ENDPOINT);
 
 interface VideoQuery {
-  categoryId?: string;
-  languageId?: string;
   level?: string;
   sortOrder?: string;
 }
@@ -30,6 +28,7 @@ const useVideos = (videoQuery: VideoQuery = {}) => {
         .getAllSongs({
           params: {
             page: pageParam,
+            ...videoQuery,
           },
         })
         .then((response: any) => ({
@@ -69,3 +68,4 @@ const useVideo = (id?: string) => {
 
 export { useAllVideos, useVideo };
 export default useVideos;
+ 

@@ -13,15 +13,13 @@ interface Props {
 const LevelSelector = ({ selectedLevel, onSelectLevel }: Props) => {
   const levels = [
     { value: "", label: "All Levels" },
-    { value: "beginner", label: "Beginner" },
-    { value: "intermediate", label: "Intermediate" },
-    { value: "advanced", label: "Advanced" },
-    { value: "expert", label: "Expert" },
+    { value: "regular", label: "Regular" },
+    { value: "admin", label: "Admin" },
   ];
 
   return (
     <FormControl>
-      <FormLabel>Difficulty Level</FormLabel>
+      <FormLabel>Level</FormLabel>
       <Select
         value={selectedLevel || ""}
         onChange={(event) => onSelectLevel(event.target.value)}
@@ -33,7 +31,7 @@ const LevelSelector = ({ selectedLevel, onSelectLevel }: Props) => {
           </option>
         ))}
       </Select>
-      <FormHelperText>Filter videos by difficulty level</FormHelperText>
+      <FormHelperText>Filter videos by level</FormHelperText>
     </FormControl>
   );
 };

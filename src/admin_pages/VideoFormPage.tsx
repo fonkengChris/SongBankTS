@@ -13,45 +13,31 @@ import {
   Heading,
   useToast,
   Spinner,
-  Switch,
-  Tag,
-  TagLabel,
-  TagCloseButton,
-  InputGroup,
-  InputRightElement,
-  Text,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import useCategories from "../hooks/useCategories";
-import useLanguages from "../hooks/useLanguages";
 import { useVideo } from "../hooks/useVideos";
 import APIClient from "../services/api-client";
 import Video from "../entities/Video";
 import { VIDEOS_ENDPOINT } from "../data/constants";
+
+// Type for video data without _id (used for POST/PUT operations)
+type VideoInput = Omit<Video, '_id' | 'createdAt' | 'updatedAt'>;
 
 const VideoFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [tagInput, setTagInput] = useState("");
 
-  const { data: categories = [] } = useCategories();
-  const { data: languages = [] } = useLanguages();
   const { data: existingVideo, isLoading } = useVideo(id);
 
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    level: "beginner",
+    level: "regular",
     url: "",
     thumbnailUrl: "",
     duration: "",
-    category: "",
-    language: "",
-    instructor: "",
-    tags: [] as string[],
-    isPublished: true,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -61,15 +47,10 @@ const VideoFormPage = () => {
       setFormData({
         title: existingVideo.title || "",
         description: existingVideo.description || "",
-        level: existingVideo.level || "beginner",
+        level: existingVideo.level || "regular",
         url: existingVideo.url || "",
         thumbnailUrl: existingVideo.thumbnailUrl || "",
         duration: existingVideo.duration?.toString() || "",
-        category: existingVideo.category?._id || "",
-        language: existingVideo.language?._id || "",
-        instructor: existingVideo.instructor || "",
-        tags: existingVideo.tags || [],
-        isPublished: existingVideo.isPublished ?? true,
       });
     }
   }, [existingVideo]);
@@ -85,15 +66,6 @@ const VideoFormPage = () => {
     }
     if (!formData.url.trim()) {
       newErrors.url = "Video URL is required";
-    }
-    if (!formData.category) {
-      newErrors.category = "Category is required";
-    }
-    if (!formData.language) {
-      newErrors.language = "Language is required";
-    }
-    if (!formData.instructor.trim()) {
-      newErrors.instructor = "Instructor is required";
     }
     if (formData.duration && isNaN(Number(formData.duration))) {
       newErrors.duration = "Duration must be a valid number";
@@ -113,28 +85,19 @@ const VideoFormPage = () => {
     setIsSubmitting(true);
 
     try {
-      const apiClient = new APIClient<Video>(VIDEOS_ENDPOINT);
-      const selectedCategory = categories.find(
-        (cat: any) => cat._id === formData.category
-      );
-      const selectedLanguage = languages.find(
-        (lang: any) => lang._id === formData.language
-      );
+      const apiClient = new APIClient<Video, VideoInput>(VIDEOS_ENDPOINT);
 
-      const videoData = {
-        ...formData,
-        level: formData.level as
-          | "beginner"
-          | "intermediate"
-          | "advanced"
-          | "expert",
+      const videoData: VideoInput = {
+        title: formData.title,
+        description: formData.description,
+        level: formData.level as "regular" | "admin",
+        url: formData.url,
+        thumbnailUrl: formData.thumbnailUrl || undefined,
         duration: formData.duration ? parseInt(formData.duration) : undefined,
-        category: selectedCategory,
-        language: selectedLanguage,
       };
 
       if (id) {
-        await apiClient.put(id, videoData as any);
+        await apiClient.put(id, videoData);
         toast({
           title: "Video updated successfully",
           status: "success",
@@ -142,7 +105,7 @@ const VideoFormPage = () => {
           isClosable: true,
         });
       } else {
-        await apiClient.post(videoData as any);
+        await apiClient.post(videoData);
         toast({
           title: "Video created successfully",
           status: "success",
@@ -165,34 +128,10 @@ const VideoFormPage = () => {
     }
   };
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
-  };
-
-  const addTag = () => {
-    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
-      setFormData((prev) => ({
-        ...prev,
-        tags: [...prev.tags, tagInput.trim()],
-      }));
-      setTagInput("");
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagToRemove),
-    }));
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addTag();
     }
   };
 
@@ -243,10 +182,8 @@ const VideoFormPage = () => {
                   value={formData.level}
                   onChange={(e) => handleInputChange("level", e.target.value)}
                 >
-                  <option value="beginner">Beginner</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
-                  <option value="expert">Expert</option>
+                  <option value="regular">Regular</option>
+                  <option value="admin">Admin</option>
                 </Select>
                 <FormErrorMessage>{errors.level}</FormErrorMessage>
               </FormControl>
@@ -259,7 +196,7 @@ const VideoFormPage = () => {
                   onChange={(e) =>
                     handleInputChange("duration", e.target.value)
                   }
-                  placeholder="e.g., 300"
+                  placeholder="Enter duration in seconds"
                 />
                 <FormErrorMessage>{errors.duration}</FormErrorMessage>
               </FormControl>
@@ -270,120 +207,27 @@ const VideoFormPage = () => {
               <Input
                 value={formData.url}
                 onChange={(e) => handleInputChange("url", e.target.value)}
-                placeholder="Enter video URL (YouTube, Vimeo, etc.)"
+                placeholder="Enter video URL"
               />
               <FormErrorMessage>{errors.url}</FormErrorMessage>
             </FormControl>
 
             <FormControl>
-              <FormLabel>Thumbnail URL</FormLabel>
+              <FormLabel>Thumbnail URL (optional)</FormLabel>
               <Input
                 value={formData.thumbnailUrl}
                 onChange={(e) =>
                   handleInputChange("thumbnailUrl", e.target.value)
                 }
-                placeholder="Enter thumbnail image URL (optional)"
-              />
-            </FormControl>
-
-            <HStack spacing={4}>
-              <FormControl isInvalid={!!errors.category}>
-                <FormLabel>Category</FormLabel>
-                <Select
-                  value={formData.category}
-                  onChange={(e) =>
-                    handleInputChange("category", e.target.value)
-                  }
-                  placeholder="Select category"
-                >
-                  {categories.map((category: any) => (
-                    <option key={category._id} value={category._id}>
-                      {category.title}
-                    </option>
-                  ))}
-                </Select>
-                <FormErrorMessage>{errors.category}</FormErrorMessage>
-              </FormControl>
-
-              <FormControl isInvalid={!!errors.language}>
-                <FormLabel>Language</FormLabel>
-                <Select
-                  value={formData.language}
-                  onChange={(e) =>
-                    handleInputChange("language", e.target.value)
-                  }
-                  placeholder="Select language"
-                >
-                  {languages.map((language: any) => (
-                    <option key={language._id} value={language._id}>
-                      {language.name}
-                    </option>
-                  ))}
-                </Select>
-                <FormErrorMessage>{errors.language}</FormErrorMessage>
-              </FormControl>
-            </HStack>
-
-            <FormControl isInvalid={!!errors.instructor}>
-              <FormLabel>Instructor</FormLabel>
-              <Input
-                value={formData.instructor}
-                onChange={(e) =>
-                  handleInputChange("instructor", e.target.value)
-                }
-                placeholder="Enter instructor name"
-              />
-              <FormErrorMessage>{errors.instructor}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Tags</FormLabel>
-              <InputGroup>
-                <Input
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Add tags (press Enter to add)"
-                />
-                <InputRightElement width="4.5rem">
-                  <Button h="1.75rem" size="sm" onClick={addTag}>
-                    Add
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <HStack spacing={2} mt={2} wrap="wrap">
-                {formData.tags.map((tag, index) => (
-                  <Tag
-                    key={index}
-                    size="md"
-                    colorScheme="blue"
-                    borderRadius="full"
-                  >
-                    <TagLabel>{tag}</TagLabel>
-                    <TagCloseButton onClick={() => removeTag(tag)} />
-                  </Tag>
-                ))}
-              </HStack>
-            </FormControl>
-
-            <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="isPublished" mb="0">
-                Published
-              </FormLabel>
-              <Switch
-                id="isPublished"
-                isChecked={formData.isPublished}
-                onChange={(e) =>
-                  handleInputChange("isPublished", e.target.checked)
-                }
+                placeholder="Enter thumbnail URL"
               />
             </FormControl>
 
             <HStack spacing={4} justify="flex-end">
               <Button
-                onClick={() => navigate("/admin/videos")}
+                type="button"
                 variant="outline"
-                isDisabled={isSubmitting}
+                onClick={() => navigate("/admin/videos")}
               >
                 Cancel
               </Button>
@@ -404,3 +248,4 @@ const VideoFormPage = () => {
 };
 
 export default VideoFormPage;
+ 

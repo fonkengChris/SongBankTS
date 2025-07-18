@@ -28,7 +28,7 @@ import { useAllVideos } from "../hooks/useVideos";
 import APIClient from "../services/api-client";
 import Video from "../entities/Video";
 import { VIDEOS_ENDPOINT } from "../data/constants";
-import { FiEdit, FiTrash2, FiEye, FiHeart, FiClock } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiClock } from "react-icons/fi";
 
 const VideosManagementPage = () => {
   const { data: videos = [], error, isLoading, refetch } = useAllVideos();
@@ -38,7 +38,6 @@ const VideosManagementPage = () => {
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const isTablet = useBreakpointValue({ base: false, md: true, lg: false });
 
   if (isLoading) {
     return (
@@ -78,13 +77,6 @@ const VideosManagementPage = () => {
     }
   };
 
-  // Helper function to safely get nested properties
-  const getNestedValue = (obj: any, path: string) => {
-    return (
-      path.split(".").reduce((acc, part) => acc && acc[part], obj) || "N/A"
-    );
-  };
-
   const formatDuration = (seconds?: number) => {
     if (!seconds) return "N/A";
     const minutes = Math.floor(seconds / 60);
@@ -94,13 +86,9 @@ const VideosManagementPage = () => {
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case "beginner":
+      case "regular":
         return "green";
-      case "intermediate":
-        return "yellow";
-      case "advanced":
-        return "orange";
-      case "expert":
+      case "admin":
         return "red";
       default:
         return "gray";
@@ -116,8 +104,8 @@ const VideosManagementPage = () => {
             <Text fontWeight="bold" fontSize="lg" color="blue.600">
               {String(video.title || "N/A")}
             </Text>
-            <Text fontSize="sm" color="gray.600">
-              by {String(video.instructor || "N/A")}
+            <Text fontSize="sm" color="gray.600" noOfLines={3}>
+              {String(video.description || "N/A")}
             </Text>
           </VStack>
 
@@ -125,31 +113,9 @@ const VideosManagementPage = () => {
             <Badge colorScheme={getLevelColor(video.level)} variant="subtle">
               {String(video.level || "N/A")}
             </Badge>
-            <Badge colorScheme="blue" variant="subtle">
-              {String(getNestedValue(video, "category.title"))}
-            </Badge>
-            <Badge colorScheme="green" variant="subtle">
-              {String(getNestedValue(video, "language.name"))}
-            </Badge>
           </HStack>
 
           <Stack spacing={2}>
-            <HStack justify="space-between">
-              <Text fontSize="sm" color="gray.600">
-                Views:
-              </Text>
-              <Text fontSize="sm" fontWeight="medium">
-                {Number(video.views) || 0}
-              </Text>
-            </HStack>
-            <HStack justify="space-between">
-              <Text fontSize="sm" color="gray.600">
-                Likes:
-              </Text>
-              <Text fontSize="sm" fontWeight="medium">
-                {Number(video.likesCount) || 0}
-              </Text>
-            </HStack>
             <HStack justify="space-between">
               <Text fontSize="sm" color="gray.600">
                 Duration:
@@ -160,14 +126,11 @@ const VideosManagementPage = () => {
             </HStack>
             <HStack justify="space-between">
               <Text fontSize="sm" color="gray.600">
-                Status:
+                Created:
               </Text>
-              <Badge
-                colorScheme={video.isPublished ? "green" : "red"}
-                variant="subtle"
-              >
-                {video.isPublished ? "Published" : "Draft"}
-              </Badge>
+              <Text fontSize="sm" fontWeight="medium">
+                {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : "N/A"}
+              </Text>
             </HStack>
           </Stack>
 
@@ -247,14 +210,10 @@ const VideosManagementPage = () => {
               <Thead>
                 <Tr>
                   <Th>Title</Th>
-                  <Th>Instructor</Th>
+                  <Th>Description</Th>
                   <Th>Level</Th>
-                  <Th>Category</Th>
-                  <Th>Language</Th>
                   <Th>Duration</Th>
-                  <Th>Views</Th>
-                  <Th>Likes</Th>
-                  <Th>Status</Th>
+                  <Th>Created</Th>
                   <Th>Actions</Th>
                 </Tr>
               </Thead>
@@ -266,14 +225,16 @@ const VideosManagementPage = () => {
                         {video.title}
                       </Text>
                     </Td>
-                    <Td>{video.instructor}</Td>
+                    <Td>
+                      <Text maxW="300px" noOfLines={3}>
+                        {video.description}
+                      </Text>
+                    </Td>
                     <Td>
                       <Badge colorScheme={getLevelColor(video.level)}>
                         {video.level}
                       </Badge>
                     </Td>
-                    <Td>{getNestedValue(video, "category.title")}</Td>
-                    <Td>{getNestedValue(video, "language.name")}</Td>
                     <Td>
                       <HStack>
                         <FiClock />
@@ -281,24 +242,7 @@ const VideosManagementPage = () => {
                       </HStack>
                     </Td>
                     <Td>
-                      <HStack>
-                        <FiEye />
-                        <Text>{video.views || 0}</Text>
-                      </HStack>
-                    </Td>
-                    <Td>
-                      <HStack>
-                        <FiHeart />
-                        <Text>{video.likesCount || 0}</Text>
-                      </HStack>
-                    </Td>
-                    <Td>
-                      <Badge
-                        colorScheme={video.isPublished ? "green" : "red"}
-                        variant="subtle"
-                      >
-                        {video.isPublished ? "Published" : "Draft"}
-                      </Badge>
+                      {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : "N/A"}
                     </Td>
                     <Td>
                       <HStack spacing={2}>

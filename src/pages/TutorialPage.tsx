@@ -19,7 +19,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { FaPlay, FaEye, FaHeart, FaClock } from "react-icons/fa";
+import { FaClock } from "react-icons/fa";
 import VideoGrid from "../components/VideoGrid";
 import useVideos from "../hooks/useVideos";
 import Video from "../entities/Video";
@@ -55,13 +55,9 @@ const TutorialPage = () => {
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case "beginner":
+      case "regular":
         return "green";
-      case "intermediate":
-        return "yellow";
-      case "advanced":
-        return "orange";
-      case "expert":
+      case "admin":
         return "red";
       default:
         return "gray";
@@ -130,54 +126,21 @@ const TutorialPage = () => {
                         {selectedVideo.level.charAt(0).toUpperCase() +
                           selectedVideo.level.slice(1)}
                       </Badge>
-                      {selectedVideo.category && (
-                        <Badge colorScheme="blue" variant="outline">
-                          {selectedVideo.category.title}
-                        </Badge>
-                      )}
-                      {selectedVideo.language && (
-                        <Badge colorScheme="purple" variant="outline">
-                          {selectedVideo.language.name}
-                        </Badge>
-                      )}
                     </HStack>
 
-                    <Text color="gray.400">By {selectedVideo.instructor}</Text>
-
-                    <HStack spacing={4} color="gray.500" fontSize="sm">
-                      <Flex align="center" gap={1}>
-                        <Icon as={FaEye} boxSize={3} />
-                        <Text>{selectedVideo.views || 0} views</Text>
-                      </Flex>
-                      <Flex align="center" gap={1}>
-                        <Icon as={FaHeart} boxSize={3} />
-                        <Text>{selectedVideo.likesCount || 0} likes</Text>
-                      </Flex>
-                      {selectedVideo.duration && (
+                    {selectedVideo.duration && (
+                      <HStack spacing={4} color="gray.500" fontSize="sm">
                         <Flex align="center" gap={1}>
                           <Icon as={FaClock} boxSize={3} />
                           <Text>{formatDuration(selectedVideo.duration)}</Text>
                         </Flex>
-                      )}
-                    </HStack>
+                      </HStack>
+                    )}
 
-                    {selectedVideo.tags && selectedVideo.tags.length > 0 && (
-                      <Box>
-                        <Text fontSize="sm" color="gray.400" mb={2}>
-                          Tags:
-                        </Text>
-                        <HStack spacing={2} wrap="wrap">
-                          {selectedVideo.tags.map((tag, index) => (
-                            <Badge
-                              key={index}
-                              colorScheme="gray"
-                              variant="outline"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                        </HStack>
-                      </Box>
+                    {selectedVideo.createdAt && (
+                      <Text color="gray.400" fontSize="sm">
+                        Created: {new Date(selectedVideo.createdAt).toLocaleDateString()}
+                      </Text>
                     )}
                   </VStack>
                 </VStack>
