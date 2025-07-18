@@ -21,32 +21,14 @@ import {
 import { useState } from "react";
 import { FaPlay, FaEye, FaHeart, FaClock } from "react-icons/fa";
 import VideoGrid from "../components/VideoGrid";
-import CategorySelector from "../components/CategorySelector";
-import LanguageSelector from "../components/LanguageSelector";
-import LevelSelector from "../components/LevelSelector";
-import SortSelector from "../components/SortSelector";
 import useVideos from "../hooks/useVideos";
-import useCategories from "../hooks/useCategories";
-import useLanguages from "../hooks/useLanguages";
 import Video from "../entities/Video";
 
 const TutorialPage = () => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState("");
-  const [selectedLanguageId, setSelectedLanguageId] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
-  const [sortOrder, setSortOrder] = useState("-createdAt");
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data: categories } = useCategories();
-  const { data: languages } = useLanguages();
-
-  const videoQuery = {
-    categoryId: selectedCategoryId,
-    languageId: selectedLanguageId,
-    level: selectedLevel,
-    sortOrder,
-  };
+  const videoQuery = {};
 
   const {
     data,
@@ -97,30 +79,6 @@ const TutorialPage = () => {
             Learn how to use SheetMusicLibrary effectively with our step-by-step
             video guides
           </Text>
-        </Box>
-
-        {/* Filters */}
-        <Box
-          bg="gray.800"
-          p={6}
-          borderRadius="lg"
-          border="1px"
-          borderColor="gray.700"
-        >
-          <VStack spacing={4}>
-            <Text fontSize="md" color="gray.400" textAlign="center">
-              Filter tutorials by category, language, or difficulty level
-            </Text>
-            <HStack spacing={4} wrap="wrap" justify="center">
-              <CategorySelector />
-              <LanguageSelector />
-              <LevelSelector
-                selectedLevel={selectedLevel}
-                onSelectLevel={setSelectedLevel}
-              />
-              <SortSelector />
-            </HStack>
-          </VStack>
         </Box>
 
         {/* Video Grid */}

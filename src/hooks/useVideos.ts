@@ -30,10 +30,6 @@ const useVideos = (videoQuery: VideoQuery = {}) => {
         .getAllSongs({
           params: {
             page: pageParam,
-            category: videoQuery.categoryId,
-            language: videoQuery.languageId,
-            level: videoQuery.level,
-            sortOrder: videoQuery.sortOrder,
           },
         })
         .then((response: any) => ({
