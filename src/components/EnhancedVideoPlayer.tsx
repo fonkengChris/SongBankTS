@@ -139,9 +139,26 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
 
-    // Set video source
-    video.src = videoUrl;
-    video.load();
+    // Set video source with error handling
+    console.log('🔍 Setting video source:', videoUrl);
+    
+    // Try setting source with error handling
+    try {
+      video.src = videoUrl;
+      video.load();
+      
+      // Force a reload after a short delay
+      setTimeout(() => {
+        if (video.readyState === 0) {
+          console.log('🔄 Forcing video reload...');
+          video.load();
+        }
+      }, 1000);
+      
+    } catch (error) {
+      console.error('❌ Error setting video source:', error);
+      setError('Failed to set video source');
+    }
 
     return () => {
       video.removeEventListener('loadstart', handleLoadStart);
@@ -293,15 +310,14 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
             style={{ 
               width: '100%', 
               height: '100%', 
-              objectFit: 'contain',
+              objectFit: 'cover',
               backgroundColor: '#000000',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              left: 0
+              display: 'block'
             }}
-            preload="metadata"
+            preload="auto"
             controls={true}
+            muted={false}
+            playsInline={true}
           >
             Your browser does not support the video tag.
           </video>
@@ -320,6 +336,22 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
             zIndex={10}
           >
             Video Container
+          </Box>
+          
+          {/* Test pattern to verify video area */}
+          <Box 
+            position="absolute" 
+            top={2} 
+            right={2} 
+            bg="blue.500" 
+            color="white" 
+            px={2} 
+            py={1} 
+            borderRadius="sm" 
+            fontSize="xs"
+            zIndex={10}
+          >
+            Test Pattern
           </Box>
         </Box>
       </AspectRatio>
