@@ -287,15 +287,41 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
   return (
     <Box position="relative" onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
       <AspectRatio ratio={16 / 9}>
-        <video
-          ref={videoRef}
-          poster={thumbnailUrl}
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-          preload="metadata"
-          controls={true}
-        >
-          Your browser does not support the video tag.
-        </video>
+        <Box position="relative" w="100%" h="100%" bg="black">
+          <video
+            ref={videoRef}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'contain',
+              backgroundColor: '#000000',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              left: 0
+            }}
+            preload="metadata"
+            controls={true}
+          >
+            Your browser does not support the video tag.
+          </video>
+          
+          {/* Visual indicator that video container exists */}
+          <Box 
+            position="absolute" 
+            top={2} 
+            left={2} 
+            bg="red.500" 
+            color="white" 
+            px={2} 
+            py={1} 
+            borderRadius="sm" 
+            fontSize="xs"
+            zIndex={10}
+          >
+            Video Container
+          </Box>
+        </Box>
       </AspectRatio>
 
       {/* Loading overlay */}
@@ -402,6 +428,9 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
           <Text>Duration: {duration.toFixed(2)}s</Text>
           <Text>Playing: {isPlaying ? 'Yes' : 'No'}</Text>
           <Text>Error: {error || 'None'}</Text>
+          <Text>Video Element: {videoRef.current ? 'Exists' : 'Missing'}</Text>
+          <Text>Video ReadyState: {videoRef.current?.readyState || 'N/A'}</Text>
+          <Text>Video NetworkState: {videoRef.current?.networkState || 'N/A'}</Text>
         </Box>
       )}
 
