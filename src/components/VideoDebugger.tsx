@@ -29,6 +29,7 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
   const [detailedInfo, setDetailedInfo] = useState<any>(null);
   const [videoTestResult, setVideoTestResult] = useState<string>("");
   const [isVideoTesting, setIsVideoTesting] = useState(false);
+  const [showTestVideo, setShowTestVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const testVideoUrl = async () => {
@@ -181,6 +182,15 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           
           <Button
             size="sm"
+            colorScheme="purple"
+            onClick={() => setShowTestVideo(!showTestVideo)}
+            leftIcon={<FaVideo />}
+          >
+            {showTestVideo ? 'Hide' : 'Show'} Test Video
+          </Button>
+          
+          <Button
+            size="sm"
             variant="outline"
             onClick={handleDownload}
             leftIcon={<FaDownload />}
@@ -227,10 +237,23 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           </Box>
         )}
 
-        {/* Hidden video element for testing */}
-        <Box display="none">
-          <video ref={videoRef} />
-        </Box>
+        {/* Test video player */}
+        {showTestVideo && (
+          <Box>
+            <Text fontSize="sm" fontWeight="semibold" mb={2}>Test Video Player:</Text>
+            <AspectRatio ratio={16 / 9}>
+              <video
+                ref={videoRef}
+                src={videoUrl}
+                controls
+                style={{ width: '100%', height: '100%' }}
+                crossOrigin="anonymous"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </AspectRatio>
+          </Box>
+        )}
 
         <Divider />
 
@@ -241,6 +264,9 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           </Text>
           <Text fontSize="xs" color="gray.600">
             • If video test fails, the file might be corrupted or not a valid MP4
+          </Text>
+          <Text fontSize="xs" color="gray.600">
+            • Try the test video player to see if the video loads with native controls
           </Text>
           <Text fontSize="xs" color="gray.600">
             • Try downloading the video to test if it's accessible

@@ -38,6 +38,7 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(true);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const toast = useToast();
 
   const isMP4 = videoUrl.toLowerCase().endsWith('.mp4');
@@ -46,10 +47,14 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
     const video = videoRef.current;
     if (!video) return;
 
+    console.log('Setting video source:', videoUrl);
+
     const handleLoadedMetadata = () => {
+      console.log('Video metadata loaded, duration:', video.duration);
       setDuration(video.duration);
       setIsLoading(false);
       setError(null);
+      setVideoLoaded(true);
     };
 
     const handleTimeUpdate = () => {
@@ -58,6 +63,7 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
 
     const handleError = (e: Event) => {
       console.error('Video error:', e);
+      console.error('Video error details:', video.error);
       setIsLoading(false);
       
       let errorMessage = "Error loading video. Please check the video URL and format.";
@@ -67,6 +73,23 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
         errorMessage = "Network error. The video may not be accessible or may be blocked.";
       } else if (video.readyState === 0) {
         errorMessage = "Video not loaded. Please check the video URL.";
+      } else if (video.error) {
+        switch (video.error.code) {
+          case 1:
+            errorMessage = "Video loading aborted.";
+            break;
+          case 2:
+            errorMessage = "Network error while loading video.";
+            break;
+          case 3:
+            errorMessage = "Video decoding failed. File may be corrupted.";
+            break;
+          case 4:
+            errorMessage = "Video format not supported.";
+            break;
+          default:
+            errorMessage = `Video error: ${video.error.message}`;
+        }
       }
       
       setError(errorMessage);
@@ -74,27 +97,44 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
     };
 
     const handleCanPlay = () => {
+      console.log('Video can play');
       setIsLoading(false);
       setError(null);
     };
 
+    const handleCanPlayThrough = () => {
+      console.log('Video can play through');
+      setVideoLoaded(true);
+    };
+
+    const handleLoadStart = () => {
+      console.log('Video load started');
+      setIsLoading(true);
+      setError(null);
+    };
+
     const handlePlay = () => {
+      console.log('Video play started');
       setIsPlaying(true);
     };
 
     const handlePause = () => {
+      console.log('Video paused');
       setIsPlaying(false);
     };
 
     const handleEnded = () => {
+      console.log('Video ended');
       setIsPlaying(false);
     };
 
     // Add event listeners
+    video.addEventListener('loadstart', handleLoadStart);
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('canplaythrough', handleCanPlayThrough);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('error', handleError);
-    video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
@@ -104,10 +144,12 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
     video.load();
 
     return () => {
+      video.removeEventListener('loadstart', handleLoadStart);
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('canplaythrough', handleCanPlayThrough);
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('error', handleError);
-      video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
@@ -117,6 +159,8 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
   const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
+
+    console.log('Toggle play, current state:', isPlaying);
 
     if (isPlaying) {
       video.pause();
@@ -249,6 +293,7 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           preload="metadata"
           controls={false}
+          crossOrigin="anonymous"
         >
           Your browser does not support the video tag.
         </video>
@@ -347,6 +392,16 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
               </HStack>
             </HStack>
           </VStack>
+        </Box>
+      )}
+
+      {/* Debug info */}
+      {process.env.NODE_ENV === 'development' && (
+        <Box position="absolute" top={2} right={2} bg="blackAlpha.700" color="white" p={2} borderRadius="md" fontSize="xs" zIndex={15}>
+          <Text>Loaded: {videoLoaded ? 'Yes' : 'No'}</Text>
+          <Text>Duration: {duration.toFixed(2)}s</Text>
+          <Text>Playing: {isPlaying ? 'Yes' : 'No'}</Text>
+          <Text>Error: {error || 'None'}</Text>
         </Box>
       )}
 
