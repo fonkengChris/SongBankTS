@@ -144,16 +144,33 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
     
     // Try setting source with error handling
     try {
+      // First, try to load the video
       video.src = videoUrl;
       video.load();
       
-      // Force a reload after a short delay
+      // Add a test to see if the video loads
+      const testLoad = () => {
+        console.log('🎬 Video readyState:', video.readyState);
+        console.log('🎬 Video networkState:', video.networkState);
+        console.log('🎬 Video error:', video.error);
+        
+        if (video.readyState >= 1) {
+          console.log('✅ Video metadata loaded successfully');
+        } else {
+          console.log('⚠️ Video metadata not loaded yet');
+        }
+      };
+      
+      // Test after a short delay
+      setTimeout(testLoad, 2000);
+      
+      // Force a reload after a longer delay if needed
       setTimeout(() => {
         if (video.readyState === 0) {
           console.log('🔄 Forcing video reload...');
           video.load();
         }
-      }, 1000);
+      }, 3000);
       
     } catch (error) {
       console.error('❌ Error setting video source:', error);
@@ -310,14 +327,22 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
             style={{ 
               width: '100%', 
               height: '100%', 
-              objectFit: 'cover',
+              objectFit: 'contain',
               backgroundColor: '#000000',
-              display: 'block'
+              display: 'block',
+              minHeight: '300px',
+              position: 'relative',
+              zIndex: 1
             }}
-            preload="auto"
+            preload="metadata"
             controls={true}
-            muted={false}
+            muted={true}
             playsInline={true}
+            crossOrigin="anonymous"
+            onLoadStart={() => console.log('🎬 Video load started')}
+            onLoadedData={() => console.log('🎬 Video data loaded')}
+            onCanPlay={() => console.log('🎬 Video can play')}
+            onCanPlayThrough={() => console.log('🎬 Video can play through')}
           >
             Your browser does not support the video tag.
           </video>
@@ -463,6 +488,8 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
           <Text>Video Element: {videoRef.current ? 'Exists' : 'Missing'}</Text>
           <Text>Video ReadyState: {videoRef.current?.readyState || 'N/A'}</Text>
           <Text>Video NetworkState: {videoRef.current?.networkState || 'N/A'}</Text>
+          <Text>Video Src: {videoRef.current?.src || 'None'}</Text>
+          <Text>Video CurrentSrc: {videoRef.current?.currentSrc || 'None'}</Text>
         </Box>
       )}
 

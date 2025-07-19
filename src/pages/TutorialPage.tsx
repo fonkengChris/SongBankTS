@@ -27,6 +27,7 @@ import SmartVideoPlayer from "../components/SmartVideoPlayer";
 import VideoDebugger from "../components/VideoDebugger";
 import VideoTestPlayer from "../components/VideoTestPlayer";
 import SimpleVideoTest from "../components/SimpleVideoTest";
+import VideoFormatTest from "../components/VideoFormatTest";
 
 const TutorialPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -143,6 +144,13 @@ const TutorialPage = () => {
                   {/* Simple Video Test */}
                   {process.env.NODE_ENV === 'development' && (
                     <SimpleVideoTest
+                      videoUrl={selectedVideo.url}
+                    />
+                  )}
+
+                  {/* Video Format Test */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <VideoFormatTest
                       videoUrl={selectedVideo.url}
                     />
                   )}
