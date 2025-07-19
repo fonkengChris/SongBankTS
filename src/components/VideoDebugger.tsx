@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -14,8 +14,9 @@ import {
   Badge,
   Divider,
   Icon,
+  AspectRatio,
 } from "@chakra-ui/react";
-import { FaPlay, FaDownload, FaExternalLinkAlt, FaInfo } from "react-icons/fa";
+import { FaPlay, FaDownload, FaExternalLinkAlt, FaInfo, FaVideo } from "react-icons/fa";
 
 interface VideoDebuggerProps {
   videoUrl: string;
@@ -26,6 +27,9 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
   const [testResult, setTestResult] = useState<string>("");
   const [isTesting, setIsTesting] = useState(false);
   const [detailedInfo, setDetailedInfo] = useState<any>(null);
+  const [videoTestResult, setVideoTestResult] = useState<string>("");
+  const [isVideoTesting, setIsVideoTesting] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const testVideoUrl = async () => {
     setIsTesting(true);
@@ -57,6 +61,50 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
       setDetailedInfo({ error: error.message, stack: error.stack });
     } finally {
       setIsTesting(false);
+    }
+  };
+
+  const testVideoPlayback = async () => {
+    setIsVideoTesting(true);
+    setVideoTestResult("");
+
+    const video = videoRef.current;
+    if (!video) {
+      setVideoTestResult("❌ Video element not found");
+      setIsVideoTesting(false);
+      return;
+    }
+
+    try {
+      // Set video source
+      video.src = videoUrl;
+      video.load();
+
+      // Wait for video to load
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error("Video loading timeout"));
+        }, 10000);
+
+        const handleLoadedMetadata = () => {
+          clearTimeout(timeout);
+          resolve(true);
+        };
+
+        const handleError = () => {
+          clearTimeout(timeout);
+          reject(new Error("Video failed to load"));
+        };
+
+        video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true });
+        video.addEventListener('error', handleError, { once: true });
+      });
+
+      setVideoTestResult(`✅ Video loaded successfully - Duration: ${video.duration.toFixed(2)}s`);
+    } catch (error: any) {
+      setVideoTestResult(`❌ Video test failed: ${error.message}`);
+    } finally {
+      setIsVideoTesting(false);
     }
   };
 
@@ -122,6 +170,17 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           
           <Button
             size="sm"
+            colorScheme="green"
+            onClick={testVideoPlayback}
+            isLoading={isVideoTesting}
+            loadingText="Testing..."
+            leftIcon={<FaVideo />}
+          >
+            Test Video
+          </Button>
+          
+          <Button
+            size="sm"
             variant="outline"
             onClick={handleDownload}
             leftIcon={<FaDownload />}
@@ -143,8 +202,18 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           <Alert status={testResult.includes("✅") ? "success" : "error"} borderRadius="md">
             <AlertIcon />
             <Box>
-              <AlertTitle>Test Result</AlertTitle>
+              <AlertTitle>URL Test Result</AlertTitle>
               <AlertDescription>{testResult}</AlertDescription>
+            </Box>
+          </Alert>
+        )}
+
+        {videoTestResult && (
+          <Alert status={videoTestResult.includes("✅") ? "success" : "error"} borderRadius="md">
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Video Test Result</AlertTitle>
+              <AlertDescription>{videoTestResult}</AlertDescription>
             </Box>
           </Alert>
         )}
@@ -158,6 +227,11 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           </Box>
         )}
 
+        {/* Hidden video element for testing */}
+        <Box display="none">
+          <video ref={videoRef} />
+        </Box>
+
         <Divider />
 
         <VStack align="start" spacing={2}>
@@ -166,7 +240,7 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
             • If URL test fails, check if the video file exists in S3
           </Text>
           <Text fontSize="xs" color="gray.600">
-            • If video doesn't play, check browser console for CSP errors
+            • If video test fails, the file might be corrupted or not a valid MP4
           </Text>
           <Text fontSize="xs" color="gray.600">
             • Try downloading the video to test if it's accessible

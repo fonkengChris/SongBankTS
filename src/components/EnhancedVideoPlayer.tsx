@@ -16,8 +16,6 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaDownload, FaExternalLinkAlt } from "react-icons/fa";
-import videojs from "video.js";
-import "video.js/dist/video-js.css";
 
 interface EnhancedVideoPlayerProps {
   videoUrl: string;
@@ -33,89 +31,131 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
   onError,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const playerRef = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showControls, setShowControls] = useState(true);
   const toast = useToast();
 
   const isMP4 = videoUrl.toLowerCase().endsWith('.mp4');
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-    // Initialize video.js player
-    const player = videojs(videoRef.current, {
-      controls: true,
-      fluid: true,
-      responsive: true,
-      poster: thumbnailUrl,
-      sources: [{
-        src: videoUrl,
-        type: 'video/mp4'
-      }],
-      html5: {
-        vhs: {
-          overrideNative: true
-        },
-        nativeAudioTracks: false,
-        nativeVideoTracks: false
-      }
-    });
-
-    playerRef.current = player;
-
-    // Event listeners
-    player.on('loadstart', () => {
-      setIsLoading(true);
+    const handleLoadedMetadata = () => {
+      setDuration(video.duration);
+      setIsLoading(false);
       setError(null);
-    });
+    };
 
-    player.on('canplay', () => {
-      setIsLoading(false);
-      setIsPlaying(false);
-    });
+    const handleTimeUpdate = () => {
+      setCurrentTime(video.currentTime);
+    };
 
-    player.on('play', () => {
-      setIsPlaying(true);
-    });
-
-    player.on('pause', () => {
-      setIsPlaying(false);
-    });
-
-    player.on('ended', () => {
-      setIsPlaying(false);
-    });
-
-    player.on('error', (err: any) => {
-      console.error('Video.js error:', err);
+    const handleError = (e: Event) => {
+      console.error('Video error:', e);
       setIsLoading(false);
       
-      let errorMessage = "Error loading video";
+      let errorMessage = "Error loading video. Please check the video URL and format.";
       
-      if (err.code === 4) {
-        errorMessage = "Video format not supported or CSP violation. Please ensure the video is in MP4 format and accessible.";
-      } else if (err.code === 3) {
-        errorMessage = "Network error or CSP violation. Please check your connection and Content Security Policy.";
-      } else if (err.code === 2) {
-        errorMessage = "Network error. The video URL may be blocked by CORS or CSP policies.";
-      } else if (err.code === 1) {
-        errorMessage = "Video loading aborted. This may be due to CSP restrictions.";
+      // Check if it's a network error
+      if (video.networkState === 3) {
+        errorMessage = "Network error. The video may not be accessible or may be blocked.";
+      } else if (video.readyState === 0) {
+        errorMessage = "Video not loaded. Please check the video URL.";
       }
       
       setError(errorMessage);
       onError?.(errorMessage);
-    });
-
-    // Cleanup
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.dispose();
-        playerRef.current = null;
-      }
     };
-  }, [videoUrl, thumbnailUrl, onError]);
+
+    const handleCanPlay = () => {
+      setIsLoading(false);
+      setError(null);
+    };
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+    };
+
+    // Add event listeners
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('error', handleError);
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
+    video.addEventListener('ended', handleEnded);
+
+    // Set video source
+    video.src = videoUrl;
+    video.load();
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+      video.removeEventListener('error', handleError);
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('ended', handleEnded);
+    };
+  }, [videoUrl, onError]);
+
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+    } else {
+      video.play().catch((err) => {
+        console.error('Error playing video:', err);
+        toast({
+          title: "Error playing video",
+          description: "This video may not be supported in your browser.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
+    }
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const newTime = parseFloat(e.target.value);
+    video.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   const handleDownload = () => {
     const link = document.createElement('a');
@@ -128,25 +168,6 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
 
   const handleOpenInNewTab = () => {
     window.open(videoUrl, '_blank');
-  };
-
-  const togglePlay = () => {
-    if (playerRef.current) {
-      if (isPlaying) {
-        playerRef.current.pause();
-      } else {
-        playerRef.current.play().catch((err: any) => {
-          console.error('Error playing video:', err);
-          toast({
-            title: "Error playing video",
-            description: "This video may not be supported in your browser or may be blocked by CSP.",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          });
-        });
-      }
-    }
   };
 
   // If there's an error or not MP4, show fallback
@@ -220,20 +241,17 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
   }
 
   return (
-    <Box position="relative">
+    <Box position="relative" onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
       <AspectRatio ratio={16 / 9}>
-        <div data-vjs-player>
-          <video
-            ref={videoRef}
-            className="video-js vjs-default-skin vjs-big-play-centered"
-            style={{ width: '100%', height: '100%' }}
-          >
-            <p className="vjs-no-js">
-              To view this video please enable JavaScript, and consider upgrading to a
-              web browser that supports HTML5 video.
-            </p>
-          </video>
-        </div>
+        <video
+          ref={videoRef}
+          poster={thumbnailUrl}
+          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          preload="metadata"
+          controls={false}
+        >
+          Your browser does not support the video tag.
+        </video>
       </AspectRatio>
 
       {/* Loading overlay */}
@@ -257,58 +275,91 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
         </Box>
       )}
 
+      {/* Video controls */}
+      {showControls && (
+        <Box
+          position="absolute"
+          bottom={0}
+          left={0}
+          right={0}
+          bg="blackAlpha.800"
+          p={4}
+          color="white"
+          zIndex={5}
+        >
+          <VStack spacing={2}>
+            {/* Progress bar */}
+            <input
+              type="range"
+              min={0}
+              max={duration || 0}
+              value={currentTime}
+              onChange={handleSeek}
+              style={{
+                width: '100%',
+                height: '4px',
+                borderRadius: '2px',
+                background: 'rgba(255, 255, 255, 0.3)',
+                outline: 'none',
+                cursor: 'pointer',
+              }}
+            />
+
+            {/* Control buttons */}
+            <HStack justify="space-between" w="100%">
+              <HStack spacing={2}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="white"
+                  onClick={togglePlay}
+                  _hover={{ bg: 'whiteAlpha.200' }}
+                >
+                  <Icon as={isPlaying ? FaPause : FaPlay} />
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="white"
+                  onClick={toggleMute}
+                  _hover={{ bg: 'whiteAlpha.200' }}
+                >
+                  <Icon as={isMuted ? FaVolumeMute : FaVolumeUp} />
+                </Button>
+
+                <Text fontSize="sm">
+                  {formatTime(currentTime)} / {formatTime(duration)}
+                </Text>
+              </HStack>
+
+              <HStack spacing={2}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="white"
+                  onClick={handleDownload}
+                  _hover={{ bg: 'whiteAlpha.200' }}
+                  leftIcon={<FaDownload />}
+                >
+                  Download
+                </Button>
+              </HStack>
+            </HStack>
+          </VStack>
+        </Box>
+      )}
+
       {/* MP4 Format Notice */}
-      <Alert status="info" borderRadius="md" mt={4}>
+      <Alert status="success" borderRadius="md" mt={4}>
         <AlertIcon />
         <Box>
-          <AlertTitle>MP4 Video</AlertTitle>
+          <AlertTitle>MP4 Video Ready</AlertTitle>
           <AlertDescription>
-            Playing MP4 video with enhanced controls and browser compatibility.
+            Your MP4 video is ready for playback with native HTML5 controls.
           </AlertDescription>
         </Box>
       </Alert>
-
-      {/* Custom Controls Overlay (optional) */}
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-        bg="blackAlpha.800"
-        p={4}
-        color="white"
-        opacity={0}
-        _hover={{ opacity: 1 }}
-        transition="opacity 0.3s"
-        zIndex={5}
-      >
-        <HStack justify="space-between">
-          <HStack spacing={2}>
-            <Button
-              size="sm"
-              variant="ghost"
-              color="white"
-              onClick={togglePlay}
-              _hover={{ bg: 'whiteAlpha.200' }}
-            >
-              <Icon as={isPlaying ? FaPause : FaPlay} />
-            </Button>
-          </HStack>
-
-          <HStack spacing={2}>
-            <Button
-              size="sm"
-              variant="ghost"
-              color="white"
-              onClick={handleDownload}
-              _hover={{ bg: 'whiteAlpha.200' }}
-              leftIcon={<FaDownload />}
-            >
-              Download
-            </Button>
-          </HStack>
-        </HStack>
-      </Box>
     </Box>
   );
 };
