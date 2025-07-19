@@ -331,10 +331,10 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
               backgroundColor: '#000000',
               display: 'block',
               minHeight: '300px',
-              position: 'relative',
-              zIndex: 1,
-              transform: 'translateZ(0)',
-              backfaceVisibility: 'hidden'
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 1
             }}
             preload="auto"
             controls={true}
@@ -395,6 +395,22 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
             zIndex={10}
           >
             Video Rendering Test
+          </Box>
+          
+          {/* Video element info */}
+          <Box 
+            position="absolute" 
+            bottom={2} 
+            right={2} 
+            bg="orange.500" 
+            color="white" 
+            px={2} 
+            py={1} 
+            borderRadius="sm" 
+            fontSize="xs"
+            zIndex={10}
+          >
+            Element: {videoRef.current ? 'Exists' : 'Missing'}
           </Box>
         </Box>
       </Box>
