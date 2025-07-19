@@ -14,6 +14,7 @@ import {
 import { FaDownload, FaExternalLinkAlt } from "react-icons/fa";
 import EnhancedVideoPlayer from "./EnhancedVideoPlayer";
 import ChromeVideoPlayer from "./ChromeVideoPlayer";
+import HardwareVideoPlayer from "./HardwareVideoPlayer";
 
 interface SmartVideoPlayerProps {
   videoId: string;
@@ -36,6 +37,11 @@ const SmartVideoPlayer: React.FC<SmartVideoPlayerProps> = ({
   const isChrome = () => {
     const userAgent = navigator.userAgent;
     return userAgent.includes('Chrome') && !userAgent.includes('Edg');
+  };
+
+  // Detect if it's a desktop machine
+  const isDesktop = () => {
+    return !navigator.userAgent.includes('Mobile') && !navigator.userAgent.includes('Android') && !navigator.userAgent.includes('iPhone');
   };
 
   const handleDownload = () => {
@@ -108,7 +114,14 @@ const SmartVideoPlayer: React.FC<SmartVideoPlayerProps> = ({
         </Box>
       </Alert>
       
-      {isChrome() ? (
+      {isDesktop() ? (
+        <HardwareVideoPlayer
+          videoUrl={videoUrl}
+          title={title}
+          thumbnailUrl={thumbnailUrl}
+          onError={onError}
+        />
+      ) : isChrome() ? (
         <ChromeVideoPlayer
           videoUrl={videoUrl}
           title={title}
