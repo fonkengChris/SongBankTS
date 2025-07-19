@@ -25,6 +25,7 @@ import useVideos from "../hooks/useVideos";
 import Video from "../entities/Video";
 import SmartVideoPlayer from "../components/SmartVideoPlayer";
 import VideoDebugger from "../components/VideoDebugger";
+import VideoTestPlayer from "../components/VideoTestPlayer";
 
 const TutorialPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -125,6 +126,14 @@ const TutorialPage = () => {
                   {/* Video Debugger for development */}
                   {process.env.NODE_ENV === 'development' && (
                     <VideoDebugger
+                      videoUrl={selectedVideo.url}
+                      title={selectedVideo.title}
+                    />
+                  )}
+
+                  {/* Video Test Player for debugging */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <VideoTestPlayer
                       videoUrl={selectedVideo.url}
                       title={selectedVideo.title}
                     />

@@ -292,8 +292,7 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
           poster={thumbnailUrl}
           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           preload="metadata"
-          controls={false}
-          crossOrigin="anonymous"
+          controls={true}
         >
           Your browser does not support the video tag.
         </video>
@@ -320,8 +319,9 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
         </Box>
       )}
 
+      {/* Temporarily disabled custom controls to test native controls */}
       {/* Video controls */}
-      {showControls && (
+      {false && showControls && (
         <Box
           position="absolute"
           bottom={0}
