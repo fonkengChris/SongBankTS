@@ -334,13 +334,22 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
               position: 'absolute',
               top: 0,
               left: 0,
-              zIndex: 1
+              zIndex: 1,
+              transform: 'translateZ(0)',
+              willChange: 'transform',
+              backfaceVisibility: 'hidden'
             }}
             preload="auto"
             controls={true}
             muted={false}
             playsInline={true}
             crossOrigin="anonymous"
+            {...{
+              'webkit-playsinline': 'true',
+              'x5-playsinline': 'true',
+              'x5-video-player-type': 'h5',
+              'x5-video-player-fullscreen': 'false'
+            }}
             onLoadStart={() => console.log('🎬 Video load started')}
             onLoadedData={() => console.log('🎬 Video data loaded')}
             onCanPlay={() => console.log('🎬 Video can play')}
@@ -381,37 +390,7 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
             Test Pattern
           </Box>
           
-          {/* Video rendering test */}
-          <Box 
-            position="absolute" 
-            bottom={2} 
-            left={2} 
-            bg="green.500" 
-            color="white" 
-            px={2} 
-            py={1} 
-            borderRadius="sm" 
-            fontSize="xs"
-            zIndex={10}
-          >
-            Video Rendering Test
-          </Box>
-          
-          {/* Video element info */}
-          <Box 
-            position="absolute" 
-            bottom={2} 
-            right={2} 
-            bg="orange.500" 
-            color="white" 
-            px={2} 
-            py={1} 
-            borderRadius="sm" 
-            fontSize="xs"
-            zIndex={10}
-          >
-            Element: {videoRef.current ? 'Exists' : 'Missing'}
-          </Box>
+
         </Box>
       </Box>
 

@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { FaDownload, FaExternalLinkAlt } from "react-icons/fa";
 import EnhancedVideoPlayer from "./EnhancedVideoPlayer";
+import ChromeVideoPlayer from "./ChromeVideoPlayer";
 
 interface SmartVideoPlayerProps {
   videoId: string;
@@ -30,6 +31,12 @@ const SmartVideoPlayer: React.FC<SmartVideoPlayerProps> = ({
   onError,
 }) => {
   const isMP4 = videoUrl.toLowerCase().endsWith('.mp4');
+  
+  // Detect Chrome browser
+  const isChrome = () => {
+    const userAgent = navigator.userAgent;
+    return userAgent.includes('Chrome') && !userAgent.includes('Edg');
+  };
 
   const handleDownload = () => {
     const link = document.createElement('a');
@@ -88,7 +95,7 @@ const SmartVideoPlayer: React.FC<SmartVideoPlayerProps> = ({
     );
   }
 
-  // For MP4 videos, use the enhanced player
+  // For MP4 videos, use the appropriate player based on browser
   return (
     <VStack spacing={4} align="stretch">
       <Alert status="success" borderRadius="md">
@@ -101,12 +108,21 @@ const SmartVideoPlayer: React.FC<SmartVideoPlayerProps> = ({
         </Box>
       </Alert>
       
-      <EnhancedVideoPlayer
-        videoUrl={videoUrl}
-        title={title}
-        thumbnailUrl={thumbnailUrl}
-        onError={onError}
-      />
+      {isChrome() ? (
+        <ChromeVideoPlayer
+          videoUrl={videoUrl}
+          title={title}
+          thumbnailUrl={thumbnailUrl}
+          onError={onError}
+        />
+      ) : (
+        <EnhancedVideoPlayer
+          videoUrl={videoUrl}
+          title={title}
+          thumbnailUrl={thumbnailUrl}
+          onError={onError}
+        />
+      )}
     </VStack>
   );
 };

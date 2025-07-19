@@ -25,11 +25,6 @@ import useVideos from "../hooks/useVideos";
 import Video from "../entities/Video";
 import SmartVideoPlayer from "../components/SmartVideoPlayer";
 import VideoDebugger from "../components/VideoDebugger";
-import VideoTestPlayer from "../components/VideoTestPlayer";
-import SimpleVideoTest from "../components/SimpleVideoTest";
-import VideoFormatTest from "../components/VideoFormatTest";
-import DirectVideoTest from "../components/DirectVideoTest";
-import VideoRenderingTest from "../components/VideoRenderingTest";
 
 const TutorialPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -132,42 +127,6 @@ const TutorialPage = () => {
                     <VideoDebugger
                       videoUrl={selectedVideo.url}
                       title={selectedVideo.title}
-                    />
-                  )}
-
-                  {/* Video Test Player for debugging */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <VideoTestPlayer
-                      videoUrl={selectedVideo.url}
-                      title={selectedVideo.title}
-                    />
-                  )}
-
-                  {/* Simple Video Test */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <SimpleVideoTest
-                      videoUrl={selectedVideo.url}
-                    />
-                  )}
-
-                  {/* Video Format Test */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <VideoFormatTest
-                      videoUrl={selectedVideo.url}
-                    />
-                  )}
-
-                  {/* Direct Video Test */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <DirectVideoTest
-                      videoUrl={selectedVideo.url}
-                    />
-                  )}
-
-                  {/* Video Rendering Test */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <VideoRenderingTest
-                      videoUrl={selectedVideo.url}
                     />
                   )}
 
