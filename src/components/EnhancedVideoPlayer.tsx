@@ -95,9 +95,13 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
       let errorMessage = "Error loading video";
       
       if (err.code === 4) {
-        errorMessage = "Video format not supported. Please ensure the video is in MP4 format.";
+        errorMessage = "Video format not supported or CSP violation. Please ensure the video is in MP4 format and accessible.";
       } else if (err.code === 3) {
-        errorMessage = "Network error. Please check your connection and try again.";
+        errorMessage = "Network error or CSP violation. Please check your connection and Content Security Policy.";
+      } else if (err.code === 2) {
+        errorMessage = "Network error. The video URL may be blocked by CORS or CSP policies.";
+      } else if (err.code === 1) {
+        errorMessage = "Video loading aborted. This may be due to CSP restrictions.";
       }
       
       setError(errorMessage);
@@ -135,7 +139,7 @@ const EnhancedVideoPlayer: React.FC<EnhancedVideoPlayerProps> = ({
           console.error('Error playing video:', err);
           toast({
             title: "Error playing video",
-            description: "This video may not be supported in your browser.",
+            description: "This video may not be supported in your browser or may be blocked by CSP.",
             status: "error",
             duration: 5000,
             isClosable: true,

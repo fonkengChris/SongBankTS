@@ -11,9 +11,11 @@ import {
   VStack,
   Icon,
   Flex,
+  Center,
 } from "@chakra-ui/react";
-import { FaPlay, FaClock } from "react-icons/fa";
+import { FaPlay, FaClock, FaVideo } from "react-icons/fa";
 import Video from "../entities/Video";
+import { useState } from "react";
 
 interface Props {
   video: Video;
@@ -21,6 +23,8 @@ interface Props {
 }
 
 const VideoCard = ({ video, onClick }: Props) => {
+  const [imageError, setImageError] = useState(false);
+
   const formatDuration = (seconds?: number) => {
     if (!seconds) return "";
     const minutes = Math.floor(seconds / 60);
@@ -39,6 +43,10 @@ const VideoCard = ({ video, onClick }: Props) => {
     }
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
     <Card
       maxW="sm"
@@ -51,13 +59,28 @@ const VideoCard = ({ video, onClick }: Props) => {
       }}
     >
       <Box position="relative">
-        <Image
-          src={video.thumbnailUrl || "/no-image-placeholder.jpg"}
-          alt={video.title}
-          height="200px"
-          width="100%"
-          objectFit="cover"
-        />
+        {video.thumbnailUrl && !imageError ? (
+          <Image
+            src={video.thumbnailUrl}
+            alt={video.title}
+            height="200px"
+            width="100%"
+            objectFit="cover"
+            onError={handleImageError}
+          />
+        ) : (
+          <Center
+            height="200px"
+            width="100%"
+            bg="gray.700"
+            color="gray.400"
+            flexDirection="column"
+            gap={2}
+          >
+            <Icon as={FaVideo} boxSize={8} />
+            <Text fontSize="sm">No Thumbnail</Text>
+          </Center>
+        )}
         <Box
           position="absolute"
           top="50%"

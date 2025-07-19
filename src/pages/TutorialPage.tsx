@@ -24,6 +24,7 @@ import VideoGrid from "../components/VideoGrid";
 import useVideos from "../hooks/useVideos";
 import Video from "../entities/Video";
 import SmartVideoPlayer from "../components/SmartVideoPlayer";
+import VideoDebugger from "../components/VideoDebugger";
 
 const TutorialPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -120,6 +121,14 @@ const TutorialPage = () => {
                     thumbnailUrl={selectedVideo.thumbnailUrl}
                     onError={handleVideoError}
                   />
+
+                  {/* Video Debugger for development */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <VideoDebugger
+                      videoUrl={selectedVideo.url}
+                      title={selectedVideo.title}
+                    />
+                  )}
 
                   <VStack align="start" spacing={3}>
                     <Text fontSize="lg" fontWeight="semibold">
