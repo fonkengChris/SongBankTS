@@ -25,6 +25,7 @@ import {
   HStack,
   VStack,
   Spinner,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useCategories from "../hooks/useCategories";
@@ -42,6 +43,12 @@ const CategoriesManagementPage = () => {
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  // Color mode values for better visibility
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   if (isLoading) {
     return (
@@ -87,13 +94,13 @@ const CategoriesManagementPage = () => {
 
   // Mobile card component
   const CategoryCard = ({ category }: { category: Category }) => (
-    <Card shadow="sm" border="1px" borderColor="gray.200">
+    <Card shadow="sm" border="1px" borderColor={borderColor} bg={cardBg}>
       <CardBody>
         <VStack align="stretch" spacing={4}>
           <HStack justify="space-between">
             <HStack spacing={3}>
               <FiFolder size={20} color="#3182CE" />
-              <Text fontWeight="bold" fontSize="lg" color="blue.600">
+              <Text fontWeight="bold" fontSize="lg" color="blue.500">
                 {category.title}
               </Text>
             </HStack>
@@ -128,11 +135,13 @@ const CategoriesManagementPage = () => {
     <Box>
       {/* Header */}
       <Box
-        bg="white"
+        bg={cardBg}
         shadow="sm"
         p={{ base: 4, md: 6 }}
         mb={4}
         borderRadius="lg"
+        border="1px"
+        borderColor={borderColor}
       >
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -140,7 +149,7 @@ const CategoriesManagementPage = () => {
           align={{ base: "stretch", sm: "center" }}
           gap={4}
         >
-          <Heading color="blue.600" size="lg">
+          <Heading color="blue.500" size="lg">
             Categories Management
           </Heading>
           <Button
@@ -155,7 +164,7 @@ const CategoriesManagementPage = () => {
       </Box>
 
       {/* Content */}
-      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+      <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
         {isMobile ? (
           // Mobile layout with cards
           <Box p={4}>
@@ -166,7 +175,7 @@ const CategoriesManagementPage = () => {
                 ))
               ) : (
                 <Box textAlign="center" py={8}>
-                  <Text color="gray.500">No categories found.</Text>
+                  <Text color={secondaryTextColor}>No categories found.</Text>
                 </Box>
               )}
             </SimpleGrid>
@@ -177,20 +186,20 @@ const CategoriesManagementPage = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th color="blue.600">
+                  <Th color="blue.500">
                     <HStack spacing={2}>
                       <FiFolder />
                       <Text>Title</Text>
                     </HStack>
                   </Th>
-                  <Th color="blue.600">Actions</Th>
+                  <Th color="blue.500">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {categories && categories.length > 0 ? (
                   categories.map((category) => (
                     <Tr key={category._id}>
-                      <Td color="blue.600" fontWeight="medium">
+                      <Td color="blue.500" fontWeight="medium">
                         {category.title}
                       </Td>
                       <Td>
@@ -219,7 +228,7 @@ const CategoriesManagementPage = () => {
                 ) : (
                   <Tr>
                     <Td colSpan={2} textAlign="center" py={8}>
-                      <Text color="gray.500">No categories found.</Text>
+                      <Text color={secondaryTextColor}>No categories found.</Text>
                     </Td>
                   </Tr>
                 )}
@@ -229,6 +238,7 @@ const CategoriesManagementPage = () => {
         )}
       </Box>
 
+      {/* Delete Confirmation Dialog */}
       <AlertDialog
         isOpen={isDeleteDialogOpen}
         leastDestructiveRef={cancelRef}
@@ -245,10 +255,7 @@ const CategoriesManagementPage = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={() => setIsDeleteDialogOpen(false)}
-              >
+              <Button ref={cancelRef} onClick={() => setIsDeleteDialogOpen(false)}>
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>

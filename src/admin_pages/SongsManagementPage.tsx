@@ -22,6 +22,7 @@ import {
   VStack,
   Stack,
   Divider,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useAllSongs } from "../hooks/useSongs";
@@ -39,6 +40,12 @@ const SongsManagementPage = () => {
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
   const isTablet = useBreakpointValue({ base: false, md: true, lg: false });
+
+  // Color mode values for better visibility
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   if (isLoading) {
     return (
@@ -87,14 +94,14 @@ const SongsManagementPage = () => {
 
   // Mobile card component
   const SongCard = ({ song }: { song: Song }) => (
-    <Card shadow="sm" border="1px" borderColor="gray.200">
+    <Card shadow="sm" border="1px" borderColor={borderColor} bg={cardBg}>
       <CardBody>
         <VStack align="stretch" spacing={4}>
           <VStack align="start" spacing={2}>
-            <Text fontWeight="bold" fontSize="lg" color="blue.600">
+            <Text fontWeight="bold" fontSize="lg" color="blue.500">
               {String(song.title || "N/A")}
             </Text>
-            <Text fontSize="sm" color="gray.600">
+            <Text fontSize="sm" color={secondaryTextColor}>
               by {String(song.authorName || "N/A")}
             </Text>
           </VStack>
@@ -113,26 +120,26 @@ const SongsManagementPage = () => {
 
           <Stack spacing={2}>
             <HStack justify="space-between">
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color={secondaryTextColor}>
                 Views:
               </Text>
-              <Text fontSize="sm" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="medium" color={textColor}>
                 {Number(song.views) || 0}
               </Text>
             </HStack>
             <HStack justify="space-between">
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color={secondaryTextColor}>
                 Likes:
               </Text>
-              <Text fontSize="sm" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="medium" color={textColor}>
                 {Number(song.likesCount) || 0}
               </Text>
             </HStack>
             <HStack justify="space-between">
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color={secondaryTextColor}>
                 Popularity:
               </Text>
-              <Text fontSize="sm" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="medium" color={textColor}>
                 {Number(song.metacritic) || 0}
               </Text>
             </HStack>
@@ -170,11 +177,13 @@ const SongsManagementPage = () => {
     <Box>
       {/* Header */}
       <Box
-        bg="white"
+        bg={cardBg}
         shadow="sm"
         p={{ base: 4, md: 6 }}
         mb={4}
         borderRadius="lg"
+        border="1px"
+        borderColor={borderColor}
       >
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -182,7 +191,7 @@ const SongsManagementPage = () => {
           align={{ base: "stretch", sm: "center" }}
           gap={4}
         >
-          <Heading color="blue.600" size="lg">
+          <Heading color="blue.500" size="lg">
             Songs Management
           </Heading>
           <Button
@@ -197,16 +206,18 @@ const SongsManagementPage = () => {
       </Box>
 
       {/* Content */}
-      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+      <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
         {isMobile ? (
           // Mobile layout with cards
           <Box p={4}>
             <SimpleGrid columns={1} spacing={4}>
-              {Array.isArray(songs) && songs.length > 0 ? (
-                songs.map((song) => <SongCard key={song._id} song={song} />)
+              {songs && songs.length > 0 ? (
+                songs.map((song) => (
+                  <SongCard key={song._id} song={song} />
+                ))
               ) : (
                 <Box textAlign="center" py={8}>
-                  <Text color="gray.500">No songs found.</Text>
+                  <Text color={secondaryTextColor}>No songs found.</Text>
                 </Box>
               )}
             </SimpleGrid>
@@ -217,57 +228,36 @@ const SongsManagementPage = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th color="blue.600">Title</Th>
-                  <Th color="blue.600">Author</Th>
-                  <Th color="blue.600">Category</Th>
-                  <Th color="blue.600">Language</Th>
-                  <Th color="blue.600">Price</Th>
-                  <Th
-                    color="blue.600"
-                    display={{ base: "none", xl: "table-cell" }}
-                  >
-                    Description
-                  </Th>
-                  <Th
-                    color="blue.600"
-                    display={{ base: "none", xl: "table-cell" }}
-                  >
-                    Lyrics
-                  </Th>
-                  <Th color="blue.600">
-                    <HStack spacing={1}>
-                      <FiEye />
-                      <Text>Views</Text>
-                    </HStack>
-                  </Th>
-                  <Th color="blue.600">
-                    <HStack spacing={1}>
-                      <FiHeart />
-                      <Text>Likes</Text>
-                    </HStack>
-                  </Th>
-                  <Th color="blue.600">Popularity</Th>
-                  <Th color="blue.600">Actions</Th>
+                  <Th color="blue.500">Title</Th>
+                  <Th color="blue.500">Author</Th>
+                  <Th color="blue.500">Category</Th>
+                  <Th color="blue.500">Language</Th>
+                  <Th color="blue.500">Price</Th>
+                  <Th color="blue.500">Views</Th>
+                  <Th color="blue.500">Likes</Th>
+                  <Th color="blue.500">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {Array.isArray(songs) && songs.length > 0 ? (
+                {songs && songs.length > 0 ? (
                   songs.map((song) => (
                     <Tr key={song._id}>
-                      <Td color="blue.600" fontWeight="medium">
-                        {String(song.title || "N/A")}
+                      <Td>
+                        <Text fontWeight="medium" maxW="200px" noOfLines={2} color="blue.500">
+                          {song.title}
+                        </Text>
                       </Td>
-                      <Td color="blue.600">
-                        {String(song.authorName || "N/A")}
+                      <Td color={secondaryTextColor}>
+                        {song.authorName}
                       </Td>
                       <Td>
                         <Badge colorScheme="blue" variant="subtle">
-                          {String(getNestedValue(song, "category.title"))}
+                          {getNestedValue(song, "category.title")}
                         </Badge>
                       </Td>
                       <Td>
                         <Badge colorScheme="green" variant="subtle">
-                          {String(song.language.name || "N/A")}
+                          {song.language.name}
                         </Badge>
                       </Td>
                       <Td>
@@ -275,30 +265,11 @@ const SongsManagementPage = () => {
                           {song.price ? `$${song.price.toFixed(2)}` : "Free"}
                         </Badge>
                       </Td>
-                      <Td
-                        color="blue.600"
-                        display={{ base: "none", xl: "table-cell" }}
-                      >
-                        {typeof song.description === "string"
-                          ? song.description.substring(0, 30) + "..."
-                          : "N/A"}
-                      </Td>
-                      <Td
-                        color="blue.600"
-                        display={{ base: "none", xl: "table-cell" }}
-                      >
-                        {typeof song.lyrics === "string"
-                          ? song.lyrics.substring(0, 30) + "..."
-                          : "N/A"}
-                      </Td>
-                      <Td color="blue.600" isNumeric>
+                      <Td color={textColor}>
                         {Number(song.views) || 0}
                       </Td>
-                      <Td color="blue.600" isNumeric>
+                      <Td color={textColor}>
                         {Number(song.likesCount) || 0}
-                      </Td>
-                      <Td color="blue.600" isNumeric>
-                        {Number(song.metacritic) || 0}
                       </Td>
                       <Td>
                         <HStack spacing={2}>
@@ -326,8 +297,8 @@ const SongsManagementPage = () => {
                   ))
                 ) : (
                   <Tr>
-                    <Td colSpan={11} textAlign="center" py={8}>
-                      <Text color="gray.500">No songs found.</Text>
+                    <Td colSpan={8} textAlign="center" py={8}>
+                      <Text color={secondaryTextColor}>No songs found.</Text>
                     </Td>
                   </Tr>
                 )}

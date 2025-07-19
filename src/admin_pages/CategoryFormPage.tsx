@@ -10,6 +10,8 @@ import {
   Heading,
   useColorModeValue,
   Flex,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -30,6 +32,14 @@ const CategoryFormPage = () => {
   const apiClient = new APIClient<Category, CategoryFormData>(
     "/api/categories"
   );
+
+  // Color mode values for consistent styling
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const inputBg = useColorModeValue("white", "gray.700");
+  const inputColor = useColorModeValue("gray.800", "gray.100");
+  const inputBorderColor = useColorModeValue("gray.300", "gray.600");
+  const inputFocusBorderColor = useColorModeValue("blue.500", "blue.300");
 
   const {
     register,
@@ -86,54 +96,72 @@ const CategoryFormPage = () => {
   };
 
   return (
-    <Box bg="gray.100" minHeight="100vh" p={4}>
-      <Box bg="white" shadow="md" p={4} mb={4}>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Heading color="blue.400" size="lg">
-            {id ? "Edit Category" : "Create Category"}
-          </Heading>
-        </Flex>
-      </Box>
+    <Box maxW="container.md" mx="auto" py={8} px={6}>
+      <VStack spacing={8} align="stretch">
+        <Heading color="blue.500" fontWeight="bold" textAlign="center">
+          {id ? "Edit Category" : "Create Category"}
+        </Heading>
+        
+        <Card 
+          bg={bgColor} 
+          shadow="md" 
+          border="1px solid" 
+          borderColor={borderColor}
+          borderRadius="lg"
+        >
+          <CardBody p={8}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <VStack spacing={6} align="stretch">
+                <FormControl isInvalid={!!errors.title}>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Category Title</FormLabel>
+                  <Input
+                    {...register("title", { required: "Title is required" })}
+                    placeholder="Enter category title"
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                  />
+                </FormControl>
 
-      <Box maxW="container.md" mx="auto" py={8}>
-        <VStack spacing={8} align="stretch">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <VStack spacing={4}>
-              <FormControl isInvalid={!!errors.title}>
-                <FormLabel color="blue.500">Category Title</FormLabel>
-                <Input
-                  {...register("title", { required: "Title is required" })}
-                  placeholder="Enter category title"
-                  bg={useColorModeValue("white", "gray.700")}
-                  color={useColorModeValue("gray.800", "gray.100")}
-                />
-              </FormControl>
-
-              <Flex gap={4}>
-                <Button
-                  onClick={() => navigate("/admin/category")}
-                  colorScheme="red"
-                  flex={1}
-                  minW="140px"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  colorScheme="blue"
-                  type="submit"
-                  isLoading={
-                    createMutation.isLoading || updateMutation.isLoading
-                  }
-                  flex={1}
-                  minW="140px"
-                >
-                  {id ? "Update Category" : "Create Category"}
-                </Button>
-              </Flex>
-            </VStack>
-          </form>
-        </VStack>
-      </Box>
+                <Flex gap={4} pt={4}>
+                  <Button
+                    onClick={() => navigate("/admin/category")}
+                    colorScheme="red"
+                    flex={1}
+                    minW="140px"
+                    size="lg"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    colorScheme="blue"
+                    type="submit"
+                    isLoading={
+                      createMutation.isLoading || updateMutation.isLoading
+                    }
+                    flex={1}
+                    minW="140px"
+                    size="lg"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    {id ? "Update Category" : "Create Category"}
+                  </Button>
+                </Flex>
+              </VStack>
+            </form>
+          </CardBody>
+        </Card>
+      </VStack>
     </Box>
   );
 };

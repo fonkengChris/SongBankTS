@@ -31,6 +31,7 @@ import {
   SimpleGrid,
   HStack,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink, Navigate } from "react-router-dom";
 import useUsers from "../hooks/useUsers"; // Custom hook to fetch users data
@@ -60,6 +61,12 @@ const UsersManagementPage = () => {
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
   const isTablet = useBreakpointValue({ base: false, md: true, lg: false });
+
+  // Color mode values for better visibility
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   useEffect(() => {
     // Define an async function to fetch users
@@ -107,15 +114,15 @@ const UsersManagementPage = () => {
 
   // Mobile card component
   const UserCard = ({ user }: { user: User }) => (
-    <Card shadow="sm" border="1px" borderColor="gray.200">
+    <Card shadow="sm" border="1px" borderColor={borderColor} bg={cardBg}>
       <CardBody>
         <VStack align="stretch" spacing={3}>
           <HStack justify="space-between">
             <VStack align="start" spacing={1}>
-              <Text fontWeight="bold" fontSize="lg" color="blue.600">
+              <Text fontWeight="bold" fontSize="lg" color="blue.500">
                 {user.name}
               </Text>
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color={secondaryTextColor}>
                 {user.email}
               </Text>
             </VStack>
@@ -127,7 +134,7 @@ const UsersManagementPage = () => {
             </Badge>
           </HStack>
 
-          <Text fontSize="xs" color="gray.500" fontFamily="mono">
+          <Text fontSize="xs" color={secondaryTextColor} fontFamily="mono">
             ID: {user._id.substring(0, 8)}...
           </Text>
 
@@ -160,11 +167,13 @@ const UsersManagementPage = () => {
     <Box>
       {/* Header */}
       <Box
-        bg="white"
+        bg={cardBg}
         shadow="sm"
         p={{ base: 4, md: 6 }}
         mb={4}
         borderRadius="lg"
+        border="1px"
+        borderColor={borderColor}
       >
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -172,7 +181,7 @@ const UsersManagementPage = () => {
           align={{ base: "stretch", sm: "center" }}
           gap={4}
         >
-          <Heading color="blue.600" size="lg">
+          <Heading color="blue.500" size="lg">
             Users Management
           </Heading>
           <Button
@@ -187,7 +196,7 @@ const UsersManagementPage = () => {
       </Box>
 
       {/* Content */}
-      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+      <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
         {isMobile ? (
           // Mobile layout with cards
           <Box p={4}>
@@ -196,7 +205,7 @@ const UsersManagementPage = () => {
                 users.map((user) => <UserCard key={user._id} user={user} />)
               ) : (
                 <Box textAlign="center" py={8}>
-                  <Text color="gray.500">No users found.</Text>
+                  <Text color={secondaryTextColor}>No users found.</Text>
                 </Box>
               )}
             </SimpleGrid>
@@ -207,52 +216,40 @@ const UsersManagementPage = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th color="blue.600">Name</Th>
-                  <Th color="blue.600">Email</Th>
-                  <Th color="blue.600">Role</Th>
-                  <Th
-                    color="blue.600"
-                    display={{ base: "none", lg: "table-cell" }}
-                  >
-                    ID
-                  </Th>
-                  <Th color="blue.600">Actions</Th>
+                  <Th color="blue.500">Name</Th>
+                  <Th color="blue.500">Email</Th>
+                  <Th color="blue.500">Role</Th>
+                  <Th color="blue.500">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {users?.length > 0 ? (
                   users.map((user) => (
                     <Tr key={user._id}>
-                      <Td color="blue.600" fontWeight="medium">
-                        {user.name}
+                      <Td>
+                        <Text fontWeight="medium" color="blue.500">
+                          {user.name}
+                        </Text>
                       </Td>
-                      <Td color="blue.600">{user.email}</Td>
+                      <Td color={secondaryTextColor}>
+                        {user.email}
+                      </Td>
                       <Td>
                         <Badge
-                          colorScheme={
-                            user.role === "superAdmin" ? "red" : "blue"
-                          }
+                          colorScheme={user.role === "superAdmin" ? "red" : "blue"}
                           variant="subtle"
                         >
                           {user.role}
                         </Badge>
                       </Td>
-                      <Td
-                        color="blue.600"
-                        display={{ base: "none", lg: "table-cell" }}
-                      >
-                        <Text fontSize="xs" fontFamily="mono">
-                          {user._id.substring(0, 8)}...
-                        </Text>
-                      </Td>
                       <Td>
                         <HStack spacing={2}>
                           <Button
+                            as={RouterLink}
+                            to={`/admin/users/edit/${user._id}`}
                             colorScheme="teal"
                             size="sm"
                             leftIcon={<FiEdit />}
-                            as={RouterLink}
-                            to={`/admin/users/edit/${user._id}`}
                           >
                             Edit
                           </Button>
@@ -270,8 +267,8 @@ const UsersManagementPage = () => {
                   ))
                 ) : (
                   <Tr>
-                    <Td colSpan={5} textAlign="center" py={8}>
-                      <Text color="gray.500">No users found.</Text>
+                    <Td colSpan={4} textAlign="center" py={8}>
+                      <Text color={secondaryTextColor}>No users found.</Text>
                     </Td>
                   </Tr>
                 )}
@@ -281,6 +278,7 @@ const UsersManagementPage = () => {
         )}
       </Box>
 
+      {/* Delete Confirmation Dialog */}
       <AlertDialog
         isOpen={isDeleteDialogOpen}
         leastDestructiveRef={cancelRef}
@@ -297,10 +295,7 @@ const UsersManagementPage = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={() => setIsDeleteDialogOpen(false)}
-              >
+              <Button ref={cancelRef} onClick={() => setIsDeleteDialogOpen(false)}>
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>

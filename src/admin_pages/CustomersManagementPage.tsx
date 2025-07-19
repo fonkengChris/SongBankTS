@@ -11,6 +11,7 @@ import {
   Button,
   Flex,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useCustomers from "../hooks/useCustomers";
@@ -21,6 +22,14 @@ const CustomersManagementPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const apiClient = new APIClient<Customer>("/api/customers");
   const toast = useToast();
+
+  // Color mode values for consistent styling
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const headerBgColor = useColorModeValue("gray.50", "gray.700");
+  const headerTextColor = useColorModeValue("blue.500", "blue.300");
+  const tableRowHoverBg = useColorModeValue("gray.50", "gray.700");
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -67,9 +76,9 @@ const CustomersManagementPage = () => {
   }
 
   return (
-    <Box>
+    <Box p={6}>
       <Flex justifyContent="space-between" alignItems="center" mb={6}>
-        <Heading size="lg" color="gray.700">
+        <Heading size="lg" color="blue.500" fontWeight="bold">
           Customers Management
         </Heading>
         <Button
@@ -77,35 +86,50 @@ const CustomersManagementPage = () => {
           as={RouterLink}
           to="/admin/customers/add"
           size="sm"
+          _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+          transition="all 0.2s"
         >
           Add Customer
         </Button>
       </Flex>
 
-      <Box bg="white" borderRadius="lg" shadow="sm" overflow="hidden">
+      <Box 
+        bg={bgColor} 
+        borderRadius="lg" 
+        shadow="md" 
+        overflow="hidden"
+        border="1px solid"
+        borderColor={borderColor}
+      >
         <Table variant="simple">
           <Thead>
-            <Tr bg="gray.50">
-              <Th>Name</Th>
-              <Th>Country</Th>
-              <Th width="200px">Actions</Th>
+            <Tr bg={headerBgColor}>
+              <Th color={headerTextColor} fontWeight="semibold" py={4}>Name</Th>
+              <Th color={headerTextColor} fontWeight="semibold" py={4}>Country</Th>
+              <Th color={headerTextColor} fontWeight="semibold" py={4} width="200px">Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
             {customers?.length > 0 ? (
               customers.map((customer) => (
-                <Tr key={customer._id}>
-                  <Td fontWeight="medium" color="blue.600">
+                <Tr 
+                  key={customer._id}
+                  _hover={{ bg: tableRowHoverBg }}
+                  transition="background-color 0.2s"
+                >
+                  <Td fontWeight="medium" color="blue.500" py={4}>
                     {customer.user ? customer.user.name : "No Name Available"}
                   </Td>
-                  <Td color="blue.600">{customer.country || "N/A"}</Td>
-                  <Td>
+                  <Td color={textColor} py={4}>{customer.country || "N/A"}</Td>
+                  <Td py={4}>
                     <Button
                       as={RouterLink}
                       to={`/admin/customers/edit/${customer._id}`}
                       colorScheme="teal"
                       size="sm"
                       mr={2}
+                      _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
+                      transition="all 0.2s"
                     >
                       Edit
                     </Button>
@@ -113,6 +137,8 @@ const CustomersManagementPage = () => {
                       colorScheme="red"
                       size="sm"
                       onClick={() => handleDelete(customer._id!)}
+                      _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
+                      transition="all 0.2s"
                     >
                       Delete
                     </Button>
@@ -121,7 +147,7 @@ const CustomersManagementPage = () => {
               ))
             ) : (
               <Tr>
-                <Td colSpan={4} textAlign="center" py={8} color="gray.500">
+                <Td colSpan={4} textAlign="center" py={12} color="gray.500">
                   No customers found.
                 </Td>
               </Tr>

@@ -23,6 +23,7 @@ import { FaClock } from "react-icons/fa";
 import VideoGrid from "../components/VideoGrid";
 import useVideos from "../hooks/useVideos";
 import Video from "../entities/Video";
+import SmartVideoPlayer from "../components/SmartVideoPlayer";
 
 const TutorialPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -64,6 +65,10 @@ const TutorialPage = () => {
     }
   };
 
+  const handleVideoError = (error: string) => {
+    console.error("Video playback error:", error);
+  };
+
   return (
     <Container maxW="container.xl" py={8}>
       <VStack spacing={8} align="stretch">
@@ -73,7 +78,7 @@ const TutorialPage = () => {
           </Heading>
           <Text fontSize="lg" color="gray.500">
             Learn how to use SheetMusicLibrary effectively with our step-by-step
-            video guides
+            MP4 video guides
           </Text>
         </Box>
 
@@ -108,13 +113,13 @@ const TutorialPage = () => {
             <ModalBody pb={6}>
               {selectedVideo && (
                 <VStack spacing={4} align="stretch">
-                  <AspectRatio ratio={16 / 9}>
-                    <iframe
-                      src={selectedVideo.url}
-                      title={selectedVideo.title}
-                      allowFullScreen
-                    />
-                  </AspectRatio>
+                  <SmartVideoPlayer
+                    videoId={selectedVideo._id}
+                    videoUrl={selectedVideo.url}
+                    title={selectedVideo.title}
+                    thumbnailUrl={selectedVideo.thumbnailUrl}
+                    onError={handleVideoError}
+                  />
 
                   <VStack align="start" spacing={3}>
                     <Text fontSize="lg" fontWeight="semibold">
@@ -129,18 +134,18 @@ const TutorialPage = () => {
                     </HStack>
 
                     {selectedVideo.duration && (
-                      <HStack spacing={4} color="gray.500" fontSize="sm">
+                    <HStack spacing={4} color="gray.500" fontSize="sm">
                         <Flex align="center" gap={1}>
                           <Icon as={FaClock} boxSize={3} />
                           <Text>{formatDuration(selectedVideo.duration)}</Text>
                         </Flex>
-                      </HStack>
+                    </HStack>
                     )}
 
                     {selectedVideo.createdAt && (
                       <Text color="gray.400" fontSize="sm">
                         Created: {new Date(selectedVideo.createdAt).toLocaleDateString()}
-                      </Text>
+                        </Text>
                     )}
                   </VStack>
                 </VStack>

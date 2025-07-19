@@ -74,7 +74,7 @@ const SongGrid = () => {
             </SongCardContainer>
           ))}
         {data?.pages.map((page, pageIndex) =>
-          page.songs.map((song) =>
+          page.songs?.map((song) =>
             song.mediaFiles.map((mediaFile) => (
               <SongCardContainer key={`${pageIndex}-${mediaFile._id}`}>
                 {song.price ? (

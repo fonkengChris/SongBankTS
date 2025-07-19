@@ -13,6 +13,10 @@ import {
   Heading,
   useToast,
   Spinner,
+  useColorModeValue,
+  Flex,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVideo } from "../hooks/useVideos";
@@ -29,11 +33,15 @@ const VideoFormPage = () => {
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  console.log("VideoFormPage rendered, id:", id);
-
   const { data: existingVideo, isLoading, error } = useVideo(id);
 
-  console.log("VideoFormPage - existingVideo:", existingVideo, "isLoading:", isLoading, "error:", error);
+  // Color mode values for consistent styling
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const inputBg = useColorModeValue("white", "gray.700");
+  const inputColor = useColorModeValue("gray.800", "gray.100");
+  const inputBorderColor = useColorModeValue("gray.300", "gray.600");
+  const inputFocusBorderColor = useColorModeValue("blue.500", "blue.300");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -47,7 +55,6 @@ const VideoFormPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    console.log("VideoFormPage useEffect - existingVideo:", existingVideo);
     if (existingVideo) {
       setFormData({
         title: existingVideo.title || "",
@@ -140,10 +147,8 @@ const VideoFormPage = () => {
     }
   };
 
-  console.log("VideoFormPage - about to render, isLoading:", isLoading);
-
-  if (isLoading) {
-    console.log("VideoFormPage - showing loading spinner");
+  // Only show loading spinner if we're editing (id exists) and the query is loading
+  if (id && isLoading) {
     return (
       <Box display="flex" justifyContent="center" p={8}>
         <Spinner size="xl" />
@@ -151,8 +156,7 @@ const VideoFormPage = () => {
     );
   }
 
-  if (error) {
-    console.log("VideoFormPage - showing error:", error);
+  if (id && error) {
     return (
       <Box p={4}>
         <Heading size="md" color="red.500">Error loading video: {error.message}</Heading>
@@ -160,107 +164,184 @@ const VideoFormPage = () => {
     );
   }
 
-  console.log("VideoFormPage - rendering form");
-
   return (
-    <Box maxW="container.md" mx="auto" p={6}>
-      <VStack spacing={6} align="stretch">
-        <Heading size="lg" color="blue.600">
+    <Box maxW="container.md" mx="auto" py={8} px={6}>
+      <VStack spacing={8} align="stretch">
+        <Heading color="blue.500" fontWeight="bold" textAlign="center">
           {id ? "Edit Video" : "Add New Video"}
         </Heading>
 
-        <Box as="form" onSubmit={handleSubmit}>
-          <VStack spacing={4} align="stretch">
-            <FormControl isInvalid={!!errors.title}>
-              <FormLabel>Title</FormLabel>
-              <Input
-                value={formData.title}
-                onChange={(e) => handleInputChange("title", e.target.value)}
-                placeholder="Enter video title"
-              />
-              <FormErrorMessage>{errors.title}</FormErrorMessage>
-            </FormControl>
+        <Card 
+          bg={bgColor} 
+          shadow="md" 
+          border="1px solid" 
+          borderColor={borderColor}
+          borderRadius="lg"
+        >
+          <CardBody p={8}>
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={6} align="stretch">
+                <FormControl isRequired isInvalid={!!errors.title}>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Title</FormLabel>
+                  <Input
+                    value={formData.title}
+                    onChange={(e) => handleInputChange("title", e.target.value)}
+                    placeholder="Enter video title"
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                  />
+                  <FormErrorMessage>{errors.title}</FormErrorMessage>
+                </FormControl>
 
-            <FormControl isInvalid={!!errors.description}>
-              <FormLabel>Description</FormLabel>
-              <Textarea
-                value={formData.description}
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-                placeholder="Enter video description"
-                rows={4}
-              />
-              <FormErrorMessage>{errors.description}</FormErrorMessage>
-            </FormControl>
+                <FormControl isRequired isInvalid={!!errors.description}>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Description</FormLabel>
+                  <Textarea
+                    value={formData.description}
+                    onChange={(e) =>
+                      handleInputChange("description", e.target.value)
+                    }
+                    placeholder="Enter video description"
+                    rows={4}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    resize="vertical"
+                  />
+                  <FormErrorMessage>{errors.description}</FormErrorMessage>
+                </FormControl>
 
-            <HStack spacing={4}>
-              <FormControl isInvalid={!!errors.level}>
-                <FormLabel>Level</FormLabel>
-                <Select
-                  value={formData.level}
-                  onChange={(e) => handleInputChange("level", e.target.value)}
-                >
-                  <option value="regular">Regular</option>
-                  <option value="admin">Admin</option>
-                </Select>
-                <FormErrorMessage>{errors.level}</FormErrorMessage>
-              </FormControl>
+                <HStack spacing={4}>
+                  <FormControl isRequired isInvalid={!!errors.level}>
+                    <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Level</FormLabel>
+                    <Select
+                      value={formData.level}
+                      onChange={(e) => handleInputChange("level", e.target.value)}
+                      bg={inputBg}
+                      color={inputColor}
+                      borderColor={inputBorderColor}
+                      _hover={{ borderColor: inputFocusBorderColor }}
+                      _focus={{ 
+                        borderColor: inputFocusBorderColor, 
+                        boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                      }}
+                      transition="all 0.2s"
+                      size="lg"
+                    >
+                      <option value="regular">Regular</option>
+                      <option value="admin">Admin</option>
+                    </Select>
+                    <FormErrorMessage>{errors.level}</FormErrorMessage>
+                  </FormControl>
 
-              <FormControl isInvalid={!!errors.duration}>
-                <FormLabel>Duration (seconds)</FormLabel>
-                <Input
-                  type="number"
-                  value={formData.duration}
-                  onChange={(e) =>
-                    handleInputChange("duration", e.target.value)
-                  }
-                  placeholder="Enter duration in seconds"
-                />
-                <FormErrorMessage>{errors.duration}</FormErrorMessage>
-              </FormControl>
-            </HStack>
+                  <FormControl isInvalid={!!errors.duration}>
+                    <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Duration (seconds)</FormLabel>
+                    <Input
+                      type="number"
+                      value={formData.duration}
+                      onChange={(e) =>
+                        handleInputChange("duration", e.target.value)
+                      }
+                      placeholder="Enter duration in seconds"
+                      bg={inputBg}
+                      color={inputColor}
+                      borderColor={inputBorderColor}
+                      _hover={{ borderColor: inputFocusBorderColor }}
+                      _focus={{ 
+                        borderColor: inputFocusBorderColor, 
+                        boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                      }}
+                      transition="all 0.2s"
+                      size="lg"
+                    />
+                    <FormErrorMessage>{errors.duration}</FormErrorMessage>
+                  </FormControl>
+                </HStack>
 
-            <FormControl isInvalid={!!errors.url}>
-              <FormLabel>Video URL</FormLabel>
-              <Input
-                value={formData.url}
-                onChange={(e) => handleInputChange("url", e.target.value)}
-                placeholder="Enter video URL"
-              />
-              <FormErrorMessage>{errors.url}</FormErrorMessage>
-            </FormControl>
+                <FormControl isRequired isInvalid={!!errors.url}>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Video URL</FormLabel>
+                  <Input
+                    value={formData.url}
+                    onChange={(e) => handleInputChange("url", e.target.value)}
+                    placeholder="Enter video URL"
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                  />
+                  <FormErrorMessage>{errors.url}</FormErrorMessage>
+                </FormControl>
 
-            <FormControl>
-              <FormLabel>Thumbnail URL (optional)</FormLabel>
-              <Input
-                value={formData.thumbnailUrl}
-                onChange={(e) =>
-                  handleInputChange("thumbnailUrl", e.target.value)
-                }
-                placeholder="Enter thumbnail URL"
-              />
-            </FormControl>
+                <FormControl>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Thumbnail URL (optional)</FormLabel>
+                  <Input
+                    value={formData.thumbnailUrl}
+                    onChange={(e) =>
+                      handleInputChange("thumbnailUrl", e.target.value)
+                    }
+                    placeholder="Enter thumbnail URL"
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                  />
+                </FormControl>
 
-            <HStack spacing={4} justify="flex-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/admin/videos")}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                colorScheme="blue"
-                isLoading={isSubmitting}
-                loadingText="Saving..."
-              >
-                {id ? "Update Video" : "Create Video"}
-              </Button>
-            </HStack>
-          </VStack>
-        </Box>
+                <Flex gap={4} pt={4}>
+                  <Button
+                    onClick={() => navigate("/admin/videos")}
+                    colorScheme="red"
+                    flex={1}
+                    minW="140px"
+                    size="lg"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    colorScheme="blue"
+                    flex={1}
+                    minW="140px"
+                    size="lg"
+                    isLoading={isSubmitting}
+                    loadingText="Saving..."
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    {id ? "Update Video" : "Create Video"}
+                  </Button>
+                </Flex>
+              </VStack>
+            </form>
+          </CardBody>
+        </Card>
       </VStack>
     </Box>
   );

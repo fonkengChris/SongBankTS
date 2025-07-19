@@ -12,6 +12,8 @@ import {
   useToast,
   Flex,
   useColorModeValue,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
@@ -31,8 +33,13 @@ const CustomerFormPage = () => {
     country: "",
   });
 
+  // Color mode values for consistent styling
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");
+  const inputBorderColor = useColorModeValue("gray.300", "gray.600");
+  const inputFocusBorderColor = useColorModeValue("blue.500", "blue.300");
 
   // Fetch users for the dropdown
   useEffect(() => {
@@ -117,59 +124,102 @@ const CustomerFormPage = () => {
   };
 
   return (
-    <Box maxW="container.md" mx="auto" py={8}>
+    <Box maxW="container.md" mx="auto" py={8} px={6}>
       <VStack spacing={8} align="stretch">
-        <Heading color="blue.500">
+        <Heading color="blue.500" fontWeight="bold" textAlign="center">
           {id ? "Edit Customer" : "Create Customer"}
         </Heading>
-        <form onSubmit={handleSubmit}>
-          <VStack spacing={4} align="stretch">
-            {!id && (
-              <FormControl isRequired>
-                <FormLabel color="blue.500">Select User</FormLabel>
-                <Select
-                  name="user"
-                  value={formData.user}
-                  onChange={handleChange}
-                  placeholder="Select a user"
-                  bg={inputBg}
-                  color={inputColor}
-                >
-                  {users.map((user) => (
-                    <option key={user._id} value={user._id}>
-                      {user.name} ({user.email})
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
+        
+        <Card 
+          bg={bgColor} 
+          shadow="md" 
+          border="1px solid" 
+          borderColor={borderColor}
+          borderRadius="lg"
+        >
+          <CardBody p={8}>
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={6} align="stretch">
+                {!id && (
+                  <FormControl isRequired>
+                    <FormLabel color="blue.500" fontWeight="semibold" mb={2}>
+                      Select User
+                    </FormLabel>
+                    <Select
+                      name="user"
+                      value={formData.user}
+                      onChange={handleChange}
+                      placeholder="Select a user"
+                      bg={inputBg}
+                      color={inputColor}
+                      borderColor={inputBorderColor}
+                      _hover={{ borderColor: inputFocusBorderColor }}
+                      _focus={{ 
+                        borderColor: inputFocusBorderColor, 
+                        boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                      }}
+                      transition="all 0.2s"
+                      size="lg"
+                    >
+                      {users.map((user) => (
+                        <option key={user._id} value={user._id}>
+                          {user.name} ({user.email})
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
 
-            <FormControl isRequired>
-              <FormLabel color="blue.500">Country</FormLabel>
-              <Input
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              />
-            </FormControl>
+                <FormControl isRequired>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>
+                    Country
+                  </FormLabel>
+                  <Input
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                    placeholder="Enter country name"
+                  />
+                </FormControl>
 
-            <Flex gap={4}>
-              <Button
-                onClick={() => navigate("/admin/customers")}
-                colorScheme="red"
-                flex={1}
-                minW="140px"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" colorScheme="blue" flex={1} minW="140px">
-                {id ? "Update" : "Create"} Customer
-              </Button>
-            </Flex>
-          </VStack>
-        </form>
+                <Flex gap={4} pt={4}>
+                  <Button
+                    onClick={() => navigate("/admin/customers")}
+                    colorScheme="red"
+                    flex={1}
+                    minW="140px"
+                    size="lg"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    colorScheme="blue" 
+                    flex={1} 
+                    minW="140px"
+                    size="lg"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    {id ? "Update" : "Create"} Customer
+                  </Button>
+                </Flex>
+              </VStack>
+            </form>
+          </CardBody>
+        </Card>
       </VStack>
     </Box>
   );

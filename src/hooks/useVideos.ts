@@ -58,14 +58,9 @@ const useAllVideos = () => {
 
 // Hook for getting a single video by ID
 const useVideo = (id?: string) => {
-  console.log("useVideo hook called with id:", id);
-  
   return useQuery<Video, Error>({
     queryKey: ["video", id],
-    queryFn: () => {
-      console.log("useVideo queryFn called with id:", id);
-      return apiClient.get(id!);
-    },
+    queryFn: () => apiClient.get(id!),
     enabled: !!id, // Only run the query if id is provided
     cacheTime: 5 * 60 * 1000, // 5 minutes
   });

@@ -133,6 +133,15 @@ export default class APIClient<T, R = T> {
     return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
   };
 
+  postFormData = (formData: FormData, onProgress?: (progressEvent: any) => void) => {
+    return axiosInstance.post<T>(this.endpoint, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: onProgress,
+    }).then((res) => res.data);
+  };
+
   put = (id: string, data: R) => {
     return axiosInstance
       .put<T>(`${this.endpoint}/${id}`, data)

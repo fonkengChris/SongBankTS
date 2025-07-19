@@ -12,6 +12,8 @@ import {
   Flex,
   useColorModeValue,
   Text,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import APIClient from "../services/api-client";
@@ -26,8 +28,13 @@ const MediaFileFormPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  // Color mode values for consistent styling
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
   const inputBg = useColorModeValue("white", "gray.700");
   const inputColor = useColorModeValue("gray.800", "gray.100");
+  const inputBorderColor = useColorModeValue("gray.300", "gray.600");
+  const inputFocusBorderColor = useColorModeValue("blue.500", "blue.300");
 
   const [notations, setNotations] = useState<Notation[]>([]);
   const [formData, setFormData] = useState<MediaFileFormData>({
@@ -124,13 +131,13 @@ const MediaFileFormPage = () => {
   };
 
   return (
-    <Box maxW="container.md" mx="auto" py={8}>
+    <Box maxW="container.md" mx="auto" py={8} px={6}>
       <VStack spacing={8} align="stretch">
         <Box>
-          <Heading color="blue.500" mb={4}>
+          <Heading color="blue.500" fontWeight="bold" textAlign="center" mb={4}>
             {id ? "Edit Media File" : "Add New Media File"}
           </Heading>
-          <Text color="blue.500" mb={6}>
+          <Text color="blue.500" mb={6} textAlign="center">
             Use this form to add a new media file. Required fields are marked
             with an asterisk (*). You can associate this media file with a song
             (optional) and must select a notation type. The media file can
@@ -139,104 +146,176 @@ const MediaFileFormPage = () => {
           </Text>
         </Box>
 
-        <form onSubmit={handleSubmit}>
-          <VStack spacing={4}>
-            <FormControl isRequired>
-              <FormLabel color="blue.500">Name</FormLabel>
-              <Input
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-                placeholder="Enter media file name"
-              />
-            </FormControl>
+        <Card 
+          bg={bgColor} 
+          shadow="md" 
+          border="1px solid" 
+          borderColor={borderColor}
+          borderRadius="lg"
+        >
+          <CardBody p={8}>
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={6} align="stretch">
+                <FormControl isRequired>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Name</FormLabel>
+                  <Input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                    placeholder="Enter media file name"
+                  />
+                </FormControl>
 
-            <FormControl>
-              <FormLabel color="blue.500">Song (Optional)</FormLabel>
-              <Select
-                name="song"
-                value={formData.song}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              >
-                <option value="">Select a song</option>
-                {songs.map((song) => (
-                  <option key={song._id} value={song._id}>
-                    {song.title}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
+                <FormControl>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Song (Optional)</FormLabel>
+                  <Select
+                    name="song"
+                    value={formData.song}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                  >
+                    <option value="">Select a song</option>
+                    {songs.map((song) => (
+                      <option key={song._id} value={song._id}>
+                        {song.title}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
 
-            <FormControl isRequired>
-              <FormLabel color="blue.500">Notation</FormLabel>
-              <Select
-                name="notation"
-                value={formData.notation}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              >
-                <option value="">Select a notation</option>
-                {notations.map((notation) => (
-                  <option key={notation._id} value={notation._id}>
-                    {notation.title}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
+                <FormControl isRequired>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Notation</FormLabel>
+                  <Select
+                    name="notation"
+                    value={formData.notation}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                  >
+                    <option value="">Select a notation</option>
+                    {notations.map((notation) => (
+                      <option key={notation._id} value={notation._id}>
+                        {notation.title}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
 
-            <FormControl>
-              <FormLabel color="blue.500">Document File</FormLabel>
-              <Input
-                name="documentFile"
-                value={formData.documentFile}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              />
-            </FormControl>
+                <FormControl>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Document File</FormLabel>
+                  <Input
+                    name="documentFile"
+                    value={formData.documentFile}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                    placeholder="Enter document file path or URL"
+                  />
+                </FormControl>
 
-            <FormControl>
-              <FormLabel color="blue.500">Audio File</FormLabel>
-              <Input
-                name="audioFile"
-                value={formData.audioFile}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              />
-            </FormControl>
+                <FormControl>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Audio File</FormLabel>
+                  <Input
+                    name="audioFile"
+                    value={formData.audioFile}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                    placeholder="Enter audio file path or URL"
+                  />
+                </FormControl>
 
-            <FormControl>
-              <FormLabel color="blue.500">Preview Image</FormLabel>
-              <Input
-                name="previewImage"
-                value={formData.previewImage}
-                onChange={handleChange}
-                bg={inputBg}
-                color={inputColor}
-              />
-            </FormControl>
+                <FormControl>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Preview Image</FormLabel>
+                  <Input
+                    name="previewImage"
+                    value={formData.previewImage}
+                    onChange={handleChange}
+                    bg={inputBg}
+                    color={inputColor}
+                    borderColor={inputBorderColor}
+                    _hover={{ borderColor: inputFocusBorderColor }}
+                    _focus={{ 
+                      borderColor: inputFocusBorderColor, 
+                      boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                    }}
+                    transition="all 0.2s"
+                    size="lg"
+                    placeholder="Enter preview image path or URL"
+                  />
+                </FormControl>
 
-            <Flex gap={4}>
-              <Button
-                onClick={() => navigate("/admin/media_files")}
-                colorScheme="red"
-                flex={1}
-                minW="140px"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" colorScheme="blue" flex={1} minW="140px">
-                {id ? "Update Media File" : "Create Media File"}
-              </Button>
-            </Flex>
-          </VStack>
-        </form>
+                <Flex gap={4} pt={4}>
+                  <Button
+                    onClick={() => navigate("/admin/media_files")}
+                    colorScheme="red"
+                    flex={1}
+                    minW="140px"
+                    size="lg"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    colorScheme="blue" 
+                    flex={1} 
+                    minW="140px"
+                    size="lg"
+                    _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
+                    transition="all 0.2s"
+                  >
+                    {id ? "Update Media File" : "Create Media File"}
+                  </Button>
+                </Flex>
+              </VStack>
+            </form>
+          </CardBody>
+        </Card>
       </VStack>
     </Box>
   );

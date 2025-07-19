@@ -27,6 +27,7 @@ import {
   Badge,
   Spinner,
   Stack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useMediaFiles from "../hooks/useMediaFiles";
@@ -52,6 +53,12 @@ const MediaFilesManagementPage = () => {
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  // Color mode values for better visibility
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   useEffect(() => {
     setLocalMediaFiles(mediaFiles || []);
@@ -110,13 +117,13 @@ const MediaFilesManagementPage = () => {
 
   // Mobile card component
   const MediaCard = ({ media }: { media: SongMedia }) => (
-    <Card shadow="sm" border="1px" borderColor="gray.200">
+    <Card shadow="sm" border="1px" borderColor={borderColor} bg={cardBg}>
       <CardBody>
         <VStack align="stretch" spacing={4}>
           <HStack justify="space-between">
             <HStack spacing={3}>
               <FiDatabase size={20} color="#3182CE" />
-              <Text fontWeight="bold" fontSize="lg" color="blue.600">
+              <Text fontWeight="bold" fontSize="lg" color="blue.500">
                 {media.name}
               </Text>
             </HStack>
@@ -126,11 +133,11 @@ const MediaFilesManagementPage = () => {
             <HStack justify="space-between">
               <HStack spacing={2}>
                 <FiFile size={16} color="#38A169" />
-                <Text fontSize="sm" color="gray.600">
+                <Text fontSize="sm" color={secondaryTextColor}>
                   Document:
                 </Text>
               </HStack>
-              <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
+              <Text fontSize="sm" fontWeight="medium" noOfLines={1} color={textColor}>
                 {media.documentFile || "N/A"}
               </Text>
             </HStack>
@@ -138,11 +145,11 @@ const MediaFilesManagementPage = () => {
             <HStack justify="space-between">
               <HStack spacing={2}>
                 <FiMusic size={16} color="#E53E3E" />
-                <Text fontSize="sm" color="gray.600">
+                <Text fontSize="sm" color={secondaryTextColor}>
                   Audio:
                 </Text>
               </HStack>
-              <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
+              <Text fontSize="sm" fontWeight="medium" noOfLines={1} color={textColor}>
                 {media.audioFile || "N/A"}
               </Text>
             </HStack>
@@ -150,11 +157,11 @@ const MediaFilesManagementPage = () => {
             <HStack justify="space-between">
               <HStack spacing={2}>
                 <FiImage size={16} color="#D69E2E" />
-                <Text fontSize="sm" color="gray.600">
+                <Text fontSize="sm" color={secondaryTextColor}>
                   Image:
                 </Text>
               </HStack>
-              <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
+              <Text fontSize="sm" fontWeight="medium" noOfLines={1} color={textColor}>
                 {media.previewImage || "N/A"}
               </Text>
             </HStack>
@@ -189,11 +196,13 @@ const MediaFilesManagementPage = () => {
     <Box>
       {/* Header */}
       <Box
-        bg="white"
+        bg={cardBg}
         shadow="sm"
         p={{ base: 4, md: 6 }}
         mb={4}
         borderRadius="lg"
+        border="1px"
+        borderColor={borderColor}
       >
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -201,7 +210,7 @@ const MediaFilesManagementPage = () => {
           align={{ base: "stretch", sm: "center" }}
           gap={4}
         >
-          <Heading color="blue.600" size="lg">
+          <Heading color="blue.500" size="lg">
             Media Files Management
           </Heading>
           <Button
@@ -210,13 +219,13 @@ const MediaFilesManagementPage = () => {
             to="/admin/media_files/add"
             size={{ base: "md", md: "lg" }}
           >
-            Add Media Files
+            Add Media File
           </Button>
         </Flex>
       </Box>
 
       {/* Content */}
-      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+      <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
         {isMobile ? (
           // Mobile layout with cards
           <Box p={4}>
@@ -227,7 +236,7 @@ const MediaFilesManagementPage = () => {
                 ))
               ) : (
                 <Box textAlign="center" py={8}>
-                  <Text color="gray.500">No media files found.</Text>
+                  <Text color={secondaryTextColor}>No media files found.</Text>
                 </Box>
               )}
             </SimpleGrid>
@@ -238,52 +247,39 @@ const MediaFilesManagementPage = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th color="blue.600">
+                  <Th color="blue.500">
                     <HStack spacing={2}>
                       <FiDatabase />
                       <Text>Name</Text>
                     </HStack>
                   </Th>
-                  <Th color="blue.600">
-                    <HStack spacing={2}>
-                      <FiFile />
-                      <Text>Document</Text>
-                    </HStack>
-                  </Th>
-                  <Th color="blue.600">
-                    <HStack spacing={2}>
-                      <FiMusic />
-                      <Text>Audio</Text>
-                    </HStack>
-                  </Th>
-                  <Th color="blue.600">
-                    <HStack spacing={2}>
-                      <FiImage />
-                      <Text>Image</Text>
-                    </HStack>
-                  </Th>
-                  <Th color="blue.600">Actions</Th>
+                  <Th color="blue.500">Document</Th>
+                  <Th color="blue.500">Audio</Th>
+                  <Th color="blue.500">Image</Th>
+                  <Th color="blue.500">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {localMediaFiles && localMediaFiles.length > 0 ? (
                   localMediaFiles.map((media) => (
                     <Tr key={media._id}>
-                      <Td color="blue.600" fontWeight="medium">
-                        {media.name}
+                      <Td>
+                        <Text fontWeight="medium" color="blue.500">
+                          {media.name}
+                        </Text>
                       </Td>
-                      <Td color="blue.600" maxW="200px">
-                        <Text noOfLines={1} fontSize="sm">
+                      <Td>
+                        <Text fontSize="sm" color={secondaryTextColor} noOfLines={1}>
                           {media.documentFile || "N/A"}
                         </Text>
                       </Td>
-                      <Td color="blue.600" maxW="200px">
-                        <Text noOfLines={1} fontSize="sm">
+                      <Td>
+                        <Text fontSize="sm" color={secondaryTextColor} noOfLines={1}>
                           {media.audioFile || "N/A"}
                         </Text>
                       </Td>
-                      <Td color="blue.600" maxW="200px">
-                        <Text noOfLines={1} fontSize="sm">
+                      <Td>
+                        <Text fontSize="sm" color={secondaryTextColor} noOfLines={1}>
                           {media.previewImage || "N/A"}
                         </Text>
                       </Td>
@@ -313,7 +309,7 @@ const MediaFilesManagementPage = () => {
                 ) : (
                   <Tr>
                     <Td colSpan={5} textAlign="center" py={8}>
-                      <Text color="gray.500">No media files found.</Text>
+                      <Text color={secondaryTextColor}>No media files found.</Text>
                     </Td>
                   </Tr>
                 )}
@@ -323,6 +319,7 @@ const MediaFilesManagementPage = () => {
         )}
       </Box>
 
+      {/* Delete Confirmation Dialog */}
       <AlertDialog
         isOpen={isDeleteDialogOpen}
         leastDestructiveRef={cancelRef}
@@ -339,10 +336,7 @@ const MediaFilesManagementPage = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={() => setIsDeleteDialogOpen(false)}
-              >
+              <Button ref={cancelRef} onClick={() => setIsDeleteDialogOpen(false)}>
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>

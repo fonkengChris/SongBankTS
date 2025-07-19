@@ -21,6 +21,7 @@ import {
   VStack,
   Badge,
   Spinner,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useLanguages from "../hooks/useLanguages";
@@ -34,6 +35,12 @@ const LanguagesManagementPage = () => {
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  // Color mode values for better visibility
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   if (isLoading) {
     return (
@@ -73,14 +80,14 @@ const LanguagesManagementPage = () => {
 
   // Mobile card component
   const LanguageCard = ({ language }: { language: any }) => (
-    <Card shadow="sm" border="1px" borderColor="gray.200">
+    <Card shadow="sm" border="1px" borderColor={borderColor} bg={cardBg}>
       <CardBody>
         <VStack align="stretch" spacing={4}>
           <HStack justify="space-between">
             <HStack spacing={3}>
               <FiGlobe size={20} color="#3182CE" />
               <VStack align="start" spacing={1}>
-                <Text fontWeight="bold" fontSize="lg" color="blue.600">
+                <Text fontWeight="bold" fontSize="lg" color="blue.500">
                   {language.name}
                 </Text>
                 <Badge colorScheme="green" variant="subtle">
@@ -119,11 +126,13 @@ const LanguagesManagementPage = () => {
     <Box>
       {/* Header */}
       <Box
-        bg="white"
+        bg={cardBg}
         shadow="sm"
         p={{ base: 4, md: 6 }}
         mb={4}
         borderRadius="lg"
+        border="1px"
+        borderColor={borderColor}
       >
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -131,7 +140,7 @@ const LanguagesManagementPage = () => {
           align={{ base: "stretch", sm: "center" }}
           gap={4}
         >
-          <Heading color="blue.600" size="lg">
+          <Heading color="blue.500" size="lg">
             Languages Management
           </Heading>
           <Button
@@ -146,7 +155,7 @@ const LanguagesManagementPage = () => {
       </Box>
 
       {/* Content */}
-      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+      <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
         {isMobile ? (
           // Mobile layout with cards
           <Box p={4}>
@@ -157,7 +166,7 @@ const LanguagesManagementPage = () => {
                 ))
               ) : (
                 <Box textAlign="center" py={8}>
-                  <Text color="gray.500">No languages found.</Text>
+                  <Text color={secondaryTextColor}>No languages found.</Text>
                 </Box>
               )}
             </SimpleGrid>
@@ -168,21 +177,21 @@ const LanguagesManagementPage = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th color="blue.600">
+                  <Th color="blue.500">
                     <HStack spacing={2}>
                       <FiGlobe />
                       <Text>Name</Text>
                     </HStack>
                   </Th>
-                  <Th color="blue.600">Code</Th>
-                  <Th color="blue.600">Actions</Th>
+                  <Th color="blue.500">Code</Th>
+                  <Th color="blue.500">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {languages && languages.length > 0 ? (
                   languages.map((language) => (
                     <Tr key={language._id}>
-                      <Td color="blue.600" fontWeight="medium">
+                      <Td color="blue.500" fontWeight="medium">
                         {language.name}
                       </Td>
                       <Td>
@@ -216,7 +225,7 @@ const LanguagesManagementPage = () => {
                 ) : (
                   <Tr>
                     <Td colSpan={3} textAlign="center" py={8}>
-                      <Text color="gray.500">No languages found.</Text>
+                      <Text color={secondaryTextColor}>No languages found.</Text>
                     </Td>
                   </Tr>
                 )}

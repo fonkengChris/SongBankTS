@@ -22,6 +22,7 @@ import {
   VStack,
   Stack,
   Divider,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useAllVideos } from "../hooks/useVideos";
@@ -38,6 +39,12 @@ const VideosManagementPage = () => {
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  // Color mode values for better visibility
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   if (isLoading) {
     return (
@@ -97,14 +104,14 @@ const VideosManagementPage = () => {
 
   // Mobile card component
   const VideoCard = ({ video }: { video: Video }) => (
-    <Card shadow="sm" border="1px" borderColor="gray.200">
+    <Card shadow="sm" border="1px" borderColor={borderColor} bg={cardBg}>
       <CardBody>
         <VStack align="stretch" spacing={4}>
           <VStack align="start" spacing={2}>
-            <Text fontWeight="bold" fontSize="lg" color="blue.600">
+            <Text fontWeight="bold" fontSize="lg" color="blue.500">
               {String(video.title || "N/A")}
             </Text>
-            <Text fontSize="sm" color="gray.600" noOfLines={3}>
+            <Text fontSize="sm" color={secondaryTextColor} noOfLines={3}>
               {String(video.description || "N/A")}
             </Text>
           </VStack>
@@ -117,18 +124,18 @@ const VideosManagementPage = () => {
 
           <Stack spacing={2}>
             <HStack justify="space-between">
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color={secondaryTextColor}>
                 Duration:
               </Text>
-              <Text fontSize="sm" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="medium" color={textColor}>
                 {formatDuration(video.duration)}
               </Text>
             </HStack>
             <HStack justify="space-between">
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color={secondaryTextColor}>
                 Created:
               </Text>
-              <Text fontSize="sm" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="medium" color={textColor}>
                 {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : "N/A"}
               </Text>
             </HStack>
@@ -166,11 +173,13 @@ const VideosManagementPage = () => {
     <Box>
       {/* Header */}
       <Box
-        bg="white"
+        bg={cardBg}
         shadow="sm"
         p={{ base: 4, md: 6 }}
         mb={4}
         borderRadius="lg"
+        border="1px"
+        borderColor={borderColor}
       >
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -178,7 +187,7 @@ const VideosManagementPage = () => {
           align={{ base: "stretch", sm: "center" }}
           gap={4}
         >
-          <Heading color="blue.600" size="lg">
+          <Heading color="blue.500" size="lg">
             Videos Management
           </Heading>
           <Button
@@ -193,81 +202,95 @@ const VideosManagementPage = () => {
       </Box>
 
       {/* Content */}
-      <Box bg="white" shadow="sm" borderRadius="lg" overflow="hidden">
+      <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
         {isMobile ? (
-          // Mobile view - Cards
+          // Mobile layout with cards
           <Box p={4}>
             <SimpleGrid columns={1} spacing={4}>
-              {videos.map((video) => (
-                <VideoCard key={video._id} video={video} />
-              ))}
+              {videos && videos.length > 0 ? (
+                videos.map((video) => (
+                  <VideoCard key={video._id} video={video} />
+                ))
+              ) : (
+                <Box textAlign="center" py={8}>
+                  <Text color={secondaryTextColor}>No videos found.</Text>
+                </Box>
+              )}
             </SimpleGrid>
           </Box>
         ) : (
-          // Desktop view - Table
+          // Desktop/Tablet layout with table
           <Box overflowX="auto">
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th>Title</Th>
-                  <Th>Description</Th>
-                  <Th>Level</Th>
-                  <Th>Duration</Th>
-                  <Th>Created</Th>
-                  <Th>Actions</Th>
+                  <Th color="blue.500">Title</Th>
+                  <Th color="blue.500">Description</Th>
+                  <Th color="blue.500">Level</Th>
+                  <Th color="blue.500">Duration</Th>
+                  <Th color="blue.500">Created</Th>
+                  <Th color="blue.500">Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {videos.map((video) => (
-                  <Tr key={video._id}>
-                    <Td>
-                      <Text fontWeight="medium" maxW="200px" noOfLines={2}>
-                        {video.title}
-                      </Text>
-                    </Td>
-                    <Td>
-                      <Text maxW="300px" noOfLines={3}>
-                        {video.description}
-                      </Text>
-                    </Td>
-                    <Td>
-                      <Badge colorScheme={getLevelColor(video.level)}>
-                        {video.level}
-                      </Badge>
-                    </Td>
-                    <Td>
-                      <HStack>
-                        <FiClock />
-                        <Text>{formatDuration(video.duration)}</Text>
-                      </HStack>
-                    </Td>
-                    <Td>
-                      {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : "N/A"}
-                    </Td>
-                    <Td>
-                      <HStack spacing={2}>
-                        <Button
-                          colorScheme="teal"
-                          size="sm"
-                          leftIcon={<FiEdit />}
-                          as={RouterLink}
-                          to={`/admin/videos/edit/${video._id}`}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          colorScheme="red"
-                          size="sm"
-                          leftIcon={<FiTrash2 />}
-                          onClick={() => handleDelete(video._id)}
-                          isDisabled={isDeleting}
-                        >
-                          Delete
-                        </Button>
-                      </HStack>
+                {videos && videos.length > 0 ? (
+                  videos.map((video) => (
+                    <Tr key={video._id}>
+                      <Td>
+                        <Text fontWeight="medium" maxW="200px" noOfLines={2} color="blue.500">
+                          {video.title}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text maxW="300px" noOfLines={3} color={secondaryTextColor}>
+                          {video.description}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Badge colorScheme={getLevelColor(video.level)}>
+                          {video.level}
+                        </Badge>
+                      </Td>
+                      <Td>
+                        <HStack>
+                          <FiClock />
+                          <Text color={textColor}>{formatDuration(video.duration)}</Text>
+                        </HStack>
+                      </Td>
+                      <Td color={textColor}>
+                        {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : "N/A"}
+                      </Td>
+                      <Td>
+                        <HStack spacing={2}>
+                          <Button
+                            colorScheme="teal"
+                            size="sm"
+                            leftIcon={<FiEdit />}
+                            as={RouterLink}
+                            to={`/admin/videos/edit/${video._id}`}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            colorScheme="red"
+                            size="sm"
+                            leftIcon={<FiTrash2 />}
+                            onClick={() => handleDelete(video._id)}
+                            isDisabled={isDeleting}
+                          >
+                            Delete
+                          </Button>
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  ))
+                ) : (
+                  <Tr>
+                    <Td colSpan={6} textAlign="center" py={8}>
+                      <Text color={secondaryTextColor}>No videos found.</Text>
                     </Td>
                   </Tr>
-                ))}
+                )}
               </Tbody>
             </Table>
           </Box>

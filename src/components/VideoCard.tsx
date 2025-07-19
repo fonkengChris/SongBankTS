@@ -104,9 +104,9 @@ const VideoCard = ({ video, onClick }: Props) => {
           </HStack>
 
           {video.createdAt && (
-            <Text fontSize="sm" color="gray.400">
+          <Text fontSize="sm" color="gray.400">
               Created: {new Date(video.createdAt).toLocaleDateString()}
-            </Text>
+          </Text>
           )}
         </VStack>
       </CardBody>
@@ -114,10 +114,10 @@ const VideoCard = ({ video, onClick }: Props) => {
       <CardFooter pt={0}>
         <HStack spacing={4} color="gray.500" fontSize="sm">
           {video.duration && (
-            <Flex align="center" gap={1}>
+          <Flex align="center" gap={1}>
               <Icon as={FaClock} boxSize={3} />
               <Text>{formatDuration(video.duration)}</Text>
-            </Flex>
+          </Flex>
           )}
         </HStack>
       </CardFooter>
