@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 3000;
 
 // Add CORS and security headers with updated CSP
 app.use((req, res, next) => {
+  // Temporarily commenting out CSP to test video loading
+  /*
   res.header(
     "Content-Security-Policy",
     "default-src 'self'; " +
@@ -22,6 +24,7 @@ app.use((req, res, next) => {
       "font-src 'self' data: https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com; " +
       "connect-src 'self' https: http: https://my-song-library-media.s3.amazonaws.com https://my-song-library-media.s3.eu-west-2.amazonaws.com https://*.s3.amazonaws.com https://*.s3.eu-west-2.amazonaws.com;"
   );
+  */
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Methods",
