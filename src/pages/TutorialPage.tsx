@@ -28,6 +28,7 @@ import VideoDebugger from "../components/VideoDebugger";
 import VideoTestPlayer from "../components/VideoTestPlayer";
 import SimpleVideoTest from "../components/SimpleVideoTest";
 import VideoFormatTest from "../components/VideoFormatTest";
+import DirectVideoTest from "../components/DirectVideoTest";
 
 const TutorialPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -151,6 +152,13 @@ const TutorialPage = () => {
                   {/* Video Format Test */}
                   {process.env.NODE_ENV === 'development' && (
                     <VideoFormatTest
+                      videoUrl={selectedVideo.url}
+                    />
+                  )}
+
+                  {/* Direct Video Test */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <DirectVideoTest
                       videoUrl={selectedVideo.url}
                     />
                   )}
