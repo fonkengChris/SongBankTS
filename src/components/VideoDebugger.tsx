@@ -12,8 +12,10 @@ import {
   AlertDescription,
   Code,
   Badge,
+  Divider,
+  Icon,
 } from "@chakra-ui/react";
-import { FaPlay, FaDownload, FaExternalLinkAlt } from "react-icons/fa";
+import { FaPlay, FaDownload, FaExternalLinkAlt, FaInfo } from "react-icons/fa";
 
 interface VideoDebuggerProps {
   videoUrl: string;
@@ -23,14 +25,27 @@ interface VideoDebuggerProps {
 const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
   const [testResult, setTestResult] = useState<string>("");
   const [isTesting, setIsTesting] = useState(false);
+  const [detailedInfo, setDetailedInfo] = useState<any>(null);
 
   const testVideoUrl = async () => {
     setIsTesting(true);
     setTestResult("");
+    setDetailedInfo(null);
 
     try {
       // Test 1: Check if URL is accessible
       const response = await fetch(videoUrl, { method: 'HEAD' });
+      
+      const info = {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        url: response.url,
+        type: response.type,
+        ok: response.ok
+      };
+      
+      setDetailedInfo(info);
       
       if (response.ok) {
         setTestResult(`✅ URL accessible - Status: ${response.status}`);
@@ -39,6 +54,7 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
       }
     } catch (error: any) {
       setTestResult(`❌ Error testing URL: ${error.message}`);
+      setDetailedInfo({ error: error.message, stack: error.stack });
     } finally {
       setIsTesting(false);
     }
@@ -59,13 +75,17 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
 
   const isMP4 = videoUrl.toLowerCase().endsWith('.mp4');
   const isS3 = videoUrl.includes('s3.amazonaws.com');
+  const isEuWest2 = videoUrl.includes('eu-west-2');
 
   return (
     <Box border="1px" borderColor="gray.300" borderRadius="lg" p={4} bg="gray.50">
       <VStack spacing={4} align="stretch">
-        <Text fontSize="lg" fontWeight="bold">
-          Video Debugger
-        </Text>
+        <HStack>
+          <Icon as={FaInfo} color="blue.500" />
+          <Text fontSize="lg" fontWeight="bold">
+            Video Debugger
+          </Text>
+        </HStack>
 
         <VStack align="start" spacing={2}>
           <Text fontSize="sm" fontWeight="semibold">Video URL:</Text>
@@ -81,6 +101,11 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           <Badge colorScheme={isS3 ? "blue" : "gray"}>
             {isS3 ? "S3 URL" : "Non-S3 URL"}
           </Badge>
+          {isS3 && (
+            <Badge colorScheme={isEuWest2 ? "purple" : "orange"}>
+              {isEuWest2 ? "eu-west-2 Region" : "Other Region"}
+            </Badge>
+          )}
         </HStack>
 
         <HStack spacing={4}>
@@ -124,6 +149,17 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           </Alert>
         )}
 
+        {detailedInfo && (
+          <Box>
+            <Text fontSize="sm" fontWeight="semibold" mb={2}>Detailed Response Info:</Text>
+            <Code fontSize="xs" p={2} bg="gray.100" borderRadius="md" display="block" whiteSpace="pre-wrap">
+              {JSON.stringify(detailedInfo, null, 2)}
+            </Code>
+          </Box>
+        )}
+
+        <Divider />
+
         <VStack align="start" spacing={2}>
           <Text fontSize="sm" fontWeight="semibold">Troubleshooting Tips:</Text>
           <Text fontSize="xs" color="gray.600">
@@ -137,6 +173,25 @@ const VideoDebugger: React.FC<VideoDebuggerProps> = ({ videoUrl, title }) => {
           </Text>
           <Text fontSize="xs" color="gray.600">
             • Check if S3 bucket CORS settings allow your domain
+          </Text>
+          <Text fontSize="xs" color="gray.600">
+            • Verify the S3 bucket is publicly accessible
+          </Text>
+          <Text fontSize="xs" color="gray.600">
+            • Check if the file path in the URL is correct
+          </Text>
+        </VStack>
+
+        <VStack align="start" spacing={2}>
+          <Text fontSize="sm" fontWeight="semibold">CSP Status:</Text>
+          <Text fontSize="xs" color="gray.600">
+            • Media sources should include: https://*.s3.eu-west-2.amazonaws.com
+          </Text>
+          <Text fontSize="xs" color="gray.600">
+            • Connect sources should include: https://*.s3.eu-west-2.amazonaws.com
+          </Text>
+          <Text fontSize="xs" color="gray.600">
+            • Image sources should include: https://*.s3.eu-west-2.amazonaws.com
           </Text>
         </VStack>
       </VStack>
