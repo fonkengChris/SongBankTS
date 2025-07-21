@@ -26,6 +26,7 @@ import Video from "../entities/Video";
 import SmartVideoPlayer from "../components/SmartVideoPlayer";
 import VideoDebugger from "../components/VideoDebugger";
 import HardwareVideoPlayer from "../components/HardwareVideoPlayer";
+import BrowserSpecificVideoPlayer from "../components/BrowserSpecificVideoPlayer";
 
 const TutorialPage = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -134,6 +135,16 @@ const TutorialPage = () => {
                   {/* Hardware Video Player for testing */}
                   {process.env.NODE_ENV === 'development' && (
                     <HardwareVideoPlayer
+                      videoUrl={selectedVideo.url}
+                      title={selectedVideo.title}
+                      thumbnailUrl={selectedVideo.thumbnailUrl}
+                      onError={handleVideoError}
+                    />
+                  )}
+
+                  {/* Browser-Specific Video Player for testing */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <BrowserSpecificVideoPlayer
                       videoUrl={selectedVideo.url}
                       title={selectedVideo.title}
                       thumbnailUrl={selectedVideo.thumbnailUrl}

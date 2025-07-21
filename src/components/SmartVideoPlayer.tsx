@@ -15,6 +15,7 @@ import { FaDownload, FaExternalLinkAlt } from "react-icons/fa";
 import EnhancedVideoPlayer from "./EnhancedVideoPlayer";
 import ChromeVideoPlayer from "./ChromeVideoPlayer";
 import HardwareVideoPlayer from "./HardwareVideoPlayer";
+import BrowserSpecificVideoPlayer from "./BrowserSpecificVideoPlayer";
 
 interface SmartVideoPlayerProps {
   videoId: string;
@@ -114,28 +115,12 @@ const SmartVideoPlayer: React.FC<SmartVideoPlayerProps> = ({
         </Box>
       </Alert>
       
-      {isDesktop() ? (
-        <HardwareVideoPlayer
-          videoUrl={videoUrl}
-          title={title}
-          thumbnailUrl={thumbnailUrl}
-          onError={onError}
-        />
-      ) : isChrome() ? (
-        <ChromeVideoPlayer
-          videoUrl={videoUrl}
-          title={title}
-          thumbnailUrl={thumbnailUrl}
-          onError={onError}
-        />
-      ) : (
-        <EnhancedVideoPlayer
-          videoUrl={videoUrl}
-          title={title}
-          thumbnailUrl={thumbnailUrl}
-          onError={onError}
-        />
-      )}
+      <BrowserSpecificVideoPlayer
+        videoUrl={videoUrl}
+        title={title}
+        thumbnailUrl={thumbnailUrl}
+        onError={onError}
+      />
     </VStack>
   );
 };
