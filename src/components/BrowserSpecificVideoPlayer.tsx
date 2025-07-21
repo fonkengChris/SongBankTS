@@ -101,7 +101,7 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
   // Get optimal settings for each browser
   const getBrowserSettings = (browser: BrowserType) => {
     const settings = {
-      preload: 'auto' as const,
+      preload: 'auto' as string,
       controls: false,
       muted: false,
       playsInline: true,
@@ -202,7 +202,7 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
     const settings = getBrowserSettings(browserInfo.type);
     
     // Apply browser-specific settings
-    video.preload = settings.preload;
+    (video as any).preload = settings.preload;
     video.controls = settings.controls;
     video.muted = settings.muted;
     video.playsInline = settings.playsInline;
