@@ -21,6 +21,7 @@ import APIClient from "../services/api-client";
 import { CONTACT_ENDPOINT } from "../data/constants";
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
+import { getValidToken, decodeToken } from "../utils/jwt-validator";
 
 interface ContactForm {
   email: string;
@@ -41,13 +42,17 @@ const Contact = () => {
 
   useEffect(() => {
     try {
-      const access = localStorage.getItem("token");
-      const currentUser = jwtDecode<CurrentUser>(access!);
-      setFormData((prev) => ({
-        ...prev,
-        email: currentUser.email || "",
-        name: currentUser.name || "",
-      }));
+      const token = getValidToken();
+      if (token) {
+        const currentUser = decodeToken(token);
+        if (currentUser) {
+          setFormData((prev) => ({
+            ...prev,
+            email: currentUser.email || "",
+            name: currentUser.name || "",
+          }));
+        }
+      }
     } catch (error) {
       // Silently fail - user can still fill in the form manually
     }

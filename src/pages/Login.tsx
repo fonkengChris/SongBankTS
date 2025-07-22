@@ -28,9 +28,10 @@ import {
   Box,
 } from "@chakra-ui/react";
 import backgroundImage from "../assets/background_image.jpg";
+import { getValidToken } from "../utils/jwt-validator";
 
 const Login = () => {
-  const jwt = localStorage.getItem("token");
+  const jwt = getValidToken();
   if (jwt) return <Navigate to="/songs" />;
 
   const { auth, setAuth } = useAuth();

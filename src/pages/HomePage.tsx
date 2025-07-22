@@ -1,14 +1,15 @@
 import { Box, Heading, Text, VStack, Button } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getValidToken } from "../utils/jwt-validator";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check for JWT token in localStorage
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Convert to boolean (true if token exists, false if null/undefined)
+    // Check for valid JWT token in localStorage
+    const token = getValidToken();
+    setIsLoggedIn(!!token); // Convert to boolean (true if valid token exists, false if null/undefined)
   }, []); // Empty dependency array means this runs once on component mount
 
   return (

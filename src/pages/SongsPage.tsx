@@ -16,9 +16,10 @@ import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
 import LanguageSelector from "../components/LanguageSelector";
 import CategorySelector from "../components/CategorySelector";
+import { getValidToken } from "../utils/jwt-validator";
 
 const SongsPage = () => {
-  const jwt = localStorage.getItem("token");
+  const jwt = getValidToken();
   if (!jwt) return <Navigate to="/auth" />;
 
   return (

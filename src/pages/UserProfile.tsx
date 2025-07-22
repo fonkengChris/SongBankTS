@@ -1,45 +1,59 @@
+import React, { useState } from "react";
 import {
   Box,
   Container,
-  Flex,
   VStack,
-  HStack,
   Heading,
   Text,
-  Image,
-  Icon,
   Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  useToast,
+  Spinner,
+  Badge,
+  HStack,
+  Icon,
   useColorModeValue,
   Divider,
 } from "@chakra-ui/react";
-import { FaEdit } from "react-icons/fa";
-import { MdEmail, MdLocationOn, MdPerson } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { FaEdit, FaUser, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { MdPerson } from "react-icons/md";
 import useCustomer from "../hooks/useCustomer";
-import jwtDecode from "jwt-decode";
-import { useState } from "react";
-import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
-import CountrySelector from "../components/CountrySelector";
+import APIClient from "../services/api-client";
 import { CUSTOMERS_ENDPOINT } from "../data/constants";
 import { CustomerPayload } from "../types/forms";
-import profileImage from "../assets/profile-container.jpg";
+import CountrySelector from "../components/CountrySelector";
 import LikedSongsList from "../components/LikedSongsList";
+import { getValidToken, decodeToken } from "../utils/jwt-validator";
+
+interface DecodedToken {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
 
 const UserProfile = () => {
-  // Define local interface for the post request
-  interface CustomerUser {
-    _id: string;
-  }
+  const toast = useToast();
 
-  // Decode token and extract user ID
-  const userToken = localStorage.getItem("token");
-
-  // Define the shape of the decoded token
-  interface DecodedToken {
-    _id: string;
-    name?: string;
-    email?: string;
+  // Get user token and validate it
+  const userToken = getValidToken();
+  if (!userToken) {
+    return (
+      <Container maxW="container.md" py={8}>
+        <VStack spacing={6}>
+          <Heading>Authentication Required</Heading>
+          <Text>Please log in to view your profile.</Text>
+          <Button as={Link} to="/auth" colorScheme="blue">
+            Go to Login
+          </Button>
+        </VStack>
+      </Container>
+    );
   }
 
   // Initialize user attributes
@@ -47,16 +61,17 @@ const UserProfile = () => {
   let userName: string | null = null;
   let userEmail: string | null = null;
 
-  if (userToken) {
-    try {
-      const decodedToken: DecodedToken = jwtDecode(userToken);
+  try {
+    const decodedToken = decodeToken(userToken);
+    if (decodedToken) {
       userId = decodedToken._id;
       userName = decodedToken.name || null;
       userEmail = decodedToken.email || null;
-    } catch (error) {
-      console.error("Error decoding token:", error);
     }
+  } catch (error) {
+    console.error("Error decoding token:", error);
   }
+
   // Fetch the customer using the useCustomer hook
   const { data: customer, error, isLoading } = useCustomer(userId!);
   const [formData, setFormData] = useState({
@@ -80,6 +95,13 @@ const UserProfile = () => {
     } catch (error) {
       console.error("Error creating customer profile:", error);
     }
+  };
+
+  const handleCountryChange = (countryCode: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      country: countryCode,
+    }));
   };
 
   return (
@@ -150,7 +172,7 @@ const UserProfile = () => {
               <VStack spacing={6} align="stretch">
                 <Box flex="1">
                   <HStack spacing={3} mb={2}>
-                    <Icon as={MdEmail} color="cyan.600" boxSize={5} />
+                    <Icon as={FaEnvelope} color="cyan.600" boxSize={5} />
                     <Text color="whiteAlpha.700" fontSize="sm">
                       Email Address
                     </Text>
@@ -162,7 +184,7 @@ const UserProfile = () => {
 
                 <Box>
                   <HStack spacing={3} mb={2}>
-                    <Icon as={MdLocationOn} color="cyan.600" boxSize={5} />
+                    <Icon as={FaMapMarkerAlt} color="cyan.600" boxSize={5} />
                     <Text color="whiteAlpha.700" fontSize="sm">
                       Country
                     </Text>
@@ -179,9 +201,7 @@ const UserProfile = () => {
                     <VStack spacing={6} align="stretch">
                       <CountrySelector
                         selectedCountry={formData.country}
-                        onSelect={(countryCode) =>
-                          setFormData({ ...formData, country: countryCode })
-                        }
+                        onSelect={handleCountryChange}
                       />
                       <Button
                         type="submit"

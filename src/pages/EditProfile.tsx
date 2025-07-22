@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import jwtDecode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { CUSTOMERS_ENDPOINT } from "../data/constants";
 import useCustomer from "../hooks/useCustomer";
 import APIClient from "../services/api-client";
@@ -21,6 +21,7 @@ import Customer from "../entities/Customer";
 import CountrySelector from "../components/CountrySelector";
 import { CustomerUpdateFormData } from "../types/forms";
 import backgroundImage from "../assets/background_image.jpg";
+import { getValidToken, decodeToken } from "../utils/jwt-validator";
 
 const customerApiClient = new APIClient<Customer, CustomerUpdateFormData>(
   CUSTOMERS_ENDPOINT
@@ -31,13 +32,36 @@ const EditProfile = () => {
   const [country, setCountry] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
-  // Decode token and extract user ID
-  const userToken = localStorage.getItem("token");
-  let userId: string | null = null;
+  // Get user token and validate it
+  const userToken = getValidToken();
+  if (!userToken) {
+    return (
+      <Container maxW="container.md" py={8}>
+        <VStack spacing={6}>
+          <Heading>Authentication Required</Heading>
+          <Text>Please log in to edit your profile.</Text>
+          <Button as={Link} to="/auth" colorScheme="blue">
+            Go to Login
+          </Button>
+        </VStack>
+      </Container>
+    );
+  }
 
-  if (userToken) {
-    const decodedToken: { _id: string } = jwtDecode(userToken);
-    userId = decodedToken._id;
+  // Initialize user attributes
+  let userId: string | null = null;
+  let userName: string | null = null;
+  let userEmail: string | null = null;
+
+  try {
+    const decodedToken = decodeToken(userToken);
+    if (decodedToken) {
+      userId = decodedToken._id;
+      userName = decodedToken.name || null;
+      userEmail = decodedToken.email || null;
+    }
+  } catch (error) {
+    console.error("Error decoding token:", error);
   }
 
   // Fetch the customer

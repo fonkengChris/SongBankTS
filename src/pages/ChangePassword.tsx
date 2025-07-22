@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { CHANGE_PASSWORD_ENDPOINT, PWD_REGEX } from "../data/constants";
 import { axiosInstance } from "../services/api-client";
-import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import CurrentUser from "../entities/CurrentUser";
 import {
@@ -32,11 +31,43 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 import backgroundImage from "../assets/background_image.jpg";
+import { getValidToken, decodeToken } from "../utils/jwt-validator";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
   const toast = useToast();
-  const user = jwtDecode<CurrentUser>(localStorage.getItem("token")!);
+  
+  // Get user token and validate it
+  const userToken = getValidToken();
+  if (!userToken) {
+    return (
+      <Container maxW="container.md" py={8}>
+        <Flex direction="column" align="center" justify="center" minH="50vh">
+          <Heading mb={4}>Authentication Required</Heading>
+          <Text mb={6}>Please log in to change your password.</Text>
+          <Button as="a" href="/auth" colorScheme="blue">
+            Go to Login
+          </Button>
+        </Flex>
+      </Container>
+    );
+  }
+
+  // Get user info from token
+  const user = decodeToken(userToken);
+  if (!user) {
+    return (
+      <Container maxW="container.md" py={8}>
+        <Flex direction="column" align="center" justify="center" minH="50vh">
+          <Heading mb={4}>Invalid Token</Heading>
+          <Text mb={6}>Please log in again.</Text>
+          <Button as="a" href="/auth" colorScheme="blue">
+            Go to Login
+          </Button>
+        </Flex>
+      </Container>
+    );
+  }
 
   const endpoint = CHANGE_PASSWORD_ENDPOINT + "/" + user._id;
 

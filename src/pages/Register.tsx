@@ -46,6 +46,7 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 import backgroundImage from "../assets/background_image.jpg";
+import { getValidToken } from "../utils/jwt-validator";
 
 const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
 const customerApiClient = new APIClient<Customer, CustomerPayload>(
@@ -53,7 +54,7 @@ const customerApiClient = new APIClient<Customer, CustomerPayload>(
 );
 
 const Register = () => {
-  const jwt = localStorage.getItem("token");
+  const jwt = getValidToken();
   if (jwt) return <Navigate to="/songs" />;
 
   const navigate = useNavigate();

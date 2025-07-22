@@ -19,9 +19,10 @@ import Views from "../components/Views";
 import Like from "../components/Like";
 import useLikeManager from "../hooks/useLikeManager";
 import YouTube from "react-youtube";
+import { getValidToken } from "../utils/jwt-validator";
 
 const SongDetailPage = () => {
-  const jwt = localStorage.getItem("token");
+  const jwt = getValidToken();
   if (!jwt) return <Navigate to="/auth" />;
 
   const { id } = useParams();

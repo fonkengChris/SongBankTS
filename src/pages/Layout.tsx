@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import CurrentUser from "../entities/CurrentUser";
 import PayPalProvider from "../components/PayPalProvider";
 import Footer from "../components/Footer";
+import { getValidToken, decodeToken } from "../utils/jwt-validator";
 
 const Layout = () => {
   const [user, setUser] = useState({} as CurrentUser);
@@ -13,10 +14,16 @@ const Layout = () => {
 
   useEffect(() => {
     try {
-      const access = localStorage.getItem("token");
-      const currentUser = jwtDecode<CurrentUser>(access!);
-      setUser({ ...currentUser });
-    } catch (error) {}
+      const token = getValidToken();
+      if (token) {
+        const decodedToken = decodeToken(token);
+        if (decodedToken) {
+          setUser(decodedToken as CurrentUser);
+        }
+      }
+    } catch (error) {
+      console.error("Error setting user from token:", error);
+    }
   }, []);
 
   return (

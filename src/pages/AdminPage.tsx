@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChakraProvider,
   Box,
@@ -29,6 +29,7 @@ import {
   useDisclosure,
   IconButton,
   Divider,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   Link,
@@ -52,14 +53,33 @@ import {
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
 import Footer from "../components/Footer";
+import { getValidToken, decodeToken } from "../utils/jwt-validator";
 
 const AdminPage: React.FC = () => {
-  const jwt = localStorage.getItem("token");
-  const user = jwtDecode<CurrentUser>(jwt!);
+  const [user, setUser] = useState({} as CurrentUser);
+  const [selectedRoute, setSelectedRoute] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
   const navigate = useNavigate();
   const location = useLocation();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedRoute, setSelectedRoute] = useState("");
+
+  useEffect(() => {
+    try {
+      const token = getValidToken();
+      if (token) {
+        const decodedToken = decodeToken(token);
+        if (decodedToken) {
+          setUser(decodedToken as CurrentUser);
+        }
+      }
+    } catch (error) {
+      console.error("Error setting user from token:", error);
+    }
+  }, []);
+
+  const jwt = getValidToken();
+  if (!jwt) return <Navigate to="/auth" />;
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });

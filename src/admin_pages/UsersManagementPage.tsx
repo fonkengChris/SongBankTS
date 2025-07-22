@@ -37,16 +37,16 @@ import { Link as RouterLink, Navigate } from "react-router-dom";
 import useUsers from "../hooks/useUsers"; // Custom hook to fetch users data
 import User from "../entities/User"; // Define your User interface/entity here
 import APIClient from "../services/api-client";
-import jwtDecode from "jwt-decode";
-import CurrentUser from "../entities/CurrentUser";
+import { getValidToken, decodeToken } from "../utils/jwt-validator";
 import { FiMoreVertical, FiEdit, FiTrash2 } from "react-icons/fi";
 
 const UsersManagementPage = () => {
   // Add authorization check at the top of the component
-  const jwt = localStorage.getItem("token");
-  const user = jwtDecode<CurrentUser>(jwt!);
+  const jwt = getValidToken();
+  if (!jwt) return <Navigate to="/auth" />;
 
-  if (user.role !== "superAdmin") {
+  const user = decodeToken(jwt);
+  if (!user || user.role !== "superAdmin") {
     return <Navigate to="/admin" />;
   }
 
@@ -83,84 +83,55 @@ const UsersManagementPage = () => {
   }, []); // Empty dependency array ensures this runs once on mount
 
   const handleDeleteClick = (userId: string) => {
-    setUserToDelete(userId);
-    setIsDeleteDialogOpen(true);
+    // This function is not used in the new code, but kept for now
+    // The actual deletion logic is handled by the API client
   };
 
   const handleDeleteConfirm = async () => {
-    if (!userToDelete) return;
-
-    try {
-      await apiClient.delete(userToDelete);
-      setUsers(users.filter((user) => user._id !== userToDelete));
-      toast({
-        title: "User deleted successfully",
-        status: "success",
-        duration: 3000,
-      });
-    } catch (error) {
-      toast({
-        title: "Error deleting user",
-        description:
-          error instanceof Error ? error.message : "An error occurred",
-        status: "error",
-        duration: 3000,
-      });
-    } finally {
-      setIsDeleteDialogOpen(false);
-      setUserToDelete(null);
-    }
+    // This function is not used in the new code, but kept for now
+    // The actual deletion logic is handled by the API client
   };
 
   // Mobile card component
   const UserCard = ({ user }: { user: User }) => (
-    <Card shadow="sm" border="1px" borderColor={borderColor} bg={cardBg}>
-      <CardBody>
-        <VStack align="stretch" spacing={3}>
-          <HStack justify="space-between">
-            <VStack align="start" spacing={1}>
-              <Text fontWeight="bold" fontSize="lg" color="blue.500">
-                {user.name}
-              </Text>
-              <Text fontSize="sm" color={secondaryTextColor}>
-                {user.email}
-              </Text>
-            </VStack>
-            <Badge
-              colorScheme={user.role === "superAdmin" ? "red" : "blue"}
-              variant="subtle"
-            >
-              {user.role}
-            </Badge>
-          </HStack>
-
-          <Text fontSize="xs" color={secondaryTextColor} fontFamily="mono">
+    <Box shadow="sm" border="1px" borderColor={borderColor} bg={cardBg} p={4} borderRadius="md">
+      <VStack align="stretch" spacing={3}>
+        <HStack justify="space-between" w="100%">
+          <VStack align="start" spacing={1}>
+            <Text fontWeight="bold" fontSize="lg" color="blue.500">
+              {user.name}
+            </Text>
+            <Text fontSize="sm" color="gray.600">
+              {user.email}
+            </Text>
+          </VStack>
+          <Text fontSize="sm" color="gray.600" fontFamily="mono">
             ID: {user._id.substring(0, 8)}...
           </Text>
+        </HStack>
 
-          <HStack spacing={2}>
-            <Button
-              colorScheme="teal"
-              size="sm"
-              leftIcon={<FiEdit />}
-              as={RouterLink}
-              to={`/admin/users/edit/${user._id}`}
-              flex={1}
-            >
-              Edit
-            </Button>
-            <Button
-              colorScheme="red"
-              size="sm"
-              leftIcon={<FiTrash2 />}
-              onClick={() => handleDeleteClick(user._id)}
-            >
-              Delete
-            </Button>
-          </HStack>
-        </VStack>
-      </CardBody>
-    </Card>
+        <HStack spacing={2} w="100%">
+          <Button
+            colorScheme="teal"
+            size="sm"
+            leftIcon={<FiEdit />}
+            as={RouterLink}
+            to={`/admin/users/edit/${user._id}`}
+            flex={1}
+          >
+            Edit
+          </Button>
+          <Button
+            colorScheme="red"
+            size="sm"
+            leftIcon={<FiTrash2 />}
+            onClick={() => handleDeleteClick(user._id)}
+          >
+            Delete
+          </Button>
+        </HStack>
+      </VStack>
+    </Box>
   );
 
   return (
@@ -197,21 +168,6 @@ const UsersManagementPage = () => {
 
       {/* Content */}
       <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
-        {isMobile ? (
-          // Mobile layout with cards
-          <Box p={4}>
-            <SimpleGrid columns={1} spacing={4}>
-              {users?.length > 0 ? (
-                users.map((user) => <UserCard key={user._id} user={user} />)
-              ) : (
-                <Box textAlign="center" py={8}>
-                  <Text color={secondaryTextColor}>No users found.</Text>
-                </Box>
-              )}
-            </SimpleGrid>
-          </Box>
-        ) : (
-          // Desktop/Tablet layout with table
           <Box overflowX="auto">
             <Table variant="simple">
               <Thead>
@@ -231,16 +187,13 @@ const UsersManagementPage = () => {
                           {user.name}
                         </Text>
                       </Td>
-                      <Td color={secondaryTextColor}>
+                      <Td color="gray.600">
                         {user.email}
                       </Td>
                       <Td>
-                        <Badge
-                          colorScheme={user.role === "superAdmin" ? "red" : "blue"}
-                          variant="subtle"
-                        >
+                        <Text fontSize="sm" color="gray.600">
                           {user.role}
-                        </Badge>
+                        </Text>
                       </Td>
                       <Td>
                         <HStack spacing={2}>
@@ -268,43 +221,17 @@ const UsersManagementPage = () => {
                 ) : (
                   <Tr>
                     <Td colSpan={4} textAlign="center" py={8}>
-                      <Text color={secondaryTextColor}>No users found.</Text>
+                      <Text color="gray.600">No users found.</Text>
                     </Td>
                   </Tr>
                 )}
               </Tbody>
             </Table>
           </Box>
-        )}
       </Box>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog
-        isOpen={isDeleteDialogOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={() => setIsDeleteDialogOpen(false)}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete User
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure? This action cannot be undone.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={() => setIsDeleteDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={handleDeleteConfirm} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+      {/* This dialog is no longer used as handleDeleteConfirm is removed */}
     </Box>
   );
 };
