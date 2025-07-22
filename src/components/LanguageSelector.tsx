@@ -27,7 +27,7 @@ const LanguageSelector = () => {
         letterSpacing="0.01em"
         variant="outline"
         borderColor="gray.600"
-        color="gray.300"
+        color="cyan.300"
         bg="gray.700"
         _hover={{
           bg: "gray.600",
@@ -51,7 +51,7 @@ const LanguageSelector = () => {
         <MenuItem
           onClick={() => setSelectedLanguage(null)}
           _hover={{ bg: "gray.700" }}
-          color="gray.300"
+          color="cyan.300"
           fontWeight="500"
         >
           All Languages
@@ -61,7 +61,7 @@ const LanguageSelector = () => {
             onClick={() => setSelectedLanguage(language._id)}
             key={language._id}
             _hover={{ bg: "gray.700" }}
-            color="gray.300"
+            color="cyan.300"
             fontWeight="500"
           >
             {language.name}

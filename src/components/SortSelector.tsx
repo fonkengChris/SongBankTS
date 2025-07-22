@@ -32,7 +32,7 @@ const SortSelector = () => {
         letterSpacing="0.01em"
         variant="outline"
         borderColor="gray.600"
-        color="gray.300"
+        color="cyan.300"
         bg="gray.700"
         _hover={{
           bg: "gray.600",
@@ -59,7 +59,7 @@ const SortSelector = () => {
             key={order.value}
             value={order.value}
             _hover={{ bg: "gray.700" }}
-            color="gray.300"
+            color="cyan.300"
             fontWeight="500"
           >
             {order.label}

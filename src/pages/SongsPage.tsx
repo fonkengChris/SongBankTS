@@ -40,28 +40,37 @@ const SongsPage = () => {
           <SongHeading />
 
           <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
-            {/* Desktop Layout */}
+            {/* Large screens (lg and above) */}
             <Hide below="lg">
-              <HStack
-                spacing={{ base: 3, md: 4, lg: 5 }}
-                marginBottom={6}
-                alignItems="center"
-                flexWrap="wrap"
-                gap={4}
-              >
-                <NotationSelector />
-                <LanguageSelector />
-                <SortSelector />
-                <Box flex={1} minWidth="200px">
+              <VStack spacing={4} marginBottom={6} align="stretch">
+                {/* Line 1: notation, language, sort selectors */}
+                <HStack
+                  spacing={4}
+                  alignItems="center"
+                  width="100%"
+                >
+                  <Box flex={1}>
+                    <NotationSelector />
+                  </Box>
+                  <Box flex={1}>
+                    <LanguageSelector />
+                  </Box>
+                  <Box flex={1}>
+                    <SortSelector />
+                  </Box>
+                </HStack>
+                
+                {/* Line 2: search bar */}
+                <Box width="100%">
                   <SearchInput />
                 </Box>
-              </HStack>
+              </VStack>
             </Hide>
 
-            {/* Mobile/Tablet Layout */}
+            {/* Small screens (below lg) */}
             <Show below="lg">
               <VStack spacing={4} marginBottom={6} align="stretch">
-                {/* First row of filters */}
+                {/* Line 1: notation and language selectors */}
                 <HStack
                   spacing={3}
                   width="100%"
@@ -77,7 +86,7 @@ const SongsPage = () => {
                   </Box>
                 </HStack>
 
-                {/* Second row of filters */}
+                {/* Line 2: category and sort selectors */}
                 <HStack
                   spacing={3}
                   width="100%"
@@ -93,7 +102,7 @@ const SongsPage = () => {
                   </Box>
                 </HStack>
 
-                {/* Search input */}
+                {/* Search bar */}
                 <Box width="100%">
                   <SearchInput />
                 </Box>
