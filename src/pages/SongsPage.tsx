@@ -8,7 +8,6 @@ import {
   Hide,
 } from "@chakra-ui/react";
 import CategoryList from "../components/CategoryList";
-import { Navigate } from "react-router-dom";
 import NotationSelector from "../components/NotationSelector";
 import SearchInput from "../components/SearchInput";
 import SongGrid from "../components/SongGrid";
@@ -16,12 +15,8 @@ import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
 import LanguageSelector from "../components/LanguageSelector";
 import CategorySelector from "../components/CategorySelector";
-import { getValidToken } from "../utils/jwt-validator";
 
 const SongsPage = () => {
-  const jwt = getValidToken();
-  if (!jwt) return <Navigate to="/auth" />;
-
   return (
     <Grid
       templateAreas={{
