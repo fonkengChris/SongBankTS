@@ -15,7 +15,17 @@ const PrivacyPage = () => {
     <Container maxW="4xl" py={8}>
       <VStack spacing={6} align="stretch">
         <Box>
-          <Heading as="h1" size="xl" mb={4}>
+          <Heading 
+            as="h1" 
+            fontSize={{ base: "clamp(2rem, 8vw, 4rem)", md: "clamp(2.5rem, 6vw, 5rem)", lg: "clamp(3rem, 5vw, 6rem)" }}
+            mb={4}
+            fontWeight="800"
+            letterSpacing="-0.03em"
+            lineHeight="1.1"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
             Data Privacy Policy
           </Heading>
           <Text color="gray.600" mb={2}>

@@ -17,11 +17,14 @@ const AboutPage = () => {
         <Box textAlign="center">
           <Heading
             as="h1"
-            size="xl"
+            fontSize={{ base: "clamp(2rem, 8vw, 4rem)", md: "clamp(2.5rem, 6vw, 5rem)", lg: "clamp(3rem, 5vw, 6rem)" }}
             mb={6}
             fontWeight="800"
             letterSpacing="-0.03em"
             lineHeight="1.1"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
           >
             About SheetMusicLibrary
           </Heading>
