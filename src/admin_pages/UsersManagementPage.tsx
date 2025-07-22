@@ -155,14 +155,6 @@ const UsersManagementPage = () => {
           <Heading color="blue.500" size="lg">
             Users Management
           </Heading>
-          <Button
-            colorScheme="blue"
-            as={RouterLink}
-            to="/admin/users/add"
-            size={{ base: "md", md: "lg" }}
-          >
-            Add User
-          </Button>
         </Flex>
       </Box>
 

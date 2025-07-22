@@ -20,7 +20,6 @@ import VideoFormPage from "./admin_pages/VideoFormPage";
 const adminRoutes: RouteObject[] = [
   // Authentication and Authorization routes
   { path: "users", element: <UsersManagementPage /> },
-  { path: "users/add", element: <UserFormPage /> },
   { path: "users/edit/:id", element: <UserFormPage /> },
 
   // Library routes

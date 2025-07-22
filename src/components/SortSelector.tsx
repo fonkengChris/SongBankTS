@@ -1,4 +1,4 @@
-import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Button, Menu, MenuButton, MenuItem, MenuList, Text, Show } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import useSongQueryStore from "../Store";
 
@@ -26,8 +26,9 @@ const SortSelector = () => {
         height={{ base: "48px", md: "56px" }}
         display="inline-flex"
         alignItems="center"
+        justifyContent="space-between"
         width="100%"
-        fontSize={{ base: "md", md: "lg" }}
+        fontSize={{ base: "sm", md: "md", lg: "lg" }}
         fontWeight="500"
         letterSpacing="0.01em"
         variant="outline"
@@ -44,8 +45,17 @@ const SortSelector = () => {
           borderColor: "blue.400",
         }}
         transition="all 0.2s ease"
+        overflow="hidden"
       >
-        Order by: {currentSortOrder?.label || "Relevance"}
+        <Text
+          noOfLines={1}
+          textAlign="left"
+          flex={1}
+          minWidth={0}
+        >
+          <Show above="md">Order by: </Show>
+          {currentSortOrder?.label || "Relevance"}
+        </Text>
       </MenuButton>
       <MenuList
         maxHeight="300px"
