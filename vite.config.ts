@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
                 /^https:\/\/sheet-music-library-ad225c202768\.herokuapp\.com\/api\/.*/i,
               handler: "NetworkFirst",
               options: {
-                cacheName: "api-cache",
+                cacheName: "api-cache-v2",
                 expiration: {
                   maxEntries: 100,
                   maxAgeSeconds: 60 * 60 * 24, // 24 hours
