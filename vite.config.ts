@@ -20,6 +20,11 @@ export default defineConfig(({ mode }) => {
           globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
           skipWaiting: true,
           clientsClaim: true,
+          cleanupOutdatedCaches: true,
+          disableDevLogs: true,
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+          sourcemap: false,
+          navigateFallback: "/index.html",
           runtimeCaching: [
             {
               urlPattern:
