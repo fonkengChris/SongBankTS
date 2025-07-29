@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: "autoUpdate",
         workbox: {
-          globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+          globPatterns: ["**/*.{js,css,ico,png,svg,woff2}"], // Remove html from globPatterns
           skipWaiting: true,
           clientsClaim: true,
           cleanupOutdatedCaches: true,
@@ -29,10 +29,23 @@ export default defineConfig(({ mode }) => {
           additionalManifestEntries: [
             { url: "/", revision: Date.now().toString() }
           ],
-          cacheId: "songbank-v4",
-          mode: "generateSW",
+          cacheId: "songbank-v5",
 
           runtimeCaching: [
+            {
+              urlPattern: /\.html$/,
+              handler: "NetworkFirst",
+              options: {
+                cacheName: "html-cache",
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60, // 1 hour
+                },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
             {
               urlPattern:
                 /^https:\/\/sheet-music-library-ad225c202768\.herokuapp\.com\/api\/.*/i,
