@@ -18,6 +18,8 @@ export default defineConfig(({ mode }) => {
         registerType: "autoUpdate",
         workbox: {
           globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+          skipWaiting: true,
+          clientsClaim: true,
           runtimeCaching: [
             {
               urlPattern:
@@ -107,6 +109,8 @@ export default defineConfig(({ mode }) => {
         devOptions: {
           enabled: true,
         },
+        injectRegister: "auto",
+        strategies: "generateSW",
       }),
     ],
     define: {
