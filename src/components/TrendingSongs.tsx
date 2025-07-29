@@ -29,12 +29,12 @@ const TrendingSongs = () => {
   useEffect(() => {
     const fetchTrendingSongs = async () => {
       try {
-        const response = await fetch("/api/songs?sortOrder=-trendingScore&limit=5");
+        const response = await fetch("/api/songs/trending?limit=5");
         const data = await response.json();
         
-        if (data.songs) {
+        if (Array.isArray(data)) {
           const trendingData: TrendingSong[] = [];
-          data.songs.forEach((song: Song) => {
+          data.forEach((song: Song) => {
             if (song.mediaFiles && song.mediaFiles.length > 0) {
               song.mediaFiles.forEach((mediaFile: SongMedia) => {
                 trendingData.push({ song, mediaFile });
