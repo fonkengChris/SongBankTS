@@ -8,6 +8,7 @@ import {
   VStack,
   Box,
   Link as ChakraLink,
+  Badge,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Song from "../entities/Song";
@@ -103,14 +104,28 @@ const SongCard = ({ song, mediaFile }: Props) => {
           borderColor="gray.600"
         >
           <CriticScore score={song.metacritic ?? 0} />
-          <Text
-            color="green.400"
-            fontWeight="700"
-            fontSize={{ base: "md", md: "lg" }}
-            letterSpacing="0.01em"
-          >
-            Free
-          </Text>
+          <HStack spacing={2}>
+            {song.trendingScore && song.trendingScore > 50 && (
+              <Badge
+                colorScheme="orange"
+                variant="solid"
+                fontSize="xs"
+                px={2}
+                py={1}
+                borderRadius="full"
+              >
+                🔥 Trending
+              </Badge>
+            )}
+            <Text
+              color="green.400"
+              fontWeight="700"
+              fontSize={{ base: "md", md: "lg" }}
+              letterSpacing="0.01em"
+            >
+              Free
+            </Text>
+          </HStack>
         </HStack>
       </CardBody>
     </Card>

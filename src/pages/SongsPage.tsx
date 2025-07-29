@@ -15,6 +15,7 @@ import SongHeading from "../components/SongHeading";
 import SortSelector from "../components/SortSelector";
 import LanguageSelector from "../components/LanguageSelector";
 import CategorySelector from "../components/CategorySelector";
+import TrendingSongs from "../components/TrendingSongs";
 
 const SongsPage = () => {
   return (
@@ -38,6 +39,10 @@ const SongsPage = () => {
       <GridItem area="main">
         <VStack spacing={{ base: 4, md: 6 }} align="stretch">
           <SongHeading />
+          
+          <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
+            <TrendingSongs />
+          </Box>
 
           <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
             {/* Large screens (lg and above) */}

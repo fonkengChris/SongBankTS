@@ -15,6 +15,7 @@ interface Song {
   views?: number;
   likesCount?: number;
   metacritic?: number;
+  trendingScore?: number;
   price?: number;
   youtubeUrl?: string;
 }
