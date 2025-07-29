@@ -25,6 +25,11 @@ export default defineConfig(({ mode }) => {
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           sourcemap: false,
           navigateFallback: "/index.html",
+          swDest: "sw.js",
+          additionalManifestEntries: [
+            { url: "/", revision: Date.now().toString() }
+          ],
+
           runtimeCaching: [
             {
               urlPattern:
