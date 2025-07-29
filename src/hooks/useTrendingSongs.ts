@@ -7,7 +7,7 @@ const useTrendingSongs = (limit: number = 5) => {
     queryKey: ["trending-songs", limit],
     queryFn: () =>
       axiosInstance
-        .get<Song[]>(`/songs/trending?limit=${limit}&_t=${Date.now()}`)
+        .get<Song[]>(`/api/songs/trending?limit=${limit}&_t=${Date.now()}`)
         .then((res) => res.data),
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
