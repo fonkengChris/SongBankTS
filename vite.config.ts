@@ -29,7 +29,8 @@ export default defineConfig(({ mode }) => {
           additionalManifestEntries: [
             { url: "/", revision: Date.now().toString() }
           ],
-          cacheId: "songbank-v2",
+          cacheId: "songbank-v4",
+          mode: "generateSW",
 
           runtimeCaching: [
             {
