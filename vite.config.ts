@@ -27,9 +27,10 @@ export default defineConfig(({ mode }) => {
           navigateFallback: "/index.html",
           swDest: "sw.js",
           additionalManifestEntries: [
-            { url: "/", revision: Date.now().toString() }
+            { url: "/", revision: Date.now().toString() },
+            { url: "/index.html", revision: Date.now().toString() }
           ],
-          cacheId: "songbank-v5",
+          cacheId: "songbank-v6",
 
           runtimeCaching: [
             {
