@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 app.use(
   "/api",
   createProxyMiddleware({
-    target: process.env.BACKEND_URL || "http://localhost:3001",
+    target: process.env.BACKEND_URL || process.env.VITE_API_URL || "http://localhost:3001",
     changeOrigin: true,
     pathRewrite: {
       "^/api": "/api",
