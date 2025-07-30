@@ -26,7 +26,7 @@ interface PopularSong {
 }
 
 const PopularSongs = () => {
-  const { data: songs, isLoading, error } = usePopularSongs(5);
+  const { data: songs, isLoading, error } = usePopularSongs(10);
   const [popularSongs, setPopularSongs] = useState<PopularSong[]>([]);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const PopularSongs = () => {
           });
         }
       });
-      setPopularSongs(popularData.slice(0, 5));
+      setPopularSongs(popularData.slice(0, 10));
     }
   }, [songs]);
 

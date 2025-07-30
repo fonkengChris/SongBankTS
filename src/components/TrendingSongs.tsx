@@ -31,7 +31,7 @@ const TrendingSongs = () => {
   useEffect(() => {
     const fetchTrendingSongs = async () => {
       try {
-        const response = await fetch("/api/songs/trending?limit=5");
+        const response = await fetch("/api/songs/trending?limit=10");
         const data = await response.json();
         
         if (Array.isArray(data)) {
@@ -43,7 +43,7 @@ const TrendingSongs = () => {
               });
             }
           });
-          setTrendingSongs(trendingData.slice(0, 5));
+          setTrendingSongs(trendingData.slice(0, 10));
         }
       } catch (error) {
         console.error("Error fetching trending songs:", error);
