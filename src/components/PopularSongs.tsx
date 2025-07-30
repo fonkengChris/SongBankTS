@@ -16,47 +16,35 @@ import { useEffect, useState } from "react";
 import Song from "../entities/Song";
 import SongMedia from "../entities/SongMedia";
 import CriticScore from "./CriticScore";
+import usePopularSongs from "../hooks/usePopularSongs";
 import SongCard from "./SongCard";
 import PremiumSongCard from "./PremiumSongCard";
 
-interface TrendingSong {
+interface PopularSong {
   song: Song;
   mediaFile: SongMedia;
 }
 
-const TrendingSongs = () => {
-  const [trendingSongs, setTrendingSongs] = useState<TrendingSong[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+const PopularSongs = () => {
+  const { data: songs, isLoading, error } = usePopularSongs(5);
+  const [popularSongs, setPopularSongs] = useState<PopularSong[]>([]);
 
   useEffect(() => {
-    const fetchTrendingSongs = async () => {
-      try {
-        const response = await fetch("/api/songs/trending?limit=5");
-        const data = await response.json();
-        
-        if (Array.isArray(data)) {
-          const trendingData: TrendingSong[] = [];
-          data.forEach((song: Song) => {
-            if (song.mediaFiles && song.mediaFiles.length > 0) {
-              song.mediaFiles.forEach((mediaFile: SongMedia) => {
-                trendingData.push({ song, mediaFile });
-              });
-            }
+    if (songs && Array.isArray(songs)) {
+      const popularData: PopularSong[] = [];
+      songs.forEach((song: Song) => {
+        if (song.mediaFiles && song.mediaFiles.length > 0) {
+          song.mediaFiles.forEach((mediaFile: SongMedia) => {
+            popularData.push({ song, mediaFile });
           });
-          setTrendingSongs(trendingData.slice(0, 5));
         }
-      } catch (error) {
-        console.error("Error fetching trending songs:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTrendingSongs();
-  }, []);
+      });
+      setPopularSongs(popularData.slice(0, 5));
+    }
+  }, [songs]);
 
   // Helper function to render appropriate card based on price
-  const renderSongCard = ({ song, mediaFile }: TrendingSong) => {
+  const renderSongCard = ({ song, mediaFile }: PopularSong) => {
     const isPremium = song.price && song.price > 0;
     
     if (isPremium) {
@@ -80,20 +68,24 @@ const TrendingSongs = () => {
         <Heading
           fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
           fontWeight="700"
-          color="orange.400"
+          color="purple.400"
           mb={4}
           display="flex"
           alignItems="center"
           gap={2}
         >
-          🔥 Trending Songs
+          ⭐ Popular Songs
         </Heading>
-        <Text color="gray.400">Loading trending songs...</Text>
+        <Text color="gray.400">Loading popular songs...</Text>
       </Box>
     );
   }
 
-  if (trendingSongs.length === 0) {
+  if (error) {
+    return null;
+  }
+
+  if (popularSongs.length === 0) {
     return null;
   }
 
@@ -110,13 +102,13 @@ const TrendingSongs = () => {
       <Heading
         fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
         fontWeight="700"
-        color="orange.400"
+        color="purple.400"
         mb={4}
         display="flex"
         alignItems="center"
         gap={2}
       >
-        🔥 Trending Songs
+        ⭐ Popular Songs
       </Heading>
 
       {/* Large screens - Horizontal scrollable layout */}
@@ -142,13 +134,13 @@ const TrendingSongs = () => {
             },
           }}
         >
-          {trendingSongs.map((trendingSong) => (
+          {popularSongs.map((popularSong) => (
             <Box
-              key={`${trendingSong.song._id}-${trendingSong.mediaFile._id}`}
+              key={`${popularSong.song._id}-${popularSong.mediaFile._id}`}
               minW={{ base: "280px", lg: "320px" }}
               maxW={{ base: "280px", lg: "320px" }}
             >
-              {renderSongCard(trendingSong)}
+              {renderSongCard(popularSong)}
             </Box>
           ))}
         </HStack>
@@ -179,11 +171,11 @@ const TrendingSongs = () => {
             },
           }}
         >
-          {trendingSongs.map((trendingSong) => (
+          {popularSongs.map((popularSong) => (
             <Box
-              key={`${trendingSong.song._id}-${trendingSong.mediaFile._id}`}
+              key={`${popularSong.song._id}-${popularSong.mediaFile._id}`}
             >
-              {renderSongCard(trendingSong)}
+              {renderSongCard(popularSong)}
             </Box>
           ))}
         </SimpleGrid>
@@ -192,4 +184,4 @@ const TrendingSongs = () => {
   );
 };
 
-export default TrendingSongs; 
+export default PopularSongs; 

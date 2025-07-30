@@ -16,6 +16,7 @@ import SortSelector from "../components/SortSelector";
 import LanguageSelector from "../components/LanguageSelector";
 import CategorySelector from "../components/CategorySelector";
 import TrendingSongs from "../components/TrendingSongs";
+import PopularSongs from "../components/PopularSongs";
 
 const SongsPage = () => {
   return (
@@ -42,6 +43,10 @@ const SongsPage = () => {
           
           <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
             <TrendingSongs />
+          </Box>
+
+          <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
+            <PopularSongs />
           </Box>
 
           <Box paddingX={{ base: 4, md: 6, lg: 8 }}>

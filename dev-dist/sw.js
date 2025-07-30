@@ -67,8 +67,11 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-a959eb95'], (function (workbox) { 'use strict';
+define(['./workbox-c776634e'], (function (workbox) { 'use strict';
 
+  workbox.setCacheNameDetails({
+    prefix: "songbank-v6"
+  });
   self.skipWaiting();
   workbox.clientsClaim();
 
@@ -81,15 +84,24 @@ define(['./workbox-a959eb95'], (function (workbox) { 'use strict';
     "url": "registerSW.js",
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
-    "url": "index.html",
-    "revision": "0.4vjhlcm42to"
+    "url": "/index.html",
+    "revision": "0.n3l94bhha9"
   }], {});
   workbox.cleanupOutdatedCaches();
-  workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+  workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("/index.html"), {
     allowlist: [/^\/$/]
   }));
+  workbox.registerRoute(/\.html$/, new workbox.NetworkFirst({
+    "cacheName": "html-cache",
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 10,
+      maxAgeSeconds: 3600
+    }), new workbox.CacheableResponsePlugin({
+      statuses: [0, 200]
+    })]
+  }), 'GET');
   workbox.registerRoute(/^https:\/\/sheet-music-library-ad225c202768\.herokuapp\.com\/api\/.*/i, new workbox.NetworkFirst({
-    "cacheName": "api-cache",
+    "cacheName": "api-cache-v2",
     plugins: [new workbox.ExpirationPlugin({
       maxEntries: 100,
       maxAgeSeconds: 86400
@@ -115,5 +127,6 @@ define(['./workbox-a959eb95'], (function (workbox) { 'use strict';
       statuses: [0, 200]
     })]
   }), 'GET');
+  self.__WB_DISABLE_DEV_LOGS = true;
 
 }));

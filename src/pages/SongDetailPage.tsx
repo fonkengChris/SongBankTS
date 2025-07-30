@@ -18,6 +18,7 @@ import SongAttributes from "../components/SongAttributes";
 import Views from "../components/Views";
 import Like from "../components/Like";
 import useLikeManager from "../hooks/useLikeManager";
+import useTrackView from "../hooks/useTrackView";
 import YouTube from "react-youtube";
 import { getValidToken } from "../utils/jwt-validator";
 
@@ -49,6 +50,9 @@ const SongDetailPage = () => {
     refresh: refreshLikeStatus,
   } = useLikeManager(songId);
 
+  // Track view when song is accessed
+  const trackView = useTrackView();
+
   const handleLike = async () => {
     if (!songId) return;
 
@@ -62,6 +66,13 @@ const SongDetailPage = () => {
       );
     }
   };
+
+  // Track view when component mounts and song is loaded
+  useEffect(() => {
+    if (songId && mediaFile && !mediaLoading) {
+      trackView.mutate(songId);
+    }
+  }, [songId, mediaFile, mediaLoading, trackView]);
 
   // Update the return type to string | undefined
   const getYoutubeVideoId = (url?: string): string | undefined => {
