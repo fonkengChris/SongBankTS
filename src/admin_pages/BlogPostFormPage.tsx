@@ -20,6 +20,7 @@ import {
   HStack,
   InputGroup,
   InputRightElement,
+  Text,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../services/api-client";
@@ -39,6 +40,30 @@ const BlogPostFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
+
+  // Check authentication and authorization
+  const user = decodeToken(localStorage.getItem("token"));
+  if (!user) {
+    return (
+      <Box p={4} textAlign="center">
+        <Text>Please log in to access this page.</Text>
+        <Button mt={4} colorScheme="blue" onClick={() => navigate("/auth")}>
+          Go to Login
+        </Button>
+      </Box>
+    );
+  }
+
+  if (user.role !== "admin" && user.role !== "superAdmin") {
+    return (
+      <Box p={4} textAlign="center">
+        <Text>Access denied. Admin privileges required.</Text>
+        <Button mt={4} colorScheme="blue" onClick={() => navigate("/admin")}>
+          Go to Admin Dashboard
+        </Button>
+      </Box>
+    );
+  }
 
   // Color mode values for consistent styling
   const bgColor = useColorModeValue("white", "gray.800");
@@ -77,10 +102,28 @@ const BlogPostFormPage = () => {
           });
         })
         .catch((error) => {
+          let errorMessage = "An error occurred while fetching the post";
+          
+          if (error.response?.status === 401) {
+            errorMessage = "Authentication failed. Please log in again.";
+            localStorage.removeItem("token");
+            navigate("/auth");
+          } else if (error.response?.status === 403) {
+            errorMessage = "Access denied. Admin privileges required.";
+          } else if (error.response?.status === 404) {
+            errorMessage = "Post not found";
+          } else if (error.response?.data?.error) {
+            errorMessage = error.response.data.error;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
           toast({
             title: "Error fetching post",
-            description: error.response?.data?.error || error.message,
+            description: errorMessage,
             status: "error",
+            duration: 5000,
+            isClosable: true,
           });
         })
         .finally(() => {
@@ -96,12 +139,28 @@ const BlogPostFormPage = () => {
     try {
       const user = decodeToken(localStorage.getItem("token"));
       if (!user) {
-        throw new Error("User not authenticated");
+        toast({
+          title: "Authentication Error",
+          description: "Please log in to create or edit posts",
+          status: "error",
+        });
+        navigate("/auth");
+        return;
+      }
+
+      // Check if user has admin privileges
+      if (user.role !== "admin" && user.role !== "superAdmin") {
+        toast({
+          title: "Access Denied",
+          description: "Admin privileges required to manage blog posts",
+          status: "error",
+        });
+        navigate("/admin");
+        return;
       }
 
       const postData = {
         ...formData,
-        authorId: user._id,
       };
 
       if (id) {
@@ -119,10 +178,28 @@ const BlogPostFormPage = () => {
       }
       navigate("/admin/blog");
     } catch (error: any) {
+      let errorMessage = "An error occurred while saving the post";
+      
+      if (error.response?.status === 401) {
+        errorMessage = "Authentication failed. Please log in again.";
+        localStorage.removeItem("token");
+        navigate("/auth");
+      } else if (error.response?.status === 403) {
+        errorMessage = "Access denied. Admin privileges required.";
+      } else if (error.response?.status === 400) {
+        errorMessage = error.response?.data?.error || "Invalid data provided";
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toast({
         title: "Error saving post",
-        description: error.response?.data?.error || error.message,
+        description: errorMessage,
         status: "error",
+        duration: 5000,
+        isClosable: true,
       });
     } finally {
       setIsLoading(false);
