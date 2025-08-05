@@ -49,6 +49,7 @@ import {
   FiArrowLeft,
   FiMenu,
   FiVideo,
+  FiEdit3,
 } from "react-icons/fi";
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
@@ -136,6 +137,12 @@ const AdminPage: React.FC = () => {
       path: "/admin/videos",
       label: "Videos",
       icon: FiVideo,
+      section: "LIBRARY",
+    },
+    {
+      path: "/admin/blog",
+      label: "Blog",
+      icon: FiEdit3,
       section: "LIBRARY",
     },
   ];
@@ -277,6 +284,17 @@ const AdminPage: React.FC = () => {
             isActive={location.pathname === "/admin/videos"}
           >
             Videos
+          </Button>
+          <Button
+            variant="ghost"
+            justifyContent="flex-start"
+            leftIcon={<Icon as={FiEdit3} />}
+            color="whiteAlpha.900"
+            _hover={{ bg: "blue.800" }}
+            onClick={() => handleNavigationChange("/admin/blog")}
+            isActive={location.pathname === "/admin/blog"}
+          >
+            Blog
           </Button>
         </VStack>
       </Box>

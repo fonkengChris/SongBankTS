@@ -20,6 +20,8 @@ import PrivacyPage from "./pages/PrivacyPage";
 import CopyrightPage from "./pages/CopyrightPage";
 import Terms from "./pages/Terms";
 import TutorialPage from "./pages/TutorialPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,8 @@ const router = createBrowserRouter([
       { path: "privacy", element: <PrivacyPage /> },
       { path: "copyright", element: <CopyrightPage /> },
       { path: "terms", element: <Terms /> },
+      { path: "blog", element: <BlogPage /> },
+      { path: "blog/:slug", element: <BlogPostPage /> },
     ],
   },
   {

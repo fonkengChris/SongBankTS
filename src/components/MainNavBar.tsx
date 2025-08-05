@@ -132,6 +132,27 @@ const MainNavBar = ({ user }: Props) => {
             letterSpacing="0.01em"
             transition="all 0.2s ease"
             width="100%"
+            onClick={() => handleNavigation("/blog")}
+          >
+            Blog
+          </Button>
+        </ListItem>
+        <ListItem>
+          <Button
+            colorScheme="blue"
+            variant="ghost"
+            color="gray.300"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+              transform: "translateY(-1px)",
+            }}
+            _active={{ bg: "blue.600" }}
+            fontWeight="600"
+            fontSize="md"
+            letterSpacing="0.01em"
+            transition="all 0.2s ease"
+            width="100%"
             onClick={() => handleNavigation("/about")}
           >
             About

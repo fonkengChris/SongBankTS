@@ -8,6 +8,7 @@ import {
   Spinner,
   Text,
   HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import ExpandableText from "../components/ExpandableText";
@@ -21,6 +22,7 @@ import useLikeManager from "../hooks/useLikeManager";
 import useTrackView from "../hooks/useTrackView";
 import YouTube from "react-youtube";
 import { getValidToken } from "../utils/jwt-validator";
+import CommentSection from "../components/CommentSection";
 
 const SongDetailPage = () => {
   const jwt = getValidToken();
@@ -143,95 +145,102 @@ const SongDetailPage = () => {
   const { song, documentFile, previewImage, audioFile } = mediaFile;
 
   return (
-    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
-      {/* First Column */}
-      <GridItem>
-        <Heading>{song.title}</Heading>
-        <Link to={documentFile}>
-          <Img
-            src={previewImage}
-            boxSize="700px"
-            objectFit="cover"
-            alt={`Preview image for ${song?.title || "song"}`}
-          />
-        </Link>
-        <br />
-        {audioFile ? (
-          <>
-            <audio controls src={audioFile}>
-              Your browser does not support the audio element.
-            </audio>
-            <br />
-          </>
-        ) : (
-          <Text>No audio available for this song.</Text>
-        )}
+    <VStack spacing={8} align="stretch">
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
+        {/* First Column */}
+        <GridItem>
+          <Heading>{song.title}</Heading>
+          <Link to={documentFile}>
+            <Img
+              src={previewImage}
+              boxSize="700px"
+              objectFit="cover"
+              alt={`Preview image for ${song?.title || "song"}`}
+            />
+          </Link>
+          <br />
+          {audioFile ? (
+            <>
+              <audio controls src={audioFile}>
+                Your browser does not support the audio element.
+              </audio>
+              <br />
+            </>
+          ) : (
+            <Text>No audio available for this song.</Text>
+          )}
 
-        <Heading>Background</Heading>
+          <Heading>Background</Heading>
 
-        <ExpandableText>
-          {song!.description || "No description available."}
-        </ExpandableText>
-      </GridItem>
+          <ExpandableText>
+            {song!.description || "No description available."}
+          </ExpandableText>
+        </GridItem>
 
-      {/* Second Column */}
-      <GridItem>
-        {song.youtubeUrl && (
-          <>
-            <Box my={4} width="100%" display="flex" justifyContent="center">
-              <Box width={{ base: "80%", md: "500px" }}>
-                <YouTube
-                  videoId={getYoutubeVideoId(song.youtubeUrl)}
-                  opts={{
-                    width: "100%",
-                    height: "300",
-                    playerVars: {
-                      autoplay: 0,
-                    },
-                  }}
-                />
+        {/* Second Column */}
+        <GridItem>
+          {song.youtubeUrl && (
+            <>
+              <Box my={4} width="100%" display="flex" justifyContent="center">
+                <Box width={{ base: "80%", md: "500px" }}>
+                  <YouTube
+                    videoId={getYoutubeVideoId(song.youtubeUrl)}
+                    opts={{
+                      width: "100%",
+                      height: "300",
+                      playerVars: {
+                        autoplay: 0,
+                      },
+                    }}
+                  />
+                </Box>
               </Box>
-            </Box>
-            <br />
-          </>
-        )}
-        <Heading mt={6}>Lyrics</Heading>
-        <Text>{song!.lyrics || "No lyrics available."}</Text>
-        <SongAttributes mediaFile={mediaFile!} />
+              <br />
+            </>
+          )}
+          <Heading mt={6}>Lyrics</Heading>
+          <Text>{song!.lyrics || "No lyrics available."}</Text>
+          <SongAttributes mediaFile={mediaFile!} />
 
-        <SimpleGrid columns={2} as="dl" spacing={4}>
-          <DefinitionItem term="Likes">
-            <Box>
-              <HStack>
-                {likeLoading ? (
-                  <Spinner size="sm" />
-                ) : (
-                  <Like liked={isLiked} onLike={handleLike} />
-                )}
-                <Text
-                  padding={2}
-                  transition="all 0.2s ease-in-out"
-                  color={isLiked ? "red.500" : "inherit"}
-                >
-                  {likesCount}
-                </Text>
-                {(errorMessage || likeError) && (
-                  <Text color="red.500">{errorMessage || likeError}</Text>
-                )}
-              </HStack>
-            </Box>
-          </DefinitionItem>
-          <DefinitionItem term="Views">
-            <Box>
-              <HStack>
-                <Views />
-                <Text padding={2}>{song!.views}</Text>
-              </HStack>
-            </Box>
-          </DefinitionItem>
-        </SimpleGrid>
-      </GridItem>
-    </SimpleGrid>
+          <SimpleGrid columns={2} as="dl" spacing={4}>
+            <DefinitionItem term="Likes">
+              <Box>
+                <HStack>
+                  {likeLoading ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <Like liked={isLiked} onLike={handleLike} />
+                  )}
+                  <Text
+                    padding={2}
+                    transition="all 0.2s ease-in-out"
+                    color={isLiked ? "red.500" : "inherit"}
+                  >
+                    {likesCount}
+                  </Text>
+                  {(errorMessage || likeError) && (
+                    <Text color="red.500">{errorMessage || likeError}</Text>
+                  )}
+                </HStack>
+              </Box>
+            </DefinitionItem>
+            <DefinitionItem term="Views">
+              <Box>
+                <HStack>
+                  <Views />
+                  <Text padding={2}>{song!.views}</Text>
+                </HStack>
+              </Box>
+            </DefinitionItem>
+          </SimpleGrid>
+        </GridItem>
+      </SimpleGrid>
+
+      {/* Comments Section */}
+      <Box>
+        <CommentSection songId={songId!} />
+      </Box>
+    </VStack>
   );
 };
 

@@ -15,6 +15,7 @@ import CustomerFormPage from "./admin_pages/CustomerFormPage";
 import UserFormPage from "./admin_pages/UserFormPage";
 import VideosManagementPage from "./admin_pages/VideosManagementPage";
 import VideoFormPage from "./admin_pages/VideoFormPage";
+import BlogManagementPage from "./admin_pages/BlogManagementPage";
 
 // Define paths based on the links in your AdminPage component
 const adminRoutes: RouteObject[] = [
@@ -68,6 +69,10 @@ const adminRoutes: RouteObject[] = [
   },
   { path: "videos/add", element: <VideoFormPage /> },
   { path: "videos/edit/:id", element: <VideoFormPage /> },
+  {
+    path: "blog",
+    element: <BlogManagementPage />,
+  },
 ];
 
 export default adminRoutes;

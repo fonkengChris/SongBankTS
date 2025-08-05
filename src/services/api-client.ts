@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosHeaders } from "axios";
 
-// Use the environment variable for the API URL
-const API_URL = import.meta.env.VITE_API_URL;
+// Use the environment variable for the API URL, with fallback for development
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:3000" : "https://sheet-music-library-ad225c202768.herokuapp.com");
 
 export const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -11,6 +11,12 @@ export const axiosInstance = axios.create({
     Accept: "application/json",
   },
 });
+
+// Log the API URL being used
+console.log("🔧 API Client Configuration:");
+console.log("   API_URL:", API_URL);
+console.log("   VITE_API_URL:", import.meta.env.VITE_API_URL);
+console.log("   DEV mode:", import.meta.env.DEV);
 
 // Add request interceptor with logging
 axiosInstance.interceptors.request.use(
