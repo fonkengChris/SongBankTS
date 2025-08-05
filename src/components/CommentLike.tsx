@@ -1,61 +1,83 @@
-import { Icon, Text, HStack } from "@chakra-ui/react";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
-import useCommentLike from "../hooks/useCommentLike";
-import { useState } from "react";
+import React from "react";
+import { IconButton, Text, HStack, useToast } from "@chakra-ui/react";
+import { FiHeart } from "react-icons/fi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { axiosInstance } from "../services/api-client";
 
-interface Props {
+interface CommentLikeProps {
   commentId: string;
   isLiked: boolean;
   likesCount: number;
-  onLikeChange?: (isLiked: boolean, newCount: number) => void;
 }
 
-const CommentLike = ({ commentId, isLiked: initialIsLiked, likesCount: initialLikesCount, onLikeChange }: Props) => {
-  const [isLiked, setIsLiked] = useState(initialIsLiked);
-  const [likesCount, setLikesCount] = useState(initialLikesCount);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const { likeComment, unlikeComment } = useCommentLike();
+const CommentLike: React.FC<CommentLikeProps> = ({ commentId, isLiked, likesCount }) => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
-  const handleLikeClick = async () => {
-    if (isLoading) return;
-    
-    setIsLoading(true);
-    
-    try {
-      if (isLiked) {
-        const result = await unlikeComment(commentId);
-        if (result.success) {
-          setIsLiked(false);
-          setLikesCount(prev => Math.max(0, prev - 1));
-          onLikeChange?.(false, likesCount - 1);
-        }
-      } else {
-        const result = await likeComment(commentId);
-        if (result.success) {
-          setIsLiked(true);
-          setLikesCount(prev => prev + 1);
-          onLikeChange?.(true, likesCount + 1);
-        }
-      }
-    } catch (error) {
-      console.error("Error toggling comment like:", error);
-    } finally {
-      setIsLoading(false);
+  const likeMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.post(`/api/comment-likes/${commentId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch comments to update like status
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.response?.data?.error || "Failed to like comment",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const unlikeMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.delete(`/api/comment-likes/${commentId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch comments to update like status
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.response?.data?.error || "Failed to unlike comment",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const handleLikeToggle = () => {
+    if (isLiked) {
+      unlikeMutation.mutate();
+    } else {
+      likeMutation.mutate();
     }
   };
 
+  const isLoading = likeMutation.isLoading || unlikeMutation.isLoading;
+
   return (
-    <HStack spacing={1} cursor="pointer" onClick={handleLikeClick}>
-      <Icon
-        as={isLiked ? BsHeartFill : BsHeart}
-        color={isLiked ? "red.500" : "gray.400"}
-        transition="all 0.2s ease-in-out"
-        _hover={{ transform: "scale(1.1)" }}
-        opacity={isLoading ? 0.5 : 1}
+    <HStack spacing={1}>
+      <IconButton
+        aria-label={isLiked ? "Unlike comment" : "Like comment"}
+        icon={<FiHeart />}
+        size="sm"
+        variant="ghost"
+        colorScheme={isLiked ? "red" : "gray"}
+        onClick={handleLikeToggle}
+        isLoading={isLoading}
+        isDisabled={isLoading}
       />
       {likesCount > 0 && (
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="xs" color="gray.500">
           {likesCount}
         </Text>
       )}
