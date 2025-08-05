@@ -12,12 +12,18 @@ import {
   useToast,
   Spinner,
   Badge,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  useColorMode,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import { FiMessageSquare } from "react-icons/fi";
+import { FiMessageSquare, FiSmile } from "react-icons/fi";
 import useComments, { Comment } from "../hooks/useComments";
 import { formatDistanceToNow } from "date-fns";
 import { parseCommentText } from "../utils/mention-utils";
+import EmojiPicker, { Theme } from "emoji-picker-react";
 
 interface CommentSectionProps {
   songId: string;
@@ -30,6 +36,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
   const [replyingTo, setReplyingTo] = useState<Comment | null>(null);
   const [replyText, setReplyText] = useState("");
   const toast = useToast();
+  const { colorMode } = useColorMode();
 
   const {
     comments,
@@ -50,8 +57,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
     if (!newComment.trim()) return;
 
     try {
-      const { mentionUsernames } = parseCommentText(newComment.trim());
-      // For now, we'll use empty mentions array - in a real app you'd resolve usernames to IDs
       await addComment(newComment.trim(), undefined, []);
       setNewComment("");
       toast({
@@ -75,7 +80,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
     if (!editText.trim()) return;
 
     try {
-      const { mentionUsernames } = parseCommentText(editText.trim());
       await updateComment(commentId, editText.trim(), []);
       setEditingComment(null);
       setEditText("");
@@ -135,7 +139,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
     if (!replyText.trim() || !replyingTo) return;
 
     try {
-      const { mentionUsernames } = parseCommentText(replyText.trim());
       await addComment(replyText.trim(), replyingTo._id, []);
       setReplyText("");
       setReplyingTo(null);
@@ -230,6 +233,35 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
       {/* Comment Content */}
       {editingComment === comment._id ? (
         <Box>
+          <HStack mb={2} justify="space-between">
+            <Text fontSize="sm" color="gray.600">
+              Edit your comment
+            </Text>
+            <Popover placement="top" closeOnBlur={false}>
+              <PopoverTrigger>
+                <IconButton
+                  aria-label="Add emoji"
+                  icon={<FiSmile />}
+                  size="sm"
+                  variant="ghost"
+                  colorScheme="blue"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverBody p={0}>
+                  <EmojiPicker
+                    onEmojiClick={(emojiObject) => {
+                      setEditText(prev => prev + emojiObject.emoji);
+                    }}
+                    width="100%"
+                    height={300}
+                    lazyLoadEmojis={true}
+                    theme={colorMode === 'dark' ? Theme.DARK : Theme.LIGHT}
+                  />
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </HStack>
           <Textarea
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
@@ -280,28 +312,70 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
 
       {/* Reply form */}
       {replyingTo?._id === comment._id && (
-        <Box mt={4} p={3} bg="gray.50" borderRadius="md">
-          <HStack justify="space-between" mb={2}>
-            <Text fontSize="sm" color="gray.600">
+        <Box 
+          mt={4} 
+          p={4} 
+          borderWidth={1} 
+          borderRadius="md"
+          borderColor="gray.200"
+          bg="white"
+        >
+          <HStack justify="space-between" mb={3}>
+            <Text fontSize="sm" color="gray.600" fontWeight="medium">
               Replying to @{comment.userId.name}
             </Text>
-            <IconButton
-              aria-label="Cancel reply"
-              icon={<CloseIcon />}
-              size="sm"
-              variant="ghost"
-              colorScheme="red"
-              onClick={cancelReply}
-            />
+            <HStack spacing={1}>
+              <Popover placement="top" closeOnBlur={false}>
+                <PopoverTrigger>
+                  <IconButton
+                    aria-label="Add emoji"
+                    icon={<FiSmile />}
+                    size="sm"
+                    variant="ghost"
+                    colorScheme="blue"
+                  />
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverBody p={0}>
+                    <EmojiPicker
+                      onEmojiClick={(emojiObject) => {
+                        setReplyText(prev => prev + emojiObject.emoji);
+                      }}
+                      width="100%"
+                      height={300}
+                      lazyLoadEmojis={true}
+                      theme={colorMode === 'dark' ? Theme.DARK : Theme.LIGHT}
+                    />
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+              <IconButton
+                aria-label="Cancel reply"
+                icon={<CloseIcon />}
+                size="sm"
+                variant="ghost"
+                colorScheme="red"
+                onClick={cancelReply}
+              />
+            </HStack>
           </HStack>
           <Textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
-            size="sm"
-            mb={2}
+            size="md"
+            mb={3}
             placeholder="Write your reply..."
+            minH="80px"
+            resize="vertical"
           />
-          <HStack>
+          <HStack justify="flex-end" spacing={2}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={cancelReply}
+            >
+              Cancel
+            </Button>
             <Button
               size="sm"
               colorScheme="blue"
@@ -310,13 +384,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
               loadingText="Posting..."
             >
               Reply
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={cancelReply}
-            >
-              Cancel
             </Button>
           </HStack>
         </Box>
@@ -355,6 +422,35 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
 
       {/* Add Comment Form */}
       <Box mb={6}>
+        <HStack mb={2} justify="space-between">
+          <Text fontSize="sm" color="gray.600">
+            Add a comment... Use @username to mention someone
+          </Text>
+          <Popover placement="top" closeOnBlur={false}>
+            <PopoverTrigger>
+              <IconButton
+                aria-label="Add emoji"
+                icon={<FiSmile />}
+                size="sm"
+                variant="ghost"
+                colorScheme="blue"
+              />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverBody p={0}>
+                <EmojiPicker
+                  onEmojiClick={(emojiObject) => {
+                    setNewComment(prev => prev + emojiObject.emoji);
+                  }}
+                  width="100%"
+                  height={300}
+                  lazyLoadEmojis={true}
+                  theme={colorMode === 'dark' ? Theme.DARK : Theme.LIGHT}
+                />
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </HStack>
         <Textarea
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
