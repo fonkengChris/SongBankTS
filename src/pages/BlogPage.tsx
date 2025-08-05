@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
 import usePosts from "../hooks/usePosts";
 import { formatDistanceToNow } from "date-fns";
+import PostLike from "../components/PostLike";
 
 const BlogPage: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -164,6 +165,14 @@ const BlogPage: React.FC = () => {
                         addSuffix: true,
                       })}
                     </Text>
+                  </HStack>
+
+                  <HStack justify="space-between" w="100%">
+                    <PostLike
+                      postId={post._id}
+                      isLiked={post.isLiked || false}
+                      likesCount={post.likesCount || 0}
+                    />
                   </HStack>
 
                   <Button

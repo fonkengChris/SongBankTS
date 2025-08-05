@@ -20,6 +20,8 @@ export interface Comment {
     picture?: string;
   }[];
   depth: number;
+  likesCount?: number;
+  isLiked?: boolean;
   replies?: Comment[];
   createdAt: string;
   updatedAt: string;

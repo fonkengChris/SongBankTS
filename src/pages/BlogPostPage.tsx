@@ -17,6 +17,7 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import usePost from "../hooks/usePost";
 import { formatDistanceToNow } from "date-fns";
+import PostLike from "../components/PostLike";
 
 const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -119,6 +120,11 @@ const BlogPostPage: React.FC = () => {
                   </Text>
                 </VStack>
               </HStack>
+              <PostLike
+                postId={post._id}
+                isLiked={post.isLiked || false}
+                likesCount={post.likesCount || 0}
+              />
             </HStack>
           </VStack>
         </Box>

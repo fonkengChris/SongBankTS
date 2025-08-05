@@ -24,6 +24,7 @@ import useComments, { Comment } from "../hooks/useComments";
 import { formatDistanceToNow } from "date-fns";
 import { parseCommentText } from "../utils/mention-utils";
 import EmojiPicker, { Theme } from "emoji-picker-react";
+import CommentLike from "./CommentLike";
 
 interface CommentSectionProps {
   songId: string;
@@ -196,6 +197,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
 
         {/* Action Buttons */}
         <HStack>
+          <CommentLike
+            commentId={comment._id}
+            isLiked={comment.isLiked || false}
+            likesCount={comment.likesCount || 0}
+          />
           {!isReply && (
             <IconButton
               aria-label="Reply to comment"

@@ -17,6 +17,8 @@ export interface Post {
   excerpt?: string;
   featuredImage?: string;
   status: "draft" | "published";
+  likesCount?: number;
+  isLiked?: boolean;
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;

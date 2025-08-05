@@ -20,6 +20,8 @@ export const CONTACT_ENDPOINT = "/api/contact";
 
 // Likes API endpoints
 export const LIKES_ENDPOINT = "/api/likes";
+export const COMMENT_LIKES_ENDPOINT = "/api/comment-likes";
+export const POST_LIKES_ENDPOINT = "/api/post-likes";
 
 //validation constants
 
