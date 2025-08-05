@@ -159,8 +159,14 @@ const BlogPostFormPage = () => {
         return;
       }
 
+      // Filter out empty fields to avoid validation errors
       const postData = {
-        ...formData,
+        title: formData.title,
+        content: formData.content,
+        status: formData.status,
+        tags: formData.tags,
+        ...(formData.excerpt && { excerpt: formData.excerpt }),
+        ...(formData.featuredImage && { featuredImage: formData.featuredImage }),
       };
 
       if (id) {
