@@ -15,7 +15,7 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { FaRunning, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import APIClient from "../services/api-client";
 import { CONTACT_ENDPOINT } from "../data/constants";
@@ -87,7 +87,7 @@ const Contact = () => {
 
       toast({
         title: "Success",
-        description: "Your message has been sent successfully!",
+        description: "Your message has been sent successfully! We'll get back to you soon.",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -127,7 +127,7 @@ const Contact = () => {
           overflow="hidden"
           textOverflow="ellipsis"
         >
-          Contact Us
+          Get in Touch
         </Heading>
         <Text
           textAlign="center"
@@ -137,7 +137,7 @@ const Contact = () => {
           letterSpacing="0.01em"
           maxW="600px"
         >
-          Any questions or remarks? Just write us a message!
+          Have questions about our sheet music library? Need technical support? We're here to help!
         </Text>
 
         {/* Contact Form */}
@@ -157,7 +157,7 @@ const Contact = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="Enter a valid email address"
+                  placeholder="Enter your email address"
                   bg="gray.700"
                   border="1px solid"
                   borderColor="gray.600"
@@ -186,7 +186,7 @@ const Contact = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="Enter your Name"
+                  placeholder="Enter your full name"
                   bg="gray.700"
                   border="1px solid"
                   borderColor="gray.600"
@@ -215,7 +215,7 @@ const Contact = () => {
                 name="message"
                 value={formData.message}
                 onChange={handleInputChange}
-                placeholder="Write your message here..."
+                placeholder="Tell us how we can help you..."
                 bg="gray.700"
                 border="1px solid"
                 borderColor="gray.600"
@@ -234,8 +234,8 @@ const Contact = () => {
             </FormControl>
             <Button
               w="100%"
-              colorScheme="teal"
-              bg="teal.400"
+              colorScheme="blue"
+              bg="blue.500"
               size="lg"
               borderRadius="full"
               onClick={handleSubmit}
@@ -246,17 +246,17 @@ const Contact = () => {
               letterSpacing="0.01em"
               py={6}
               _hover={{
-                bg: "teal.500",
+                bg: "blue.600",
                 transform: "translateY(-2px)",
-                boxShadow: "0 8px 25px rgba(20, 184, 166, 0.3)",
+                boxShadow: "0 8px 25px rgba(59, 130, 246, 0.3)",
               }}
               _active={{
-                bg: "teal.600",
+                bg: "blue.700",
                 transform: "translateY(0)",
               }}
               transition="all 0.2s ease"
             >
-              SUBMIT
+              Send Message
             </Button>
           </Stack>
         </Box>
@@ -270,33 +270,30 @@ const Contact = () => {
         border="1px solid"
         borderColor="gray.700"
       >
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={12}>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8}>
           <VStack align="center" spacing={6}>
             <Circle
               size="80px"
-              bg="teal.400"
-              boxShadow="0 8px 25px rgba(20, 184, 166, 0.3)"
+              bg="blue.500"
+              boxShadow="0 8px 25px rgba(59, 130, 246, 0.3)"
             >
-              <Icon as={FaRunning} color="white" boxSize={8} />
+              <Icon as={FaEnvelope} color="white" boxSize={8} />
             </Circle>
             <Heading
               size="md"
-              color="teal.400"
+              color="blue.400"
               fontWeight="700"
               letterSpacing="-0.01em"
               textAlign="center"
             >
-              RESOURCE TEAM
+              Email Support
             </Heading>
             <VStack spacing={2} align="center">
               <Text color="gray.300" fontSize="md" fontWeight="500">
-                Christian Fonkeng
+                support@sheetmusiclibrary.com
               </Text>
-              <Text color="gray.300" fontSize="md" fontWeight="500">
-                Blaise Dong
-              </Text>
-              <Text color="gray.300" fontSize="md" fontWeight="500">
-                Martial Wanji
+              <Text color="gray.400" fontSize="sm" textAlign="center">
+                For general inquiries and technical support
               </Text>
             </VStack>
           </VStack>
@@ -304,29 +301,26 @@ const Contact = () => {
           <VStack align="center" spacing={6}>
             <Circle
               size="80px"
-              bg="teal.400"
-              boxShadow="0 8px 25px rgba(20, 184, 166, 0.3)"
+              bg="blue.500"
+              boxShadow="0 8px 25px rgba(59, 130, 246, 0.3)"
             >
               <Icon as={FaPhone} color="white" boxSize={8} />
             </Circle>
             <Heading
               size="md"
-              color="teal.400"
+              color="blue.400"
               fontWeight="700"
               letterSpacing="-0.01em"
               textAlign="center"
             >
-              PHONE (LANDLINE)
+              Phone Support
             </Heading>
             <VStack spacing={2} align="center">
               <Text color="gray.300" fontSize="md" fontWeight="500">
-                +44 7735086910
+                +44 773 508 6910
               </Text>
-              <Text color="gray.300" fontSize="md" fontWeight="500">
-                +237 681389551
-              </Text>
-              <Text color="gray.300" fontSize="md" fontWeight="500">
-                +237 672260392
+              <Text color="gray.400" fontSize="sm" textAlign="center">
+                Available during business hours
               </Text>
             </VStack>
           </VStack>
@@ -334,30 +328,71 @@ const Contact = () => {
           <VStack align="center" spacing={6}>
             <Circle
               size="80px"
-              bg="teal.400"
-              boxShadow="0 8px 25px rgba(20, 184, 166, 0.3)"
+              bg="blue.500"
+              boxShadow="0 8px 25px rgba(59, 130, 246, 0.3)"
             >
               <Icon as={FaMapMarkerAlt} color="white" boxSize={8} />
             </Circle>
             <Heading
               size="md"
-              color="teal.400"
+              color="blue.400"
               fontWeight="700"
               letterSpacing="-0.01em"
               textAlign="center"
             >
-              OFFICE LOCATION
+              Office Location
             </Heading>
             <VStack spacing={2} align="center">
               <Text color="gray.300" fontSize="md" fontWeight="500">
-                The Sheet Music Pro
+                SheetMusicLibrary Ltd.
               </Text>
               <Text color="gray.300" fontSize="md" fontWeight="500">
-                23 Clifford Street, Leicester, UK
+                23 Clifford Street
+              </Text>
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                Leicester, UK LE1 1AA
+              </Text>
+            </VStack>
+          </VStack>
+
+          <VStack align="center" spacing={6}>
+            <Circle
+              size="80px"
+              bg="blue.500"
+              boxShadow="0 8px 25px rgba(59, 130, 246, 0.3)"
+            >
+              <Icon as={FaClock} color="white" boxSize={8} />
+            </Circle>
+            <Heading
+              size="md"
+              color="blue.400"
+              fontWeight="700"
+              letterSpacing="-0.01em"
+              textAlign="center"
+            >
+              Business Hours
+            </Heading>
+            <VStack spacing={2} align="center">
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                Mon - Fri: 9:00 AM - 6:00 PM
+              </Text>
+              <Text color="gray.300" fontSize="md" fontWeight="500">
+                Sat: 10:00 AM - 4:00 PM
+              </Text>
+              <Text color="gray.400" fontSize="sm" textAlign="center">
+                GMT Time Zone
               </Text>
             </VStack>
           </VStack>
         </SimpleGrid>
+      </Box>
+
+      {/* Additional Information */}
+      <Box mt={12} textAlign="center">
+        <Text color="gray.400" fontSize="md" maxW="800px" mx="auto">
+          We typically respond to all inquiries within 24 hours during business days. 
+          For urgent technical issues, please include "URGENT" in your message subject.
+        </Text>
       </Box>
     </Container>
   );
