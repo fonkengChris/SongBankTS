@@ -7,6 +7,7 @@ import CurrentUser from "../entities/CurrentUser";
 import PayPalProvider from "../components/PayPalProvider";
 import Footer from "../components/Footer";
 import { getValidToken, decodeToken } from "../utils/jwt-validator";
+import { initializeViewTracking } from "../utils/view-tracking";
 
 const Layout = () => {
   const [user, setUser] = useState({} as CurrentUser);
@@ -24,13 +25,16 @@ const Layout = () => {
     } catch (error) {
       console.error("Error setting user from token:", error);
     }
+
+    // Initialize view tracking
+    initializeViewTracking();
   }, []);
 
   return (
     <PayPalProvider>
       <Box minH="100vh" bg={bgColor} display="flex" flexDirection="column">
         <MainNavBar user={user} />
-        <Box padding={5} flex="1">
+        <Box flex="1">
           <Outlet />
         </Box>
         <Footer />
