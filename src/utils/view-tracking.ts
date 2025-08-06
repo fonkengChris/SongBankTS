@@ -4,13 +4,28 @@ const VIEWED_SONGS_KEY = 'viewedSongs';
 const VIEWED_SONGS_EXPIRY_KEY = 'viewedSongsExpiry';
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
+// Cache for viewed songs to reduce localStorage reads
+let viewedSongsCache: string[] | null = null;
+let cacheExpiry: number | null = null;
+
 /**
- * Get the list of viewed songs from localStorage
+ * Get the list of viewed songs from localStorage with caching
  */
 export const getViewedSongs = (): string[] => {
   try {
+    // Check cache first
+    if (viewedSongsCache && cacheExpiry && Date.now() < cacheExpiry) {
+      return viewedSongsCache;
+    }
+
     const viewedSongs = localStorage.getItem(VIEWED_SONGS_KEY);
-    return viewedSongs ? JSON.parse(viewedSongs) : [];
+    const songs = viewedSongs ? JSON.parse(viewedSongs) : [];
+    
+    // Update cache
+    viewedSongsCache = songs;
+    cacheExpiry = Date.now() + 60000; // Cache for 1 minute
+    
+    return songs;
   } catch (error) {
     console.error('Error reading viewed songs from localStorage:', error);
     return [];
@@ -26,6 +41,9 @@ export const addViewedSong = (songId: string): void => {
     if (!viewedSongs.includes(songId)) {
       viewedSongs.push(songId);
       localStorage.setItem(VIEWED_SONGS_KEY, JSON.stringify(viewedSongs));
+      
+      // Update cache
+      viewedSongsCache = viewedSongs;
       
       // Set expiry time
       const expiryTime = Date.now() + SESSION_DURATION;
@@ -56,6 +74,10 @@ export const clearViewedSongs = (): void => {
   try {
     localStorage.removeItem(VIEWED_SONGS_KEY);
     localStorage.removeItem(VIEWED_SONGS_EXPIRY_KEY);
+    
+    // Clear cache
+    viewedSongsCache = null;
+    cacheExpiry = null;
   } catch (error) {
     console.error('Error clearing viewed songs from localStorage:', error);
   }

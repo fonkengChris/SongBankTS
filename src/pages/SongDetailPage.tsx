@@ -74,7 +74,7 @@ const SongDetailPage = () => {
     if (songId && mediaFile && !mediaLoading) {
       trackViewOnce(songId);
     }
-  }, [songId, mediaFile, mediaLoading, trackViewOnce]);
+  }, [songId, mediaLoading, trackViewOnce]);
 
   // Update the return type to string | undefined
   const getYoutubeVideoId = (url?: string): string | undefined => {
