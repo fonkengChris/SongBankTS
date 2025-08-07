@@ -25,7 +25,7 @@ const PayPalPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Pr
                   currency_code: "USD",
                 },
                 description,
-                custom_id: mediaFileId, // Include mediaFileId for reference
+                custom_id: mediaFileId || "", // Include mediaFileId for reference
               },
             ],
           });
@@ -44,7 +44,7 @@ const PayPalPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Pr
                   description: description,
                   status: "COMPLETED",
                   provider: "PAYPAL",
-                  mediaFileId: mediaFileId,
+                  mediaFileId: mediaFileId || undefined,
                   purchaseType: "SONG",
                   transactionDetails: {
                     originalAmount: amount,
