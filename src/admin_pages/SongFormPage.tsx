@@ -15,6 +15,11 @@ import {
   Flex,
   Card,
   CardBody,
+  Tag,
+  TagLabel,
+  TagCloseButton,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import APIClient from "../services/api-client";
@@ -29,10 +34,10 @@ const SongFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const { data: categories } = useCategories();
-  const { song } = useSong(id || "");
+  const { data: categories, isLoading: categoriesLoading } = useCategories();
+  const { song, loading: songLoading } = useSong(id || "");
   const { mediaFiles, loading: mediaLoading } = useMediaFiles();
-  const { data: languages } = useLanguages();
+  const { data: languages, isLoading: languagesLoading } = useLanguages();
 
   // Color mode values for consistent styling
   const bgColor = useColorModeValue("white", "gray.800");
@@ -41,7 +46,9 @@ const SongFormPage = () => {
   const inputColor = useColorModeValue("gray.800", "gray.100");
   const inputBorderColor = useColorModeValue("gray.300", "gray.600");
   const inputFocusBorderColor = useColorModeValue("blue.500", "blue.300");
+  const mediaFilesBg = useColorModeValue("gray.50", "gray.700");
 
+  const [tagInput, setTagInput] = useState("");
   const [formData, setFormData] = useState<SongFormData>({
     title: "",
     slug: "",
@@ -53,6 +60,7 @@ const SongFormPage = () => {
     mediaFiles: [],
     price: undefined,
     youtubeUrl: "",
+    tags: [],
   });
 
   const handleMediaSelect = (mediaId: string) => {
@@ -72,22 +80,78 @@ const SongFormPage = () => {
     });
   };
 
+  const handleAddTag = (tag?: string) => {
+    const tagToAdd = tag || tagInput;
+    if (!tagToAdd.trim() || formData.tags?.includes(tagToAdd.trim())) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      tags: [...(prev.tags || []), tagToAdd.trim()]
+    }));
+    setTagInput("");
+  };
+
+  const handleTagInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTag();
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags?.filter(tag => tag !== tagToRemove) || []
+    }));
+  };
+
   useEffect(() => {
-    if (id && song) {
+    if (id && song && categories && languages) {
+      // Find the actual category and language objects
+      // Handle both cases: when they come as populated objects or as string IDs
+      const categoryId = typeof song.category === 'string' ? song.category : song.category?._id;
+      const languageId = typeof song.language === 'string' ? song.language : song.language?._id;
+      
+      const categoryObj = categoryId ? 
+        (typeof song.category === 'object' ? song.category : categories.find(cat => cat._id === categoryId)) 
+        : undefined;
+        
+      // Find language object, but fall back gracefully if not found
+      let languageObj = { _id: "", name: "", code: "" };
+      if (languageId) {
+        if (typeof song.language === 'object') {
+          // Check if this language exists in available languages
+          const existsInAvailable = languages.some(lang => lang._id === song.language._id);
+          if (existsInAvailable) {
+            languageObj = song.language;
+          } else {
+            console.warn(`Language ${song.language._id} (${song.language.name}) from song not found in available languages`);
+          }
+        } else {
+          const foundLang = languages.find(lang => lang._id === languageId);
+          if (foundLang) {
+            languageObj = foundLang;
+          } else {
+            console.warn(`Language ID ${languageId} from song not found in available languages`);
+          }
+        }
+      }
+      
       setFormData({
-        title: song.title,
-        slug: song.slug,
-        description: song.description,
-        lyrics: song.lyrics,
-        language: song.language,
-        authorName: song.authorName,
-        category: song.category,
-        mediaFiles: [],
-        price: song.price,
-        youtubeUrl: song.youtubeUrl,
+        title: song.title || "",
+        slug: song.slug || "",
+        description: song.description || "",
+        lyrics: song.lyrics || "",
+        language: languageObj,
+        authorName: song.authorName || "",
+        category: categoryObj,
+        mediaFiles: song.mediaFiles?.map(file => typeof file === 'string' ? file : file._id) || [],
+        price: song.price || undefined,
+        youtubeUrl: song.youtubeUrl || "",
+        tags: song.tags || [],
       });
     }
-  }, [id, song]);
+  }, [id, song, categories, languages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,21 +206,30 @@ const SongFormPage = () => {
     });
   };
 
+  // Check if we should show loading state
+  const isLoading = id && (songLoading || categoriesLoading || languagesLoading);
+
   return (
     <Box maxW="container.md" mx="auto" py={8} px={6}>
-      <VStack spacing={8} align="stretch">
-        <Box>
-          <Heading color="blue.500" fontWeight="bold" textAlign="center" mb={4}>
-            {id ? "Edit Song" : "Add New Song"}
-          </Heading>
-          <Text color="blue.500" mb={6} textAlign="center">
-            Fill in the form below to create a new song. Required fields are
-            marked with an asterisk (*). The slug will be automatically
-            generated from the title. You can attach up to three media files
-            (document, audio, or image) to the song. These media files must be
-            created first in the Media Files section.
-          </Text>
-        </Box>
+      {isLoading ? (
+        <VStack spacing={4} textAlign="center">
+          <Text>Loading song data...</Text>
+          <Box>Loading...</Box>
+        </VStack>
+      ) : (
+        <VStack spacing={8} align="stretch">
+          <Box>
+            <Heading color="blue.500" fontWeight="bold" textAlign="center" mb={4}>
+              {id ? "Edit Song" : "Add New Song"}
+            </Heading>
+            <Text color="blue.500" mb={6} textAlign="center">
+              Fill in the form below to create a new song. Required fields are
+              marked with an asterisk (*). The slug will be automatically
+              generated from the title. You can attach up to three media files
+              (document, audio, or image) to the song. These media files must be
+              created first in the Media Files section.
+            </Text>
+          </Box>
 
         <Card 
           bg={bgColor} 
@@ -233,7 +306,7 @@ const SongFormPage = () => {
                 <FormControl isRequired>
                   <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Category</FormLabel>
                   <Select
-                    value={formData.category?._id}
+                    value={formData.category?._id || ""}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
@@ -262,14 +335,19 @@ const SongFormPage = () => {
 
                 <FormControl isRequired>
                   <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Language</FormLabel>
+
                   <Select
-                    value={formData.language?._id}
-                    onChange={(e) =>
+                    value={formData.language?._id || ""}
+                    onChange={(e) => {
+                      console.log("Language dropdown changed:", e.target.value);
+                      console.log("Available languages:", languages);
+                      const selectedLang = languages?.find((l) => l._id === e.target.value);
+                      console.log("Selected language:", selectedLang);
                       setFormData({
                         ...formData,
-                        language: languages?.find((l) => l._id === e.target.value)!,
-                      })
-                    }
+                        language: selectedLang || { _id: "", name: "", code: "" },
+                      });
+                    }}
                     bg={inputBg}
                     color={inputColor}
                     borderColor={inputBorderColor}
@@ -362,6 +440,62 @@ const SongFormPage = () => {
                   />
                 </FormControl>
 
+                <FormControl>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Tags</FormLabel>
+                  <VStack align="stretch" spacing={3}>
+                    <Flex gap={2}>
+                      <Input
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        onKeyPress={handleTagInputKeyPress}
+                        placeholder="Enter a tag and press Enter"
+                        bg={inputBg}
+                        color={inputColor}
+                        borderColor={inputBorderColor}
+                        _hover={{ borderColor: inputFocusBorderColor }}
+                        _focus={{ 
+                          borderColor: inputFocusBorderColor, 
+                          boxShadow: `0 0 0 1px ${inputFocusBorderColor}` 
+                        }}
+                        transition="all 0.2s"
+                        flex={1}
+                      />
+                      <Button
+                        onClick={() => handleAddTag()}
+                        colorScheme="blue"
+                        isDisabled={!tagInput.trim() || formData.tags?.includes(tagInput.trim())}
+                        minW="80px"
+                      >
+                        Add
+                      </Button>
+                    </Flex>
+                    {formData.tags && formData.tags.length > 0 && (
+                      <Box>
+                        <Text fontSize="sm" color="blue.500" fontWeight="semibold" mb={2}>
+                          Current Tags:
+                        </Text>
+                        <Wrap spacing={2}>
+                          {formData.tags.map((tag, index) => (
+                            <WrapItem key={index}>
+                              <Tag
+                                size="md"
+                                colorScheme="blue"
+                                borderRadius="full"
+                              >
+                                <TagLabel>{tag}</TagLabel>
+                                <TagCloseButton 
+                                  onClick={() => handleRemoveTag(tag)}
+                                  _hover={{ bg: "blue.600" }}
+                                />
+                              </Tag>
+                            </WrapItem>
+                          ))}
+                        </Wrap>
+                      </Box>
+                    )}
+                  </VStack>
+                </FormControl>
+
                 <FormControl isRequired>
                   <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Lyrics</FormLabel>
                   <Textarea
@@ -384,7 +518,7 @@ const SongFormPage = () => {
                   />
                 </FormControl>
 
-                <Box borderWidth="1px" borderRadius="lg" p={6} mt={4} bg={useColorModeValue("gray.50", "gray.700")}>
+                <Box borderWidth="1px" borderRadius="lg" p={6} mt={4} bg={mediaFilesBg}>
                   <Heading size="md" mb={4} color="blue.500" fontWeight="semibold">
                     Media Files
                   </Heading>
@@ -496,10 +630,29 @@ const SongFormPage = () => {
 
                   {formData.mediaFiles && formData.mediaFiles.length > 0 && (
                     <Box mt={4}>
-                      <FormLabel color="blue.500" fontWeight="semibold">Selected Files:</FormLabel>
+                      <FormLabel color="blue.500" fontWeight="semibold">
+                        Selected Files ({formData.mediaFiles.length}):
+                      </FormLabel>
                       {formData.mediaFiles.map((mediaId) => {
                         const media = mediaFiles.find((m) => m._id === mediaId);
-                        if (!media) return null;
+                        if (!media) {
+                          return (
+                            <Flex key={mediaId} alignItems="center" gap={2} mb={2}>
+                              <Text color="red.400" fontSize="sm">
+                                Media file not found (ID: {mediaId})
+                              </Text>
+                              <Button
+                                size="sm"
+                                colorScheme="red"
+                                onClick={() => handleMediaSelect(mediaId)}
+                                _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
+                                transition="all 0.2s"
+                              >
+                                Remove
+                              </Button>
+                            </Flex>
+                          );
+                        }
                         return (
                           <Flex key={media._id} alignItems="center" gap={2} mb={2}>
                             <Text color={inputColor}>
@@ -558,7 +711,8 @@ const SongFormPage = () => {
             </form>
           </CardBody>
         </Card>
-      </VStack>
+        </VStack>
+      )}
     </Box>
   );
 };

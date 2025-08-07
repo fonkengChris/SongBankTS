@@ -50,6 +50,7 @@ import {
   FiMenu,
   FiVideo,
   FiEdit3,
+  FiDollarSign,
 } from "react-icons/fi";
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
@@ -145,6 +146,17 @@ const AdminPage: React.FC = () => {
       icon: FiEdit3,
       section: "LIBRARY",
     },
+    // Payments section - only show for superAdmin
+    ...(user.role === "superAdmin"
+      ? [
+          {
+            path: "/admin/payments",
+            label: "Payments",
+            icon: FiDollarSign,
+            section: "PAYMENTS",
+          },
+        ]
+      : []),
   ];
 
   // Handle navigation change
@@ -298,6 +310,28 @@ const AdminPage: React.FC = () => {
           </Button>
         </VStack>
       </Box>
+
+      {/* Payments Section - Only show for superAdmin */}
+      {user.role === "superAdmin" && (
+        <Box>
+          <Text fontSize="sm" color="whiteAlpha.700" mb={3} fontWeight="medium">
+            PAYMENTS
+          </Text>
+          <VStack align="stretch" spacing={1}>
+            <Button
+              variant="ghost"
+              justifyContent="flex-start"
+              leftIcon={<Icon as={FiDollarSign} />}
+              color="whiteAlpha.900"
+              _hover={{ bg: "blue.800" }}
+              onClick={() => handleNavigationChange("/admin/payments")}
+              isActive={location.pathname === "/admin/payments"}
+            >
+              Payments
+            </Button>
+          </VStack>
+        </Box>
+      )}
     </VStack>
   );
 

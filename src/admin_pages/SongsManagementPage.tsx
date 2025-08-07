@@ -23,6 +23,8 @@ import {
   Stack,
   Divider,
   useColorModeValue,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useAllSongs } from "../hooks/useSongs";
@@ -117,6 +119,39 @@ const SongsManagementPage = () => {
               {song.price ? `$${song.price.toFixed(2)}` : "Free"}
             </Badge>
           </HStack>
+
+          {song.tags && song.tags.length > 0 && (
+            <Wrap spacing={1}>
+              {song.tags.slice(0, 3).map((tag, index) => (
+                <WrapItem key={index}>
+                  <Badge
+                    colorScheme="gray"
+                    variant="subtle"
+                    fontSize="xs"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    {tag}
+                  </Badge>
+                </WrapItem>
+              ))}
+              {song.tags.length > 3 && (
+                <WrapItem>
+                  <Badge
+                    colorScheme="gray"
+                    variant="outline"
+                    fontSize="xs"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    +{song.tags.length - 3}
+                  </Badge>
+                </WrapItem>
+              )}
+            </Wrap>
+          )}
 
           <Stack spacing={2}>
             <HStack justify="space-between">
@@ -233,6 +268,7 @@ const SongsManagementPage = () => {
                   <Th color="blue.500">Category</Th>
                   <Th color="blue.500">Language</Th>
                   <Th color="blue.500">Price</Th>
+                  <Th color="blue.500">Tags</Th>
                   <Th color="blue.500">Views</Th>
                   <Th color="blue.500">Likes</Th>
                   <Th color="blue.500">Actions</Th>
@@ -264,6 +300,42 @@ const SongsManagementPage = () => {
                         <Badge colorScheme="purple" variant="subtle">
                           {song.price ? `$${song.price.toFixed(2)}` : "Free"}
                         </Badge>
+                      </Td>
+                      <Td>
+                        {song.tags && song.tags.length > 0 ? (
+                          <Wrap spacing={1}>
+                            {song.tags.slice(0, 2).map((tag, index) => (
+                              <WrapItem key={index}>
+                                <Badge
+                                  colorScheme="gray"
+                                  variant="subtle"
+                                  fontSize="xs"
+                                  px={2}
+                                  py={1}
+                                  borderRadius="full"
+                                >
+                                  {tag}
+                                </Badge>
+                              </WrapItem>
+                            ))}
+                            {song.tags.length > 2 && (
+                              <WrapItem>
+                                <Badge
+                                  colorScheme="gray"
+                                  variant="outline"
+                                  fontSize="xs"
+                                  px={2}
+                                  py={1}
+                                  borderRadius="full"
+                                >
+                                  +{song.tags.length - 2}
+                                </Badge>
+                              </WrapItem>
+                            )}
+                          </Wrap>
+                        ) : (
+                          <Text color={textColor} fontSize="sm">No tags</Text>
+                        )}
                       </Td>
                       <Td color={textColor}>
                         {Number(song.views) || 0}
@@ -297,7 +369,7 @@ const SongsManagementPage = () => {
                   ))
                 ) : (
                   <Tr>
-                    <Td colSpan={8} textAlign="center" py={8}>
+                    <Td colSpan={9} textAlign="center" py={8}>
                       <Text color={secondaryTextColor}>No songs found.</Text>
                     </Td>
                   </Tr>

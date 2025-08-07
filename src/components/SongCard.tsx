@@ -9,6 +9,8 @@ import {
   Box,
   Link as ChakraLink,
   Badge,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Song from "../entities/Song";
@@ -94,6 +96,38 @@ const SongCard = ({ song, mediaFile }: Props) => {
             >
               {song.authorName}
             </Text>
+          )}
+          {song.tags && song.tags.length > 0 && (
+            <Wrap spacing={1} maxH="60px" overflow="hidden">
+              {song.tags.slice(0, 3).map((tag, index) => (
+                <WrapItem key={index}>
+                  <Badge
+                    colorScheme="gray"
+                    variant="subtle"
+                    fontSize="xs"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    {tag}
+                  </Badge>
+                </WrapItem>
+              ))}
+              {song.tags.length > 3 && (
+                <WrapItem>
+                  <Badge
+                    colorScheme="gray"
+                    variant="outline"
+                    fontSize="xs"
+                    px={2}
+                    py={1}
+                    borderRadius="full"
+                  >
+                    +{song.tags.length - 3}
+                  </Badge>
+                </WrapItem>
+              )}
+            </Wrap>
           )}
         </VStack>
         <HStack

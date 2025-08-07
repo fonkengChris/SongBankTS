@@ -18,6 +18,7 @@ interface Song {
   trendingScore?: number;
   price?: number;
   youtubeUrl?: string;
+  tags?: string[];
 }
 
 export default Song;

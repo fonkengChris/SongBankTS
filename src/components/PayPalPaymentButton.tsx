@@ -1,13 +1,17 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import { Box } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
+import paymentService from "../services/payment-service";
 
 interface Props {
   amount: number;
   description: string;
+  mediaFileId?: string;
   onSuccess?: () => void;
 }
 
-const PayPalPaymentButton = ({ amount, description, onSuccess }: Props) => {
+const PayPalPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Props) => {
+  const toast = useToast();
+
   return (
     <Box width="100%" minH="200px">
       <PayPalButtons
@@ -20,16 +24,76 @@ const PayPalPaymentButton = ({ amount, description, onSuccess }: Props) => {
                   value: amount.toString(),
                   currency_code: "USD",
                 },
+                description,
+                custom_id: mediaFileId, // Include mediaFileId for reference
               },
             ],
           });
         }}
         onApprove={async (data, actions) => {
-          if (actions.order) {
-            const order = await actions.order.capture();
-            console.log("Capture result", order);
-            if (onSuccess) onSuccess();
+          try {
+            if (actions.order) {
+              const order = await actions.order.capture();
+              console.log("PayPal capture result:", order);
+              
+              // Create payment record in database
+              try {
+                await paymentService.createPayment({
+                  orderId: order.id,
+                  amount: amount,
+                  description: description,
+                  status: "COMPLETED",
+                  provider: "PAYPAL",
+                  mediaFileId: mediaFileId,
+                  purchaseType: "SONG",
+                  transactionDetails: {
+                    originalAmount: amount,
+                    originalCurrency: "USD",
+                    convertedAmount: amount,
+                    convertedCurrency: "USD",
+                    exchangeRate: 1,
+                  },
+                });
+
+                console.log("Payment record created successfully");
+                
+                if (onSuccess) onSuccess();
+              } catch (paymentError) {
+                console.error("Failed to create payment record:", paymentError);
+                
+                // Still call onSuccess since the PayPal payment was successful
+                // The user should get access even if our record creation failed
+                toast({
+                  title: "Payment Successful",
+                  description: "Payment completed but there was an issue with our records. Please contact support if you have issues accessing your purchase.",
+                  status: "warning",
+                  duration: 8000,
+                  isClosable: true,
+                });
+                
+                if (onSuccess) onSuccess();
+              }
+            }
+          } catch (error) {
+            console.error("PayPal payment error:", error);
+            toast({
+              title: "Payment Error",
+              description: "There was an issue processing your payment. Please try again.",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
           }
+        }}
+        onError={(err) => {
+          console.error("PayPal error:", err);
+          toast({
+            title: "Payment Error",
+            description: "There was an issue with PayPal. Please try again.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
         }}
       />
     </Box>

@@ -47,6 +47,7 @@ export interface SongFormData {
   likesCount?: number;
   metacritic?: number;
   youtubeUrl?: string;
+  tags?: string[];
 }
 
 export interface NotationFormData {

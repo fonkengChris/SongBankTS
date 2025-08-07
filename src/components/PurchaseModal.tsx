@@ -80,6 +80,7 @@ const PurchaseModal = ({
                 <PayPalPaymentButton
                   amount={price}
                   description={`Purchase ${songTitle}`}
+                  mediaFileId={mediaFileId}
                   onSuccess={handlePurchaseSuccess}
                 />
               </Box>
@@ -88,6 +89,7 @@ const PurchaseModal = ({
                 <MoMoPaymentButton
                   amount={price}
                   description={`Purchase ${songTitle}`}
+                  mediaFileId={mediaFileId}
                   onSuccess={handlePurchaseSuccess}
                 />
               </Box>

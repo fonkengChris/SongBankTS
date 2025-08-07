@@ -17,14 +17,16 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { axiosInstance } from "../services/api-client";
+import paymentService from "../services/payment-service";
 
 interface Props {
   amount: number;
   description: string;
+  mediaFileId?: string;
   onSuccess?: () => void;
 }
 
-const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
+const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pin, setPin] = useState("");
@@ -94,6 +96,7 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
         },
         payerMessage: description,
         payeeNote: "Payment for digital content",
+        mediaFileId: mediaFileId, // Include mediaFileId for backend payment record
       };
 
       console.log("Payment payload:", payload); // For debugging
@@ -109,6 +112,10 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
           status: "info",
           duration: 5000,
         });
+        
+        // Note: Payment record is automatically created by the backend
+        // The backend MoMo endpoint already handles payment record creation
+        console.log("MoMo payment initiated, record created by backend");
       }
     } catch (error: any) {
       console.error("Payment error:", error);
@@ -124,7 +131,7 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
     }
   };
 
-  const handlePinSubmit = () => {
+  const handlePinSubmit = async () => {
     if (!phoneNumber.trim()) {
       toast({
         title: "Phone Number Required",
@@ -136,12 +143,50 @@ const MoMoPaymentButton = ({ amount, description, onSuccess }: Props) => {
 
     if (import.meta.env.DEV) {
       setShowPinDialog(false);
-      if (onSuccess) onSuccess();
-      toast({
-        title: "Payment Successful",
-        description: "Transaction completed successfully",
-        status: "success",
-      });
+      
+      // Simulate payment record creation in development
+      try {
+        const mockOrderId = `MOMO_DEV_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
+        await paymentService.createPayment({
+          orderId: mockOrderId,
+          amount: amount,
+          description: description,
+          status: "COMPLETED",
+          provider: "MTN_MOMO",
+          mediaFileId: mediaFileId,
+          purchaseType: "SONG",
+          transactionDetails: {
+            originalAmount: amount,
+            originalCurrency: "USD",
+            convertedAmount: amount * 3700, // Mock conversion to UGX
+            convertedCurrency: "UGX",
+            exchangeRate: 3700,
+          },
+        });
+
+        console.log("Payment record created successfully (DEV mode)");
+        
+        if (onSuccess) onSuccess();
+        toast({
+          title: "Payment Successful",
+          description: "Transaction completed successfully",
+          status: "success",
+        });
+      } catch (paymentError) {
+        console.error("Failed to create payment record (DEV mode):", paymentError);
+        
+        // Still show success since this is dev mode
+        toast({
+          title: "Payment Successful",
+          description: "Payment completed but there was an issue with our records. Please contact support if you have issues accessing your purchase.",
+          status: "warning",
+          duration: 8000,
+          isClosable: true,
+        });
+        
+        if (onSuccess) onSuccess();
+      }
     } else {
       setShowPinDialog(false);
       handlePayment();
