@@ -37,9 +37,10 @@ const PayPalPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Pr
               console.log("PayPal capture result:", order);
               
               // Create payment record in database
-              try {
-                await paymentService.createPayment({
-                  orderId: order.id,
+              if (order.id) {
+                try {
+                  await paymentService.createPayment({
+                    orderId: order.id,
                   amount: amount,
                   description: description,
                   status: "COMPLETED",
@@ -55,14 +56,26 @@ const PayPalPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Pr
                   },
                 });
 
-                console.log("Payment record created successfully");
-                
-                if (onSuccess) onSuccess();
-              } catch (paymentError) {
-                console.error("Failed to create payment record:", paymentError);
-                
-                // Still call onSuccess since the PayPal payment was successful
-                // The user should get access even if our record creation failed
+                  console.log("Payment record created successfully");
+                  
+                  if (onSuccess) onSuccess();
+                } catch (paymentError) {
+                  console.error("Failed to create payment record:", paymentError);
+                  
+                  // Still call onSuccess since the PayPal payment was successful
+                  // The user should get access even if our record creation failed
+                  toast({
+                    title: "Payment Successful",
+                    description: "Payment completed but there was an issue with our records. Please contact support if you have issues accessing your purchase.",
+                    status: "warning",
+                    duration: 8000,
+                    isClosable: true,
+                  });
+                  
+                  if (onSuccess) onSuccess();
+                }
+              } else {
+                console.error("PayPal order ID missing");
                 toast({
                   title: "Payment Successful",
                   description: "Payment completed but there was an issue with our records. Please contact support if you have issues accessing your purchase.",
