@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: Props) => {
     window.location.href = "/login";
   }, []);
 
-  const isAuthenticated = !!auth.access && getValidToken();
+  const isAuthenticated = !!auth.access && !!getValidToken();
 
   return (
     <AuthContext.Provider value={{ auth, setAuth, logout, isAuthenticated }}>
