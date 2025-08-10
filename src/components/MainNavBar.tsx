@@ -20,6 +20,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/songBankLogo.png";
 import CurrentUser from "../entities/CurrentUser";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import useAuth from "../hooks/useAuth";
 
 interface Props {
   user: CurrentUser | null;
@@ -34,11 +35,9 @@ const MainNavBar = ({ user }: Props) => {
   ];
 
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("tokenRef");
-    navigate("/logout");
-    navigate(0);
+    logout();
   };
 
   const getFirstName = (fullName: string) => {

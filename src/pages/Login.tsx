@@ -34,7 +34,7 @@ const Login = () => {
   const jwt = getValidToken();
   if (jwt) return <Navigate to="/songs" />;
 
-  const { auth, setAuth } = useAuth();
+  const { auth, setAuth, logout } = useAuth();
   const toast = useToast();
 
   const navigate = useNavigate();

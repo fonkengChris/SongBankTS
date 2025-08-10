@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosHeaders } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosHeaders } from "axios";
+import { getValidToken } from "../utils/jwt-validator";
 
 // Use the environment variable for the API URL, with fallback for development
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:3000" : "https://sheet-music-library-ad225c202768.herokuapp.com");
@@ -21,7 +22,7 @@ console.log("   DEV mode:", import.meta.env.DEV);
 // Add request interceptor with logging
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = getValidToken();
     if (token) {
       const headers = new AxiosHeaders(config.headers);
       headers.set("x-auth-token", token);
@@ -63,7 +64,7 @@ axiosInstance.interceptors.response.use(
 
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/auth";
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }

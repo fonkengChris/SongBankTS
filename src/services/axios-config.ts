@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getValidToken } from "../utils/jwt-validator";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -9,9 +10,13 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor for debugging
+// Add request interceptor to include JWT token
 api.interceptors.request.use(
   (config) => {
+    const token = getValidToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     console.log("Request Config:", config);
     return config;
   },
@@ -21,7 +26,7 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor for debugging
+// Add response interceptor to handle token expiration
 api.interceptors.response.use(
   (response) => {
     console.log("Response:", {
@@ -33,6 +38,18 @@ api.interceptors.response.use(
   },
   (error) => {
     console.error("Response Error:", error);
+    
+    // If we get a 401 response, the token is likely expired
+    if (error.response?.status === 401) {
+      console.log("Token expired or invalid, logging out user");
+      localStorage.removeItem("token");
+      
+      // Redirect to login page
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+    
     return Promise.reject(error);
   }
 );

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
 import {
   Box,
   Button,
@@ -40,6 +41,7 @@ const BlogPostFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
+  const { logout } = useAuth();
 
   // Check authentication and authorization
   const user = decodeToken(localStorage.getItem("token"));
@@ -106,8 +108,7 @@ const BlogPostFormPage = () => {
           
           if (error.response?.status === 401) {
             errorMessage = "Authentication failed. Please log in again.";
-            localStorage.removeItem("token");
-            navigate("/auth");
+            logout();
           } else if (error.response?.status === 403) {
             errorMessage = "Access denied. Admin privileges required.";
           } else if (error.response?.status === 404) {
@@ -188,8 +189,7 @@ const BlogPostFormPage = () => {
       
       if (error.response?.status === 401) {
         errorMessage = "Authentication failed. Please log in again.";
-        localStorage.removeItem("token");
-        navigate("/auth");
+        logout();
       } else if (error.response?.status === 403) {
         errorMessage = "Access denied. Admin privileges required.";
       } else if (error.response?.status === 400) {
