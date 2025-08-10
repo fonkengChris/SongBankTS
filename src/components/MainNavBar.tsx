@@ -17,7 +17,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from "../assets/songBankLogo.png";
+import logo from "/songBankLogo.png";
 import CurrentUser from "../entities/CurrentUser";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import useAuth from "../hooks/useAuth";
