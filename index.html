@@ -9,7 +9,7 @@
       content="default-src 'self'; img-src 'self' data: https: http: blob: https://my-song-library-media.s3.amazonaws.com https://my-song-library-media.s3.eu-west-2.amazonaws.com https://*.s3.amazonaws.com https://*.s3.eu-west-2.amazonaws.com; media-src 'self' https: http: blob: https://my-song-library-media.s3.amazonaws.com https://my-song-library-media.s3.eu-west-2.amazonaws.com https://*.s3.amazonaws.com https://*.s3.eu-west-2.amazonaws.com; font-src 'self' data: https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com; connect-src 'self' https: http: https://my-song-library-media.s3.amazonaws.com https://my-song-library-media.s3.eu-west-2.amazonaws.com https://*.s3.amazonaws.com https://*.s3.eu-west-2.amazonaws.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:;"
     />
     -->
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/songBankLogo.png" />
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -32,6 +32,11 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="msapplication-TileColor" content="#000000" />
     <meta name="msapplication-tap-highlight" content="no" />
+    
+    <!-- Enhanced PWA Meta Tags -->
+    <meta name="application-name" content="SongLibrary" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msapplication-TileImage" content="/songBankLogo.png" />
 
     <!-- PWA Icons -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

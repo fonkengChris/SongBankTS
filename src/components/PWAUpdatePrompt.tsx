@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Text, useToast, Image, HStack, VStack } from "@chakra-ui/react";
 
 interface PWAUpdatePromptProps {
   onUpdate?: () => void;
@@ -87,11 +87,24 @@ const PWAUpdatePrompt: React.FC<PWAUpdatePromptProps> = ({ onUpdate }) => {
       p={4}
       borderRadius="md"
       boxShadow="lg"
-      maxW="300px"
+      maxW="320px"
     >
-      <Text fontSize="sm" mb={2}>
-        {needRefresh ? "New content available" : "App ready to work offline"}
-      </Text>
+      <HStack spacing={3} mb={3}>
+        <Image
+          src="/songBankLogo.png"
+          alt="SongLibrary Logo"
+          boxSize="24px"
+          objectFit="contain"
+        />
+        <VStack spacing={0} align="start" flex="1">
+          <Text fontSize="sm" fontWeight="semibold">
+            SongLibrary
+          </Text>
+          <Text fontSize="xs" color="gray.300">
+            {needRefresh ? "New content available" : "App ready to work offline"}
+          </Text>
+        </VStack>
+      </HStack>
       <Box display="flex" gap={2}>
         {needRefresh && (
           <Button size="sm" colorScheme="blue" onClick={update}>

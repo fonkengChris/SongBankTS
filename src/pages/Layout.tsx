@@ -8,6 +8,7 @@ import PayPalProvider from "../components/PayPalProvider";
 import Footer from "../components/Footer";
 import { getValidToken, decodeToken } from "../utils/jwt-validator";
 import { initializeViewTracking } from "../utils/view-tracking";
+import PWASplashScreen from "../components/PWASplashScreen";
 
 const Layout = () => {
   const [user, setUser] = useState({} as CurrentUser);
@@ -32,6 +33,7 @@ const Layout = () => {
 
   return (
     <PayPalProvider>
+      <PWASplashScreen />
       <Box minH="100vh" bg={bgColor} display="flex" flexDirection="column">
         <MainNavBar user={user} />
         <Box flex="1">
