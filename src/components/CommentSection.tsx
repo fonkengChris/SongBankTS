@@ -187,7 +187,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
             <Text fontWeight="bold" fontSize="sm">
               {comment.userId.name}
             </Text>
-            <Text fontSize="xs" color="gray.500">
+            <Text fontSize="xs" color="gray.400">
               {formatDistanceToNow(new Date(comment.createdAt), {
                 addSuffix: true,
               })}
@@ -240,7 +240,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
       {editingComment === comment._id ? (
         <Box>
           <HStack mb={2} justify="space-between">
-            <Text fontSize="sm" color="gray.600">
+            <Text fontSize="sm" color="gray.300">
               Edit your comment
             </Text>
             <Popover placement="top" closeOnBlur={false}>
@@ -273,6 +273,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
             onChange={(e) => setEditText(e.target.value)}
             size="sm"
             mb={2}
+            bg="gray.700"
+            border="1px solid"
+            borderColor="gray.600"
+            color="white"
+            _focus={{
+              borderColor: "blue.400",
+              boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+              bg: "gray.700"
+            }}
+            _hover={{ borderColor: "gray.500" }}
           />
           <HStack>
             <Button
@@ -298,7 +308,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
           <Text>{comment.comment}</Text>
           {comment.mentions && comment.mentions.length > 0 && (
             <HStack mt={2} spacing={1}>
-              <Text fontSize="xs" color="gray.500">Mentioned:</Text>
+              <Text fontSize="xs" color="gray.400">Mentioned:</Text>
               {comment.mentions.map((mention) => (
                 <Badge key={mention._id} size="sm" colorScheme="blue">
                   @{mention.name}
@@ -311,7 +321,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
 
       {/* Show if comment was edited */}
       {comment.updatedAt !== comment.createdAt && (
-        <Text fontSize="xs" color="gray.500" mt={1}>
+        <Text fontSize="xs" color="gray.400" mt={1}>
           (edited)
         </Text>
       )}
@@ -323,11 +333,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
           p={4} 
           borderWidth={1} 
           borderRadius="md"
-          borderColor="gray.200"
-          bg="white"
+          borderColor="gray.600"
+          bg="gray.800"
         >
           <HStack justify="space-between" mb={3}>
-            <Text fontSize="sm" color="gray.600" fontWeight="medium">
+            <Text fontSize="sm" color="gray.300" fontWeight="medium">
               Replying to @{comment.userId.name}
             </Text>
             <HStack spacing={1}>
@@ -373,6 +383,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
             placeholder="Write your reply..."
             minH="80px"
             resize="vertical"
+            bg="gray.700"
+            border="1px solid"
+            borderColor="gray.600"
+            color="white"
+            _focus={{
+              borderColor: "blue.400",
+              boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+              bg: "gray.700"
+            }}
+            _hover={{ borderColor: "gray.500" }}
+            _placeholder={{ color: "gray.400" }}
           />
           <HStack justify="flex-end" spacing={2}>
             <Button
@@ -429,7 +450,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
       {/* Add Comment Form */}
       <Box mb={6}>
         <HStack mb={2} justify="space-between">
-          <Text fontSize="sm" color="gray.600">
+          <Text fontSize="sm" color="gray.300">
             Add a comment... Use @username to mention someone
           </Text>
           <Popover placement="top" closeOnBlur={false}>
@@ -464,6 +485,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
           size="md"
           mb={2}
           minH="100px"
+          bg="gray.700"
+          border="1px solid"
+          borderColor="gray.600"
+          color="white"
+          _focus={{
+            borderColor: "blue.400",
+            boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+            bg: "gray.700"
+          }}
+          _hover={{ borderColor: "gray.500" }}
+          _placeholder={{ color: "gray.400" }}
         />
         <Button
           colorScheme="blue"
@@ -484,7 +516,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ songId }) => {
 
         {comments.length === 0 && (
           <Box textAlign="center" py={8}>
-            <Text color="gray.500">No comments yet. Be the first to comment!</Text>
+            <Text color="gray.400">No comments yet. Be the first to comment!</Text>
           </Box>
         )}
       </VStack>
