@@ -8,6 +8,7 @@ interface JWTPayload {
   email: string;
   role: "regular" | "admin" | "superAdmin";
   token_type: string;
+  lastActivity: string;
 }
 
 /**
@@ -33,6 +34,19 @@ export const isValidJWT = (token: string | null): boolean => {
     const currentTime = Math.floor(Date.now() / 1000);
     if (decoded.exp < currentTime) {
       return false;
+    }
+
+    // Check if user has been inactive for more than 15 minutes
+    if (decoded.lastActivity) {
+      const lastActivity = new Date(decoded.lastActivity);
+      const now = new Date();
+      const inactiveTime = now.getTime() - lastActivity.getTime();
+      const maxInactiveTime = 15 * 60 * 1000; // 15 minutes in milliseconds
+      
+      if (inactiveTime > maxInactiveTime) {
+        console.log("Token expired due to inactivity");
+        return false;
+      }
     }
 
     return true;

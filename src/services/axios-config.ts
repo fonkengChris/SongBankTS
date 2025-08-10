@@ -41,7 +41,15 @@ api.interceptors.response.use(
     
     // If we get a 401 response, the token is likely expired
     if (error.response?.status === 401) {
-      console.log("Token expired or invalid, logging out user");
+      const errorMessage = error.response?.data;
+      console.log("Authentication failed:", errorMessage);
+      
+      if (errorMessage === "Session expired due to inactivity.") {
+        console.log("Session expired due to inactivity, logging out user");
+      } else {
+        console.log("Token expired or invalid, logging out user");
+      }
+      
       localStorage.removeItem("token");
       
       // Redirect to login page

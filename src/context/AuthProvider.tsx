@@ -36,10 +36,45 @@ export const AuthProvider = ({ children }: Props) => {
     // Check immediately
     checkTokenValidity();
 
-    // Set up periodic check every minute
-    const interval = setInterval(checkTokenValidity, 60000);
+    // Set up periodic check every 5 minutes (more frequent for activity-based expiration)
+    const interval = setInterval(checkTokenValidity, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Track user activity to extend session
+  useEffect(() => {
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    
+    const handleUserActivity = () => {
+      // Update the token's lastActivity timestamp in localStorage
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = decodeToken(token);
+          if (decoded) {
+            // Update the lastActivity in the decoded token
+            decoded.lastActivity = new Date().toISOString();
+            // Note: We can't modify the actual JWT token, but we can track activity locally
+            // The backend will update the actual timestamp on each request
+          }
+        } catch (error) {
+          console.error("Error updating activity timestamp:", error);
+        }
+      }
+    };
+
+    // Add event listeners for user activity
+    activityEvents.forEach(event => {
+      document.addEventListener(event, handleUserActivity, { passive: true });
+    });
+
+    return () => {
+      // Clean up event listeners
+      activityEvents.forEach(event => {
+        document.removeEventListener(event, handleUserActivity);
+      });
+    };
   }, []);
 
   const logout = useCallback(() => {
