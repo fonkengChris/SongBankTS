@@ -21,20 +21,19 @@ import Customer from "../entities/Customer";
 import CountrySelector from "../components/CountrySelector";
 import { CustomerUpdateFormData } from "../types/forms";
 import backgroundImage from "../assets/background_image.jpg";
-import { getValidToken, decodeToken } from "../utils/jwt-validator";
+import useAuth from "../hooks/useAuth";
 
 const customerApiClient = new APIClient<Customer, CustomerUpdateFormData>(
   CUSTOMERS_ENDPOINT
 );
 
 const EditProfile = () => {
+  const { isAuthenticated, auth } = useAuth();
   const navigate = useNavigate();
   const [country, setCountry] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
-  // Get user token and validate it
-  const userToken = getValidToken();
-  if (!userToken) {
+  if (!isAuthenticated) {
     return (
       <Container maxW="container.md" py={8}>
         <VStack spacing={6}>
@@ -54,11 +53,13 @@ const EditProfile = () => {
   let userEmail: string | null = null;
 
   try {
-    const decodedToken = decodeToken(userToken);
-    if (decodedToken) {
-      userId = decodedToken._id;
-      userName = decodedToken.name || null;
-      userEmail = decodedToken.email || null;
+    if (auth.access) {
+      const decodedToken = JSON.parse(atob(auth.access.split('.')[1]));
+      if (decodedToken) {
+        userId = decodedToken._id;
+        userName = decodedToken.name || null;
+        userEmail = decodedToken.email || null;
+      }
     }
   } catch (error) {
     console.error("Error decoding token:", error);

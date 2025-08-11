@@ -55,33 +55,36 @@ import {
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
 import Footer from "../components/Footer";
-import { getValidToken, decodeToken } from "../utils/jwt-validator";
+import useAuth from "../hooks/useAuth";
 
 const AdminPage: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const [selectedRoute, setSelectedRoute] = useState("/admin/songs");
   const [user, setUser] = useState({} as CurrentUser);
-  const [selectedRoute, setSelectedRoute] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cardBg = useColorModeValue("white", "gray.800");
+  const bgColor = useColorModeValue("white", "gray.900");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     try {
-      const token = getValidToken();
-      if (token) {
-        const decodedToken = decodeToken(token);
-        if (decodedToken) {
-          setUser(decodedToken as CurrentUser);
+      if (isAuthenticated) {
+        // Get user info from the auth context or decode the token
+        const token = localStorage.getItem("token");
+        if (token) {
+          const decodedToken = JSON.parse(atob(token.split('.')[1]));
+          if (decodedToken) {
+            setUser(decodedToken as CurrentUser);
+          }
         }
       }
     } catch (error) {
       console.error("Error setting user from token:", error);
     }
-  }, []);
+  }, [isAuthenticated]);
 
-  const jwt = getValidToken();
-  if (!jwt) return <Navigate to="/auth" />;
+  if (!isAuthenticated) return <Navigate to="/auth" />;
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });

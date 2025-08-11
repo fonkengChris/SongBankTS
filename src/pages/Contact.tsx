@@ -21,7 +21,7 @@ import APIClient from "../services/api-client";
 import { CONTACT_ENDPOINT } from "../data/constants";
 import jwtDecode from "jwt-decode";
 import CurrentUser from "../entities/CurrentUser";
-import { getValidToken, decodeToken } from "../utils/jwt-validator";
+import useAuth from "../hooks/useAuth";
 
 interface ContactForm {
   email: string;
@@ -32,6 +32,7 @@ interface ContactForm {
 const contactService = new APIClient<ContactForm>(CONTACT_ENDPOINT);
 
 const Contact = () => {
+  const { auth } = useAuth();
   const [formData, setFormData] = useState<ContactForm>({
     email: "",
     name: "",
@@ -42,9 +43,8 @@ const Contact = () => {
 
   useEffect(() => {
     try {
-      const token = getValidToken();
-      if (token) {
-        const currentUser = decodeToken(token);
+      if (auth.access) {
+        const currentUser = JSON.parse(atob(auth.access.split('.')[1]));
         if (currentUser) {
           setFormData((prev) => ({
             ...prev,
@@ -56,7 +56,7 @@ const Contact = () => {
     } catch (error) {
       // Silently fail - user can still fill in the form manually
     }
-  }, []);
+  }, [auth.access]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

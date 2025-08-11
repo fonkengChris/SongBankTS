@@ -31,15 +31,14 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 import backgroundImage from "../assets/background_image.jpg";
-import { getValidToken, decodeToken } from "../utils/jwt-validator";
+import useAuth from "../hooks/useAuth";
 
 const ChangePassword = () => {
+  const { isAuthenticated, auth } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
   
-  // Get user token and validate it
-  const userToken = getValidToken();
-  if (!userToken) {
+  if (!isAuthenticated) {
     return (
       <Container maxW="container.md" py={8}>
         <Flex direction="column" align="center" justify="center" minH="50vh">
@@ -62,7 +61,15 @@ const ChangePassword = () => {
   }
 
   // Get user info from token
-  const user = decodeToken(userToken);
+  let user: any = null;
+  try {
+    if (auth.access) {
+      user = JSON.parse(atob(auth.access.split('.')[1]));
+    }
+  } catch (error) {
+    console.error("Error decoding token:", error);
+  }
+
   if (!user) {
     return (
       <Container maxW="container.md" py={8}>

@@ -28,7 +28,7 @@ import { CUSTOMERS_ENDPOINT } from "../data/constants";
 import { CustomerPayload } from "../types/forms";
 import CountrySelector from "../components/CountrySelector";
 import LikedSongsList from "../components/LikedSongsList";
-import { getValidToken, decodeToken } from "../utils/jwt-validator";
+import useAuth from "../hooks/useAuth";
 
 interface DecodedToken {
   _id: string;
@@ -38,11 +38,10 @@ interface DecodedToken {
 }
 
 const UserProfile = () => {
+  const { isAuthenticated, auth } = useAuth();
   const toast = useToast();
 
-  // Get user token and validate it
-  const userToken = getValidToken();
-  if (!userToken) {
+  if (!isAuthenticated) {
     return (
       <Container maxW="container.md" py={8}>
         <VStack spacing={6}>
@@ -62,11 +61,13 @@ const UserProfile = () => {
   let userEmail: string | null = null;
 
   try {
-    const decodedToken = decodeToken(userToken);
-    if (decodedToken) {
-      userId = decodedToken._id;
-      userName = decodedToken.name || null;
-      userEmail = decodedToken.email || null;
+    if (auth.access) {
+      const decodedToken = JSON.parse(atob(auth.access.split('.')[1]));
+      if (decodedToken) {
+        userId = decodedToken._id;
+        userName = decodedToken.name || null;
+        userEmail = decodedToken.email || null;
+      }
     }
   } catch (error) {
     console.error("Error decoding token:", error);

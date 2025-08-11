@@ -10,26 +10,18 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { getValidToken } from "../utils/jwt-validator";
+import useAuth from "../hooks/useAuth";
 
 const Footer = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
   const footerBg = useColorModeValue("gray.50", "gray.900");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const textColor = useColorModeValue("gray.600", "gray.400");
   const linkColor = useColorModeValue("gray.600", "gray.400");
   const linkHoverColor = useColorModeValue("gray.800", "gray.200");
 
-  useEffect(() => {
-    // Check for valid JWT token in localStorage
-    const token = getValidToken();
-    setIsLoggedIn(!!token); // Convert to boolean (true if valid token exists, false if null/undefined)
-  }, []); // Empty dependency array means this runs once on component mount
-
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    window.location.href = "/";
+    logout();
   };
 
   return (
@@ -124,7 +116,7 @@ const Footer = () => {
             >
               Songs
             </Link>
-            {!isLoggedIn ? (
+            {!isAuthenticated ? (
               <Link
                 href={"/auth"}
                 color={linkColor}

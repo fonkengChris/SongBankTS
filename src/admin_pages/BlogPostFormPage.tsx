@@ -26,7 +26,6 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../services/api-client";
 import { Post } from "../hooks/usePosts";
-import { decodeToken } from "../utils/jwt-validator";
 
 interface BlogPostFormData {
   title: string;
@@ -41,10 +40,29 @@ const BlogPostFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const { logout } = useAuth();
+  const { logout, auth, isAuthenticated } = useAuth();
 
   // Check authentication and authorization
-  const user = decodeToken(localStorage.getItem("token"));
+  if (!isAuthenticated) {
+    return (
+      <Box p={4} textAlign="center">
+        <Text>Please log in to access this page.</Text>
+        <Button mt={4} colorScheme="blue" onClick={() => navigate("/auth")}>
+          Go to Login
+        </Button>
+      </Box>
+    );
+  }
+
+  let user: any = null;
+  try {
+    if (auth.access) {
+      user = JSON.parse(atob(auth.access.split('.')[1]));
+    }
+  } catch (error) {
+    console.error("Error decoding token:", error);
+  }
+
   if (!user) {
     return (
       <Box p={4} textAlign="center">
@@ -138,16 +156,7 @@ const BlogPostFormPage = () => {
     setIsLoading(true);
 
     try {
-      const user = decodeToken(localStorage.getItem("token"));
-      if (!user) {
-        toast({
-          title: "Authentication Error",
-          description: "Please log in to create or edit posts",
-          status: "error",
-        });
-        navigate("/auth");
-        return;
-      }
+      const user = JSON.parse(atob(auth.access!.split('.')[1]));
 
       // Check if user has admin privileges
       if (user.role !== "admin" && user.role !== "superAdmin") {

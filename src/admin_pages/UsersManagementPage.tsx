@@ -37,15 +37,24 @@ import { Link as RouterLink, Navigate } from "react-router-dom";
 import useUsers from "../hooks/useUsers"; // Custom hook to fetch users data
 import User from "../entities/User"; // Define your User interface/entity here
 import APIClient from "../services/api-client";
-import { getValidToken, decodeToken } from "../utils/jwt-validator";
 import { FiMoreVertical, FiEdit, FiTrash2 } from "react-icons/fi";
+import useAuth from "../hooks/useAuth";
 
 const UsersManagementPage = () => {
+  const { isAuthenticated, auth } = useAuth();
+  
   // Add authorization check at the top of the component
-  const jwt = getValidToken();
-  if (!jwt) return <Navigate to="/auth" />;
+  if (!isAuthenticated) return <Navigate to="/auth" />;
 
-  const user = decodeToken(jwt);
+  let user: any = null;
+  try {
+    if (auth.access) {
+      user = JSON.parse(atob(auth.access.split('.')[1]));
+    }
+  } catch (error) {
+    console.error("Error decoding token:", error);
+  }
+
   if (!user || user.role !== "superAdmin") {
     return <Navigate to="/admin" />;
   }

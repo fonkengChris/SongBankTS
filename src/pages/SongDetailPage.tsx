@@ -21,12 +21,12 @@ import Like from "../components/Like";
 import useLikeManager from "../hooks/useLikeManager";
 import { useEnhancedTrackView } from "../hooks/useTrackView";
 import YouTube from "react-youtube";
-import { getValidToken } from "../utils/jwt-validator";
 import CommentSection from "../components/CommentSection";
+import useAuth from "../hooks/useAuth";
 
 const SongDetailPage = () => {
-  const jwt = getValidToken();
-  if (!jwt) return <Navigate to="/auth" />;
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/auth" />;
 
   const { id } = useParams();
   if (!id) return <Text color="red.500">Invalid ID.</Text>;

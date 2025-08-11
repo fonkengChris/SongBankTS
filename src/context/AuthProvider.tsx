@@ -1,6 +1,5 @@
 import { ReactNode, createContext, useState, useEffect, useCallback } from "react";
 import { Auth } from "../entities/Auth";
-import { getValidToken, decodeToken } from "../utils/jwt-validator";
 
 interface Props {
   children: ReactNode;
@@ -23,7 +22,7 @@ export const AuthProvider = ({ children }: Props) => {
     localStorage.removeItem("token");
     setAuth({} as Auth);
     // Redirect to login page
-    window.location.href = "/login";
+    window.location.href = "/auth";
   }, []);
 
   // Check token validity on mount and set up periodic checks
@@ -31,11 +30,16 @@ export const AuthProvider = ({ children }: Props) => {
     const checkTokenValidity = () => {
       const token = localStorage.getItem("token");
       if (token) {
-        const decoded = decodeToken(token);
-        if (decoded) {
-          setAuth({ user: decoded.email, pwd: "", access: token });
-        } else {
-          // Token is invalid or expired, logout
+        try {
+          const decoded = JSON.parse(atob(token.split('.')[1]));
+          if (decoded && decoded.email) {
+            setAuth({ user: decoded.email, pwd: "", access: token });
+          } else {
+            // Token is invalid or expired, logout
+            logout();
+          }
+        } catch (error) {
+          // Token is invalid, logout
           logout();
         }
       }
@@ -59,7 +63,7 @@ export const AuthProvider = ({ children }: Props) => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const decoded = decodeToken(token);
+          const decoded = JSON.parse(atob(token.split('.')[1]));
           if (decoded) {
             // Update the lastActivity in the decoded token
             decoded.lastActivity = new Date().toISOString();
@@ -85,7 +89,7 @@ export const AuthProvider = ({ children }: Props) => {
     };
   }, []);
 
-  const isAuthenticated = !!auth.access && !!getValidToken();
+  const isAuthenticated = !!auth.access;
 
   return (
     <AuthContext.Provider value={{ auth, setAuth, logout, isAuthenticated }}>

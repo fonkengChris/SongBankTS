@@ -1,16 +1,10 @@
 import { Box, Heading, Text, VStack, Button } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getValidToken } from "../utils/jwt-validator";
+import useAuth from "../hooks/useAuth";
 
 const HomePage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // Check for valid JWT token in localStorage
-    const token = getValidToken();
-    setIsLoggedIn(!!token); // Convert to boolean (true if valid token exists, false if null/undefined)
-  }, []); // Empty dependency array means this runs once on component mount
+  const { isAuthenticated } = useAuth();
 
   return (
     <Box minH="100vh" display="flex" flexDirection="column">
@@ -178,7 +172,7 @@ const HomePage = () => {
             >
               Watch Tutorials
             </Button>
-            {!isLoggedIn && (
+            {!isAuthenticated && (
               <Button
                 as={RouterLink}
                 to="/register"
