@@ -61,18 +61,27 @@ const Login = () => {
     try {
       console.log("Attempting login...");
       const response = await authApi.post({ email: user, password: pwd });
-      // console.log("Login successful:", response);
+      console.log("Login response:", response);
 
       const access = response?.accessToken;
-      localStorage.setItem("token", access);
+      console.log("Access token extracted:", access);
+      
+      if (access) {
+        localStorage.setItem("token", access);
+        console.log("Token stored in localStorage:", localStorage.getItem("token"));
+        
+        setAuth({ user, pwd, access });
+        console.log("Auth state updated with:", { user, pwd, access });
+        
+        setUser("");
+        setPwd("");
 
-      setAuth({ user, pwd, access });
-      console.log(auth);
-      setUser("");
-      setPwd("");
-
-      navigate("/");
-      navigate(0);
+        navigate("/");
+        navigate(0);
+      } else {
+        console.error("No access token in response");
+        setErrMsg("Login failed: No token received");
+      }
     } catch (err: any) {
       console.error("Login failed:", err);
       if (!err?.response) {

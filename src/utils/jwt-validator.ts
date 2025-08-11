@@ -18,21 +18,34 @@ interface JWTPayload {
  */
 export const isValidJWT = (token: string | null): boolean => {
   if (!token) {
+    console.log("JWT validation: No token provided");
     return false;
   }
 
   try {
     // Try to decode the token
     const decoded = jwtDecode<JWTPayload>(token);
+    console.log("JWT validation: Decoded token:", decoded);
     
     // Check if token has required fields
     if (!decoded || !decoded.exp || !decoded._id || !decoded.email) {
+      console.log("JWT validation: Missing required fields", {
+        hasDecoded: !!decoded,
+        hasExp: !!decoded?.exp,
+        hasId: !!decoded?._id,
+        hasEmail: !!decoded?.email
+      });
       return false;
     }
 
     // Check if token is expired
     const currentTime = Math.floor(Date.now() / 1000);
     if (decoded.exp < currentTime) {
+      console.log("JWT validation: Token expired", {
+        tokenExp: decoded.exp,
+        currentTime,
+        difference: decoded.exp - currentTime
+      });
       return false;
     }
 
@@ -44,11 +57,16 @@ export const isValidJWT = (token: string | null): boolean => {
       const maxInactiveTime = 15 * 60 * 1000; // 15 minutes in milliseconds
       
       if (inactiveTime > maxInactiveTime) {
-        console.log("Token expired due to inactivity");
+        console.log("JWT validation: Token expired due to inactivity", {
+          lastActivity: decoded.lastActivity,
+          inactiveTime: inactiveTime / 1000 / 60, // in minutes
+          maxInactiveTime: maxInactiveTime / 1000 / 60 // in minutes
+        });
         return false;
       }
     }
 
+    console.log("JWT validation: Token is valid");
     return true;
   } catch (error) {
     // If decoding fails, token is invalid
@@ -63,11 +81,15 @@ export const isValidJWT = (token: string | null): boolean => {
  */
 export const getValidToken = (): string | null => {
   const token = localStorage.getItem("token");
+  console.log("getValidToken: Retrieved token from localStorage:", token ? "exists" : "null");
+  
   if (isValidJWT(token)) {
+    console.log("getValidToken: Token is valid, returning it");
     return token;
   }
   
   // If token is invalid, remove it from localStorage
+  console.log("getValidToken: Token is invalid, removing from localStorage");
   localStorage.removeItem("token");
   return null;
 };
