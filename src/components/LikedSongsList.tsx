@@ -9,6 +9,7 @@ import {
   Alert,
   AlertIcon,
   Badge,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useLikedSongs from "../hooks/useLikedSongs";
@@ -16,6 +17,9 @@ import { MdMusicNote, MdPerson, MdDescription } from "react-icons/md";
 
 const LikedSongsList = () => {
   const { likedSongs, loading, error } = useLikedSongs(1, 10); // Show first 10 liked songs
+  
+  // Responsive values for mobile/desktop
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (loading) {
     return (
@@ -83,7 +87,7 @@ const LikedSongsList = () => {
   return (
     <Box>
       <Heading size="md" color="whiteAlpha.900" mb={4}>
-        Liked Media Files ({allMediaFiles.length})
+        Liked song files ({allMediaFiles.length})
       </Heading>
 
       <VStack spacing={2} align="stretch">
@@ -109,39 +113,71 @@ const LikedSongsList = () => {
               }}
               transition="all 0.2s ease-in-out"
             >
-              <HStack justify="space-between" align="center" spacing={3}>
-                <HStack flex={1} spacing={3} minW={0}>
+              {isMobile ? (
+                // Mobile layout - simplified with truncated names
+                <VStack spacing={2} align="stretch">
                   <Text
                     color="whiteAlpha.900"
                     fontWeight="semibold"
                     fontSize="sm"
                     noOfLines={1}
-                    flex={1}
+                    title={`${mediaFile.songTitle} - ${mediaFile.name}`}
                   >
                     {mediaFile.songTitle} - {mediaFile.name}
                   </Text>
-                  <HStack spacing={1} color="whiteAlpha.600" fontSize="xs">
-                    <MdPerson size="12px" />
-                    <Text noOfLines={1}>{mediaFile.songAuthor}</Text>
+                  <HStack spacing={2} color="whiteAlpha.600" fontSize="xs" flexWrap="wrap">
+                    <HStack spacing={1}>
+                      <MdPerson size="12px" />
+                      <Text noOfLines={1}>{mediaFile.songAuthor}</Text>
+                    </HStack>
+                    <Text>•</Text>
+                    <Text noOfLines={1}>{mediaFile.notation?.title || "No notation"}</Text>
+                    <Text>•</Text>
+                    <Text noOfLines={1}>{mediaFile.songLanguage}</Text>
+                  </HStack>
+                  <HStack spacing={2} fontSize="xs" color="whiteAlpha.600">
+                    <Text>{mediaFile.songViews} views</Text>
+                    <Badge colorScheme="cyan" variant="subtle" size="sm">
+                      {mediaFile.songLikes}
+                    </Badge>
+                  </HStack>
+                </VStack>
+              ) : (
+                // Desktop layout - original design
+                <HStack justify="space-between" align="center" spacing={3}>
+                  <HStack flex={1} spacing={3} minW={0}>
+                    <Text
+                      color="whiteAlpha.900"
+                      fontWeight="semibold"
+                      fontSize="sm"
+                      noOfLines={1}
+                      flex={1}
+                    >
+                      {mediaFile.songTitle} - {mediaFile.name}
+                    </Text>
+                    <HStack spacing={1} color="whiteAlpha.600" fontSize="xs">
+                      <MdPerson size="12px" />
+                      <Text noOfLines={1}>{mediaFile.songAuthor}</Text>
+                    </HStack>
+                  </HStack>
+
+                  <HStack
+                    spacing={2}
+                    fontSize="xs"
+                    color="whiteAlpha.600"
+                    flexShrink={0}
+                  >
+                    <Text>{mediaFile.notation?.title || "No notation"}</Text>
+                    <Text>•</Text>
+                    <Text>{mediaFile.songLanguage}</Text>
+                    <Text>•</Text>
+                    <Text>{mediaFile.songViews} views</Text>
+                    <Badge colorScheme="cyan" variant="subtle" size="sm">
+                      {mediaFile.songLikes}
+                    </Badge>
                   </HStack>
                 </HStack>
-
-                <HStack
-                  spacing={2}
-                  fontSize="xs"
-                  color="whiteAlpha.600"
-                  flexShrink={0}
-                >
-                  <Text>{mediaFile.notation?.title || "No notation"}</Text>
-                  <Text>•</Text>
-                  <Text>{mediaFile.songLanguage}</Text>
-                  <Text>•</Text>
-                  <Text>{mediaFile.songViews} views</Text>
-                  <Badge colorScheme="cyan" variant="subtle" size="sm">
-                    {mediaFile.songLikes}
-                  </Badge>
-                </HStack>
-              </HStack>
+              )}
             </Box>
           </Link>
         ))}
