@@ -43,7 +43,15 @@ const ChangePassword = () => {
     return (
       <Container maxW="container.md" py={8}>
         <Flex direction="column" align="center" justify="center" minH="50vh">
-          <Heading mb={4}>Authentication Required</Heading>
+          <Stack spacing={4} align="center" mb={6} p={6} bg="gray.50" borderRadius="lg" border="1px" borderColor="gray.200">
+            <Image
+              src="/songBankLogo.png"
+              alt="SongLibrary Logo"
+              boxSize="80px"
+              objectFit="contain"
+            />
+            <Heading mb={4} color="gray.700">Authentication Required</Heading>
+          </Stack>
           <Text mb={6}>Please log in to change your password.</Text>
           <Button as="a" href="/auth" colorScheme="blue">
             Go to Login
@@ -59,7 +67,15 @@ const ChangePassword = () => {
     return (
       <Container maxW="container.md" py={8}>
         <Flex direction="column" align="center" justify="center" minH="50vh">
-          <Heading mb={4}>Invalid Token</Heading>
+          <Stack spacing={4} align="center" mb={6} p={6} bg="gray.50" borderRadius="lg" border="1px" borderColor="gray.200">
+            <Image
+              src="/songBankLogo.png"
+              alt="SongLibrary Logo"
+              boxSize="80px"
+              objectFit="contain"
+            />
+            <Heading mb={4} color="gray.700">Invalid Token</Heading>
+          </Stack>
           <Text mb={6}>Please log in again.</Text>
           <Button as="a" href="/auth" colorScheme="blue">
             Go to Login
@@ -150,7 +166,15 @@ const ChangePassword = () => {
     <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
       <Flex p={8} flex={1} align={"center"} justify={"center"}>
         <Stack spacing={6} w={"full"} maxW={"md"}>
-          <Heading fontSize={"2xl"}>Change your password</Heading>
+          <Stack spacing={4} align="center" mb={4} p={6} bg="gray.50" borderRadius="lg" border="1px" borderColor="gray.200">
+            <Image
+              src="/songBankLogo.png"
+              alt="SongLibrary Logo"
+              boxSize="80px"
+              objectFit="contain"
+            />
+            <Heading fontSize={"2xl"} textAlign="center" color="gray.700">Change your password</Heading>
+          </Stack>
 
           {errMsg && (
             <Box

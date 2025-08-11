@@ -147,7 +147,15 @@ const Login = () => {
       <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
         <Flex p={8} flex={1} align={'center'} justify={'center'}>
           <Stack spacing={6} w={'full'} maxW={'md'}>
-            <Heading fontSize={'2xl'}>Sign in to your account</Heading>
+            <Stack spacing={4} align="center" mb={4} p={6} bg="gray.50" borderRadius="lg" border="1px" borderColor="gray.200">
+              <Image
+                src="/songBankLogo.png"
+                alt="SongLibrary Logo"
+                boxSize="80px"
+                objectFit="contain"
+              />
+              <Heading fontSize={'2xl'} textAlign="center" color="gray.700">Sign in to your account</Heading>
+            </Stack>
             
             {errMsg && (
               <Box

@@ -15,7 +15,7 @@ api.interceptors.request.use(
   (config) => {
     const token = getValidToken();
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers["x-auth-token"] = token; // Changed from Authorization: Bearer to x-auth-token
     }
     console.log("Request Config:", config);
     return config;

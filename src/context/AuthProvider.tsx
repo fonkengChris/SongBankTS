@@ -18,6 +18,14 @@ const AuthContext = createContext<AuthCridentials>({} as AuthCridentials);
 export const AuthProvider = ({ children }: Props) => {
   const [auth, setAuth] = useState<Auth>({} as Auth);
 
+  // Define logout function first to avoid circular dependency
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setAuth({} as Auth);
+    // Redirect to login page
+    window.location.href = "/login";
+  }, []);
+
   // Check token validity on mount and set up periodic checks
   useEffect(() => {
     const checkTokenValidity = () => {
@@ -40,7 +48,7 @@ export const AuthProvider = ({ children }: Props) => {
     const interval = setInterval(checkTokenValidity, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [logout]);
 
   // Track user activity to extend session
   useEffect(() => {
@@ -75,13 +83,6 @@ export const AuthProvider = ({ children }: Props) => {
         document.removeEventListener(event, handleUserActivity);
       });
     };
-  }, []);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem("token");
-    setAuth({} as Auth);
-    // Redirect to login page
-    window.location.href = "/login";
   }, []);
 
   const isAuthenticated = !!auth.access && !!getValidToken();
