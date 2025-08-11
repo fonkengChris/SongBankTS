@@ -13,9 +13,12 @@ const api = axios.create({
 // Add request interceptor to include JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = getValidToken();
+    const token = localStorage.getItem("token"); // Get token directly without validation
     if (token) {
-      config.headers["x-auth-token"] = token; // Changed from Authorization: Bearer to x-auth-token
+      config.headers["x-auth-token"] = token;
+      console.log("Request interceptor: Token added to headers:", token.substring(0, 20) + "...");
+    } else {
+      console.log("Request interceptor: No token found in localStorage");
     }
     console.log("Request Config:", config);
     return config;

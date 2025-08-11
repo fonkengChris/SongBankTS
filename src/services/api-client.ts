@@ -22,11 +22,14 @@ console.log("   DEV mode:", import.meta.env.DEV);
 // Add request interceptor with logging
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = getValidToken();
+    const token = localStorage.getItem("token"); // Get token directly without validation
     if (token) {
       const headers = new AxiosHeaders(config.headers);
       headers.set("x-auth-token", token);
       config.headers = headers;
+      console.log("API Client: Token added to headers:", token.substring(0, 20) + "...");
+    } else {
+      console.log("API Client: No token found in localStorage");
     }
 
     console.log("Request Config:", {
