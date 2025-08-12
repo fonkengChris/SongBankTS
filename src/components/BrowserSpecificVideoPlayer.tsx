@@ -110,6 +110,30 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
            userAgent.includes('X11');
   };
 
+  // Force video refresh for Ubuntu Chrome
+  const forceVideoRefresh = (video: HTMLVideoElement) => {
+    if (browserInfo?.type === 'chrome' && isUbuntu()) {
+      console.log('🐧 Ubuntu Chrome - Forcing video refresh');
+      
+      // Hide video temporarily
+      video.style.display = 'none';
+      
+      // Force browser to re-render
+      setTimeout(() => {
+        video.style.display = 'block';
+        video.style.transform = 'translateZ(0)';
+        
+        // Additional refresh attempts
+        setTimeout(() => {
+          video.style.transform = 'translateZ(1px)';
+          setTimeout(() => {
+            video.style.transform = 'translateZ(0)';
+          }, 10);
+        }, 50);
+      }, 10);
+    }
+  };
+
   // Get optimal settings for each browser
   const getBrowserSettings = (browser: BrowserType) => {
     const settings = {
@@ -263,6 +287,12 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       setDuration(video.duration);
       setIsLoading(false);
       console.log('✅ Video metadata loaded for', browserInfo.type);
+      
+      // Force video refresh for Ubuntu Chrome after metadata loads
+      if (browserInfo.type === 'chrome' && isUbuntu()) {
+        console.log('🐧 Ubuntu Chrome - Forcing video refresh after metadata load');
+        setTimeout(() => forceVideoRefresh(video), 200);
+      }
     };
 
     const handleTimeUpdate = () => {
@@ -297,6 +327,11 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       setIsLoading(false);
       setError(null);
       console.log('✅ Video can play in', browserInfo.type);
+      
+      // Force video refresh for Ubuntu Chrome when video can play
+      if (browserInfo.type === 'chrome' && isUbuntu()) {
+        setTimeout(() => forceVideoRefresh(video), 100);
+      }
     };
 
     const handlePlay = () => {
@@ -333,11 +368,27 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       // Force muted state initially for Ubuntu Chrome
       video.muted = true;
       
+      // Ubuntu Chrome specific video rendering fixes
+      video.style.transform = 'translateZ(0)';
+      video.style.backfaceVisibility = 'hidden';
+      video.style.perspective = 'none';
+      video.style.transformStyle = 'flat';
+      
+      // Force hardware acceleration for Ubuntu Chrome
+      video.style.willChange = 'auto';
+      video.style.filter = 'none';
+      
       // Add additional event listeners for Ubuntu Chrome
       const handleCanPlayThrough = () => {
         console.log('✅ Ubuntu Chrome - Can play through');
         // Unmute after successful loading
         video.muted = false;
+        
+        // Force video refresh for Ubuntu Chrome
+        video.style.display = 'none';
+        setTimeout(() => {
+          video.style.display = 'block';
+        }, 10);
       };
       
       video.addEventListener('canplaythrough', handleCanPlayThrough);
@@ -372,6 +423,12 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
         console.error('Play error:', err);
         setError('Failed to play video. Try downloading instead.');
       });
+      
+      // Force video refresh for Ubuntu Chrome
+      if (browserInfo?.type === 'chrome' && isUbuntu()) {
+        console.log('🐧 Ubuntu Chrome - Forcing video refresh on play');
+        setTimeout(() => forceVideoRefresh(video), 100);
+      }
     }
   };
 
@@ -494,8 +551,27 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
             top: 0,
             left: 0,
             zIndex: 1,
+            // Ubuntu Chrome specific styles
+            ...(browserInfo?.type === 'chrome' && isUbuntu() ? {
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              perspective: 'none',
+              transformStyle: 'flat',
+              willChange: 'auto',
+              filter: 'none',
+            } : {})
           }}
           poster={thumbnailUrl}
+          // Ubuntu Chrome specific attributes
+          {...(browserInfo?.type === 'chrome' && isUbuntu() ? {
+            'webkit-playsinline': 'true',
+            'playsinline': 'true',
+            'webkit-video-playable-inline': 'true',
+            'webkit-remote-playback': 'false',
+            'disablepictureinpicture': 'true',
+            'controls': false,
+            'preload': 'none',
+          } : {})}
         >
           Your browser does not support the video tag.
         </video>
