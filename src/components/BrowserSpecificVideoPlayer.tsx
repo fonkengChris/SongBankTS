@@ -98,6 +98,18 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
     };
   };
 
+  // Detect if running on Ubuntu/Linux
+  const isUbuntu = () => {
+    const userAgent = navigator.userAgent;
+    const platform = navigator.platform;
+    
+    // Check for Linux indicators
+    return userAgent.includes('Linux') || 
+           platform.includes('Linux') || 
+           userAgent.includes('Ubuntu') ||
+           userAgent.includes('X11');
+  };
+
   // Get optimal settings for each browser
   const getBrowserSettings = (browser: BrowserType) => {
     const settings = {
@@ -120,19 +132,44 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
         break;
 
       case 'chrome':
-        // Chrome needs specific settings to prevent freezing
-        settings.preload = 'metadata';
-        settings.style = {
-          transform: 'translateZ(0)',
-          willChange: 'auto',
-          backfaceVisibility: 'hidden',
-        };
-        settings.attributes = {
-          'webkit-playsinline': 'true',
-          'x5-playsinline': 'true',
-          'x5-video-player-type': 'h5',
-          'x5-video-player-fullscreen': 'false',
-        };
+        // Chrome needs specific settings to prevent freezing, especially on Ubuntu
+        if (isUbuntu()) {
+          // Ubuntu-specific Chrome optimizations
+          settings.preload = 'none';
+          settings.style = {
+            transform: 'translateZ(0)',
+            willChange: 'auto',
+            backfaceVisibility: 'hidden',
+            // Ubuntu Chrome specific fixes
+            filter: 'none',
+            perspective: 'none',
+            transformStyle: 'flat',
+          };
+          settings.attributes = {
+            'webkit-playsinline': 'true',
+            'x5-playsinline': 'true',
+            'x5-video-player-type': 'h5',
+            'x5-video-player-fullscreen': 'false',
+            // Ubuntu Chrome specific attributes
+            'webkit-video-playable-inline': 'true',
+            'webkit-remote-playback': 'false',
+            'disablepictureinpicture': 'true',
+          };
+        } else {
+          // Standard Chrome settings for other platforms
+          settings.preload = 'metadata';
+          settings.style = {
+            transform: 'translateZ(0)',
+            willChange: 'auto',
+            backfaceVisibility: 'hidden',
+          };
+          settings.attributes = {
+            'webkit-playsinline': 'true',
+            'x5-playsinline': 'true',
+            'x5-video-player-type': 'h5',
+            'x5-video-player-fullscreen': 'false',
+          };
+        }
         break;
 
       case 'safari':
@@ -191,6 +228,13 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
     const detectedBrowser = detectBrowser();
     setBrowserInfo(detectedBrowser);
     console.log('🌐 Browser detected:', detectedBrowser);
+    
+    // Log Ubuntu-specific information for debugging
+    if (detectedBrowser.type === 'chrome' && isUbuntu()) {
+      console.log('🐧 Ubuntu Chrome detected - Video playback may have issues');
+      console.log('🐧 User Agent:', navigator.userAgent);
+      console.log('🐧 Platform:', navigator.platform);
+    }
   }, []);
 
   useEffect(() => {
@@ -232,7 +276,11 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       let errorMessage = `Video playback error in ${browserInfo.type}. `;
       
       if (browserInfo.type === 'chrome') {
-        errorMessage += "Chrome may freeze with certain video formats. Try Firefox or download the video.";
+        if (isUbuntu()) {
+          errorMessage += "Chrome on Ubuntu has known video playback issues. Try Firefox, or download the video. You can also try refreshing the page.";
+        } else {
+          errorMessage += "Chrome may freeze with certain video formats. Try Firefox or download the video.";
+        }
       } else if (browserInfo.type === 'safari') {
         errorMessage += "Safari has limited MP4 support. Try Firefox or download the video.";
       } else if (browserInfo.type === 'opera') {
@@ -277,6 +325,24 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
 
     // Set video source
     video.src = videoUrl;
+    
+    // Ubuntu Chrome specific initialization
+    if (browserInfo.type === 'chrome' && isUbuntu()) {
+      console.log('🐧 Ubuntu Chrome detected - applying special initialization');
+      
+      // Force muted state initially for Ubuntu Chrome
+      video.muted = true;
+      
+      // Add additional event listeners for Ubuntu Chrome
+      const handleCanPlayThrough = () => {
+        console.log('✅ Ubuntu Chrome - Can play through');
+        // Unmute after successful loading
+        video.muted = false;
+      };
+      
+      video.addEventListener('canplaythrough', handleCanPlayThrough);
+    }
+    
     video.load();
 
     return () => {
@@ -287,6 +353,11 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
+      
+      // Remove Ubuntu Chrome specific listeners if they exist
+      if (browserInfo.type === 'chrome' && isUbuntu()) {
+        video.removeEventListener('canplaythrough', () => {});
+      }
     };
   }, [videoUrl, browserInfo, onError]);
 
@@ -388,6 +459,19 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
 
   return (
     <VStack spacing={4} align="stretch">
+      {/* Ubuntu Chrome notice */}
+      {browserInfo.type === 'chrome' && isUbuntu() && (
+        <Alert status="warning" borderRadius="md">
+          <AlertIcon />
+          <Box>
+            <Text fontWeight="bold">Chrome on Ubuntu Notice</Text>
+            <Text fontSize="sm">
+              Chrome on Ubuntu may have video playback issues. If you experience problems, try Firefox or download the video.
+            </Text>
+          </Box>
+        </Alert>
+      )}
+      
       <Box 
         position="relative" 
         w="100%" 
