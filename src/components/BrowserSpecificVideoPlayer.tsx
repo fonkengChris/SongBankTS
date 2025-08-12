@@ -134,6 +134,53 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
     }
   };
 
+  // Force complete video reload for Ubuntu Chrome
+  const forceVideoReload = () => {
+    if (browserInfo?.type === 'chrome' && isUbuntu()) {
+      console.log('🐧 Ubuntu Chrome - Forcing complete video reload');
+      
+      const video = videoRef.current;
+      if (!video) return;
+      
+      // Store current state
+      const wasPlaying = !video.paused;
+      const currentTime = video.currentTime;
+      const wasMuted = video.muted;
+      
+      // Remove video element
+      video.remove();
+      
+      // Create new video element
+      const newVideo = document.createElement('video');
+      newVideo.style.cssText = video.style.cssText;
+      newVideo.className = video.className;
+      newVideo.id = video.id;
+      
+      // Copy all attributes
+      Array.from(video.attributes).forEach(attr => {
+        newVideo.setAttribute(attr.name, attr.value);
+      });
+      
+      // Set source and reload
+      newVideo.src = videoUrl;
+      newVideo.currentTime = currentTime;
+      newVideo.muted = wasMuted;
+      
+      // Replace in DOM
+      video.parentNode?.replaceChild(newVideo, video);
+      
+      // Update ref
+      (videoRef as any).current = newVideo;
+      
+      // Restore state
+      if (wasPlaying) {
+        newVideo.play().catch(console.error);
+      }
+      
+      console.log('🐧 Ubuntu Chrome - Video element replaced');
+    }
+  };
+
   // Get optimal settings for each browser
   const getBrowserSettings = (browser: BrowserType) => {
     const settings = {
@@ -292,6 +339,14 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       if (browserInfo.type === 'chrome' && isUbuntu()) {
         console.log('🐧 Ubuntu Chrome - Forcing video refresh after metadata load');
         setTimeout(() => forceVideoRefresh(video), 200);
+        
+        // Also try complete reload after a longer delay if video still not showing
+        setTimeout(() => {
+          if (video.readyState >= 3 && !video.videoWidth) {
+            console.log('🐧 Ubuntu Chrome - Video loaded but no width, forcing reload');
+            forceVideoReload();
+          }
+        }, 3000);
       }
     };
 
@@ -525,6 +580,14 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
             <Text fontSize="sm">
               Chrome on Ubuntu may have video playback issues. If you experience problems, try Firefox or download the video.
             </Text>
+            <Button 
+              size="sm" 
+              colorScheme="blue" 
+              mt={2}
+              onClick={forceVideoReload}
+            >
+              Fix Video Display (Ubuntu Chrome)
+            </Button>
           </Box>
         </Alert>
       )}
@@ -559,6 +622,13 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
               transformStyle: 'flat',
               willChange: 'auto',
               filter: 'none',
+              // Force software rendering for Ubuntu Chrome
+              imageRendering: 'auto',
+              objectFit: 'contain',
+              // Additional Ubuntu Chrome fixes
+              WebkitTransform: 'translateZ(0)',
+              WebkitBackfaceVisibility: 'hidden',
+              WebkitPerspective: 'none',
             } : {})
           }}
           poster={thumbnailUrl}
@@ -571,6 +641,9 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
             'disablepictureinpicture': 'true',
             'controls': false,
             'preload': 'none',
+            // Force software rendering
+            'webkit-accelerator': 'false',
+            'webkit-transform3d': 'false',
           } : {})}
         >
           Your browser does not support the video tag.
