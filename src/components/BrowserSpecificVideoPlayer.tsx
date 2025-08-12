@@ -110,30 +110,6 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
            userAgent.includes('X11');
   };
 
-  // Force video refresh for Ubuntu Chrome
-  const forceVideoRefresh = (video: HTMLVideoElement) => {
-    if (browserInfo?.type === 'chrome' && isUbuntu()) {
-      console.log('🐧 Ubuntu Chrome - Forcing video refresh');
-      
-      // Hide video temporarily
-      video.style.display = 'none';
-      
-      // Force browser to re-render
-      setTimeout(() => {
-        video.style.display = 'block';
-        video.style.transform = 'translateZ(0)';
-        
-        // Additional refresh attempts
-        setTimeout(() => {
-          video.style.transform = 'translateZ(1px)';
-          setTimeout(() => {
-            video.style.transform = 'translateZ(0)';
-          }, 10);
-        }, 50);
-      }, 10);
-    }
-  };
-
   // Force complete video reload for Ubuntu Chrome
   const forceVideoReload = () => {
     if (browserInfo?.type === 'chrome' && isUbuntu()) {
@@ -178,6 +154,22 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       }
       
       console.log('🐧 Ubuntu Chrome - Video element replaced');
+    }
+  };
+
+  // Force video refresh for Ubuntu Chrome (less aggressive)
+  const forceVideoRefresh = (video: HTMLVideoElement) => {
+    if (browserInfo?.type === 'chrome' && isUbuntu()) {
+      console.log('🐧 Ubuntu Chrome - Forcing video refresh');
+      
+      // Just force a repaint without hiding/showing
+      video.style.transform = 'translateZ(0)';
+      setTimeout(() => {
+        video.style.transform = 'translateZ(1px)';
+        setTimeout(() => {
+          video.style.transform = 'translateZ(0)';
+        }, 10);
+      }, 50);
     }
   };
 
@@ -339,14 +331,6 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       if (browserInfo.type === 'chrome' && isUbuntu()) {
         console.log('🐧 Ubuntu Chrome - Forcing video refresh after metadata load');
         setTimeout(() => forceVideoRefresh(video), 200);
-        
-        // Also try complete reload after a longer delay if video still not showing
-        setTimeout(() => {
-          if (video.readyState >= 3 && !video.videoWidth) {
-            console.log('🐧 Ubuntu Chrome - Video loaded but no width, forcing reload');
-            forceVideoReload();
-          }
-        }, 3000);
       }
     };
 
@@ -382,11 +366,6 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       setIsLoading(false);
       setError(null);
       console.log('✅ Video can play in', browserInfo.type);
-      
-      // Force video refresh for Ubuntu Chrome when video can play
-      if (browserInfo.type === 'chrome' && isUbuntu()) {
-        setTimeout(() => forceVideoRefresh(video), 100);
-      }
     };
 
     const handlePlay = () => {
@@ -420,9 +399,6 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
     if (browserInfo.type === 'chrome' && isUbuntu()) {
       console.log('🐧 Ubuntu Chrome detected - applying special initialization');
       
-      // Force muted state initially for Ubuntu Chrome
-      video.muted = true;
-      
       // Ubuntu Chrome specific video rendering fixes
       video.style.transform = 'translateZ(0)';
       video.style.backfaceVisibility = 'hidden';
@@ -436,14 +412,6 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
       // Add additional event listeners for Ubuntu Chrome
       const handleCanPlayThrough = () => {
         console.log('✅ Ubuntu Chrome - Can play through');
-        // Unmute after successful loading
-        video.muted = false;
-        
-        // Force video refresh for Ubuntu Chrome
-        video.style.display = 'none';
-        setTimeout(() => {
-          video.style.display = 'block';
-        }, 10);
       };
       
       video.addEventListener('canplaythrough', handleCanPlayThrough);
@@ -479,10 +447,10 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
         setError('Failed to play video. Try downloading instead.');
       });
       
-      // Force video refresh for Ubuntu Chrome
+      // Force video refresh for Ubuntu Chrome (delayed to avoid interfering with play)
       if (browserInfo?.type === 'chrome' && isUbuntu()) {
-        console.log('🐧 Ubuntu Chrome - Forcing video refresh on play');
-        setTimeout(() => forceVideoRefresh(video), 100);
+        console.log('🐧 Ubuntu Chrome - Video started playing, will refresh after delay');
+        setTimeout(() => forceVideoRefresh(video), 500);
       }
     }
   };
