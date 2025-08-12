@@ -388,18 +388,6 @@ const BrowserSpecificVideoPlayer: React.FC<BrowserSpecificVideoPlayerProps> = ({
 
   return (
     <VStack spacing={4} align="stretch">
-      <Alert status="info" borderRadius="md">
-        <AlertIcon />
-        <Box>
-          <Text fontWeight="bold">Browser-Specific Video Player</Text>
-          <Text fontSize="sm">
-            Browser: {browserInfo.type} v{browserInfo.version} | 
-            MP4 Support: {browserInfo.supportsMP4 ? 'Yes' : 'No'} | 
-            Hardware: {browserInfo.hasHardwareAcceleration ? 'Yes' : 'No'}
-          </Text>
-        </Box>
-      </Alert>
-
       <Box 
         position="relative" 
         w="100%" 

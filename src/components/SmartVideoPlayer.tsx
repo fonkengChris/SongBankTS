@@ -105,16 +105,6 @@ const SmartVideoPlayer: React.FC<SmartVideoPlayerProps> = ({
   // For MP4 videos, use the appropriate player based on browser
   return (
     <VStack spacing={4} align="stretch">
-      <Alert status="success" borderRadius="md">
-        <AlertIcon />
-        <Box>
-          <AlertTitle>MP4 Video Ready</AlertTitle>
-          <AlertDescription>
-            Your MP4 video is ready for playback in the browser.
-          </AlertDescription>
-        </Box>
-      </Alert>
-      
       <BrowserSpecificVideoPlayer
         videoUrl={videoUrl}
         title={title}
