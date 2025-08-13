@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: Props) => {
     localStorage.removeItem("token");
     setAuth({} as Auth);
     // Redirect to login page
-    window.location.href = "/login";
+    window.location.href = "/auth";
   }, []);
 
   // Check token validity on mount and set up periodic checks

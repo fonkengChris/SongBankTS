@@ -14,8 +14,11 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { axiosInstance } from "../services/api-client";
 import paymentService from "../services/payment-service";
 
@@ -31,25 +34,100 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pin, setPin] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+  const [referenceId, setReferenceId] = useState<string | null>(null);
+  const [statusCheckInterval, setStatusCheckInterval] = useState<NodeJS.Timeout | null>(null);
   const toast = useToast();
 
+  // Format phone number for Cameroon (MTN)
   const formatPhoneNumber = (number: string) => {
     // Remove all non-digits and any leading zeros
     let cleaned = number.replace(/\D/g, "").replace(/^0+/, "");
-
-    // Remove 256 if it exists at the start
-    if (cleaned.startsWith("256")) {
+    
+    // Remove country code if present (237 for Cameroon)
+    if (cleaned.startsWith("237")) {
       cleaned = cleaned.substring(3);
     }
-
-    // Add 256 prefix
-    return `+237${cleaned}`;
+    
+    // Ensure it's a valid Cameroon mobile number (9 digits starting with 6, 7, 8, or 9)
+    if (cleaned.length === 9 && /^[6789]/.test(cleaned)) {
+      return cleaned; // Return without country code as MTN API expects
+    }
+    
+    throw new Error("Invalid Cameroon mobile number format. Please enter a valid number (e.g., 677123456)");
   };
 
   const validatePhoneNumber = (number: string) => {
-    const formatted = formatPhoneNumber(number);
-    // MTN Uganda numbers should be 12 digits (256 + 9 digits)
-    return formatted.length === 12;
+    try {
+      formatPhoneNumber(number);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (statusCheckInterval) {
+        clearInterval(statusCheckInterval);
+      }
+    };
+  }, [statusCheckInterval]);
+
+  // Function to check payment status
+  const checkPaymentStatus = async (refId: string) => {
+    try {
+      const response = await axiosInstance.get(`/api/momo/status/${refId}`);
+      const status = response.data.status;
+      
+      setPaymentStatus(status);
+      
+      if (status === "SUCCESSFUL") {
+        // Payment completed successfully
+        if (statusCheckInterval) {
+          clearInterval(statusCheckInterval);
+          setStatusCheckInterval(null);
+        }
+        
+        toast({
+          title: "Payment Successful!",
+          description: "Your payment has been completed successfully.",
+          status: "success",
+          duration: 5000,
+        });
+        
+        if (onSuccess) onSuccess();
+      } else if (status === "FAILED" || status === "TIMEOUT") {
+        // Payment failed
+        if (statusCheckInterval) {
+          clearInterval(statusCheckInterval);
+          setStatusCheckInterval(null);
+        }
+        
+        toast({
+          title: "Payment Failed",
+          description: "Your payment was not completed. Please try again.",
+          status: "error",
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+    }
+  };
+
+  // Start polling for payment status
+  const startStatusPolling = (refId: string) => {
+    // Check immediately
+    checkPaymentStatus(refId);
+    
+    // Then check every 10 seconds
+    const interval = setInterval(() => {
+      checkPaymentStatus(refId);
+    }, 10000);
+    
+    setStatusCheckInterval(interval);
   };
 
   const handlePayment = async () => {
@@ -61,7 +139,7 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
     if (!validatePhoneNumber(phoneNumber)) {
       toast({
         title: "Invalid Phone Number",
-        description: "Please enter a valid MTN number (e.g., 0775123456)",
+        description: "Please enter a valid Cameroon MTN number (e.g., 677123456)",
         status: "error",
         duration: 5000,
       });
@@ -73,58 +151,100 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
 
     try {
       if (import.meta.env.DEV) {
-        setShowPinDialog(true);
+        // Development mode - simulate payment
+        const mockOrderId = `MOMO_DEV_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
+        try {
+          await paymentService.createPayment({
+            orderId: mockOrderId,
+            amount: amount,
+            description: description,
+            status: "COMPLETED",
+            provider: "MTN_MOMO",
+            mediaFileId: mediaFileId,
+            purchaseType: "SONG",
+            transactionDetails: {
+              originalAmount: amount,
+              originalCurrency: "USD",
+              convertedAmount: amount * 600, // Mock conversion to XAF
+              convertedCurrency: "XAF",
+              exchangeRate: 600,
+            },
+          });
+
+          console.log("Payment record created successfully (DEV mode)");
+          
+          if (onSuccess) onSuccess();
+          toast({
+            title: "Payment Successful",
+            description: "Transaction completed successfully (Development Mode)",
+            status: "success",
+          });
+        } catch (paymentError) {
+          console.error("Failed to create payment record (DEV mode):", paymentError);
+          
+          toast({
+            title: "Payment Successful",
+            description: "Payment completed but there was an issue with our records. Please contact support if you have issues accessing your purchase.",
+            status: "warning",
+            duration: 8000,
+            isClosable: true,
+          });
+          
+          if (onSuccess) onSuccess();
+        }
+        
         setIsLoading(false);
+        setShowPinDialog(false);
         return;
       }
 
-      const headers = {
-        Authorization: `Bearer ${import.meta.env.VITE_MOMO_API_KEY}`,
-        "X-Reference-Id": crypto.randomUUID(),
-        "X-Target-Environment": import.meta.env.VITE_MOMO_ENVIRONMENT,
-        "Ocp-Apim-Subscription-Key": import.meta.env.VITE_MOMO_PRIMARY_KEY,
-      };
-
+      // Production mode - make actual API call
       const payload = {
         amount,
         description,
-        currency: import.meta.env.VITE_MOMO_CURRENCY || "EUR",
-        externalId: crypto.randomUUID(),
-        payer: {
-          partyIdType: "MSISDN",
-          partyId: formattedPhone,
-        },
-        payerMessage: description,
-        payeeNote: "Payment for digital content",
-        mediaFileId: mediaFileId, // Include mediaFileId for backend payment record
+        phoneNumber: formattedPhone,
+        mediaFileId: mediaFileId,
       };
 
-      console.log("Payment payload:", payload); // For debugging
+      console.log("Payment payload:", payload);
 
-      const response = await axiosInstance.post("/api/momo/payment", payload, {
-        headers,
-      });
+      const response = await axiosInstance.post("/api/momo/payment", payload);
 
       if (response.data.status === "PENDING") {
+        const refId = response.data.referenceId;
+        setReferenceId(refId);
+        setPaymentStatus("PENDING");
+        
         toast({
           title: "Payment Initiated",
-          description: "Please check your phone to complete the payment",
+          description: "Please check your phone to complete the payment. We'll notify you when it's completed.",
           status: "info",
-          duration: 5000,
+          duration: 8000,
+          isClosable: true,
         });
         
-        // Note: Payment record is automatically created by the backend
-        // The backend MoMo endpoint already handles payment record creation
-        console.log("MoMo payment initiated, record created by backend");
+        // Start polling for status updates
+        startStatusPolling(refId);
+        
+        setShowPinDialog(false);
       }
     } catch (error: any) {
       console.error("Payment error:", error);
+      
+      let errorMessage = "Failed to initiate payment";
+      if (error.response?.data?.details) {
+        errorMessage = error.response.data.details;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      }
+      
       toast({
         title: "Payment Error",
-        description:
-          error.response?.data?.details || "Failed to initiate payment",
+        description: errorMessage,
         status: "error",
-        duration: 5000,
+        duration: 8000,
+        isClosable: true,
       });
     } finally {
       setIsLoading(false);
@@ -141,56 +261,7 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
       return;
     }
 
-    if (import.meta.env.DEV) {
-      setShowPinDialog(false);
-      
-      // Simulate payment record creation in development
-      try {
-        const mockOrderId = `MOMO_DEV_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
-        await paymentService.createPayment({
-          orderId: mockOrderId,
-          amount: amount,
-          description: description,
-          status: "COMPLETED",
-          provider: "MTN_MOMO",
-          mediaFileId: mediaFileId,
-          purchaseType: "SONG",
-          transactionDetails: {
-            originalAmount: amount,
-            originalCurrency: "USD",
-            convertedAmount: amount * 3700, // Mock conversion to UGX
-            convertedCurrency: "UGX",
-            exchangeRate: 3700,
-          },
-        });
-
-        console.log("Payment record created successfully (DEV mode)");
-        
-        if (onSuccess) onSuccess();
-        toast({
-          title: "Payment Successful",
-          description: "Transaction completed successfully",
-          status: "success",
-        });
-      } catch (paymentError) {
-        console.error("Failed to create payment record (DEV mode):", paymentError);
-        
-        // Still show success since this is dev mode
-        toast({
-          title: "Payment Successful",
-          description: "Payment completed but there was an issue with our records. Please contact support if you have issues accessing your purchase.",
-          status: "warning",
-          duration: 8000,
-          isClosable: true,
-        });
-        
-        if (onSuccess) onSuccess();
-      }
-    } else {
-      setShowPinDialog(false);
-      handlePayment();
-    }
+    handlePayment();
   };
 
   return (
@@ -205,6 +276,22 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
       >
         Pay with MTN Mobile Money
       </Button>
+
+      {/* Payment Status Alert */}
+      {paymentStatus && (
+        <Alert 
+          status={paymentStatus === "SUCCESSFUL" ? "success" : paymentStatus === "FAILED" ? "error" : "info"}
+          borderRadius="md"
+        >
+          <AlertIcon />
+          <AlertDescription>
+            {paymentStatus === "PENDING" && "Payment initiated. Please complete on your phone."}
+            {paymentStatus === "SUCCESSFUL" && "Payment completed successfully!"}
+            {paymentStatus === "FAILED" && "Payment failed. Please try again."}
+            {paymentStatus === "TIMEOUT" && "Payment timed out. Please try again."}
+          </AlertDescription>
+        </Alert>
+      )}
 
       <Modal
         isOpen={showPinDialog}
@@ -224,11 +311,11 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Enter your phone number"
                 />
-                <FormHelperText>Format: +256XXXXXXXXX</FormHelperText>
+                <FormHelperText>Format: 677123456 (Cameroon MTN number)</FormHelperText>
               </FormControl>
               {import.meta.env.DEV && (
                 <FormControl>
-                  <FormLabel>PIN</FormLabel>
+                  <FormLabel>PIN (Dev Mode)</FormLabel>
                   <Input
                     type="password"
                     maxLength={4}
