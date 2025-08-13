@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: Props) => {
     localStorage.removeItem("token");
     setAuth({} as Auth);
     // Redirect to login page
-    window.location.href = "/auth";
+    window.location.href = "/login";
   }, []);
 
   // Check token validity on mount and set up periodic checks
@@ -33,6 +33,13 @@ export const AuthProvider = ({ children }: Props) => {
         try {
           const decoded = JSON.parse(atob(token.split('.')[1]));
           if (decoded && decoded.email) {
+            // Check if token is expired
+            const currentTime = Math.floor(Date.now() / 1000);
+            if (decoded.exp && decoded.exp < currentTime) {
+              console.log("Token expired, logging out");
+              logout();
+              return;
+            }
             setAuth({ user: decoded.email, pwd: "", access: token });
           } else {
             // Token is invalid or expired, logout
