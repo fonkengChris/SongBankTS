@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   Box,
   Heading,
@@ -23,14 +23,43 @@ import {
   useColorModeValue,
   Avatar,
   Tooltip,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  IconButton,
 } from "@chakra-ui/react";
 import usePayments from "../hooks/usePayments";
-import { FiDollarSign, FiUser, FiMusic, FiCalendar, FiCheckCircle, FiClock, FiXCircle } from "react-icons/fi";
+import useDeletePayment from "../hooks/useDeletePayment";
+import { FiDollarSign, FiUser, FiMusic, FiCalendar, FiCheckCircle, FiClock, FiXCircle, FiTrash2 } from "react-icons/fi";
 import Payment from "../entities/Payment";
 
 const PaymentsManagementPage = () => {
-  const { data: payments, error, isLoading } = usePayments();
+  const { data: payments, error, isLoading, refetch } = usePayments();
+  const { deletePayment, isDeleting } = useDeletePayment();
   const toast = useToast();
+  const [paymentToDelete, setPaymentToDelete] = useState<Payment | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  // Get current user role from JWT token
+  const [userRole, setUserRole] = useState<string>("");
+  
+  React.useEffect(() => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const decoded = JSON.parse(atob(token.split('.')[1]));
+        setUserRole(decoded.role || "");
+      }
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  }, []);
+
+  const isSuperAdmin = userRole === "superAdmin";
 
   // Responsive breakpoints
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -40,6 +69,41 @@ const PaymentsManagementPage = () => {
   const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
+
+  // Handle delete payment
+  const handleDeletePayment = async () => {
+    if (!paymentToDelete) return;
+
+    const success = await deletePayment(paymentToDelete._id);
+    
+    if (success) {
+      toast({
+        title: "Payment deleted",
+        description: "Payment has been successfully deleted",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      refetch(); // Refresh the payments list
+    } else {
+      toast({
+        title: "Delete failed",
+        description: "Failed to delete payment",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+
+    setPaymentToDelete(null);
+    setIsDeleteDialogOpen(false);
+  };
+
+  // Open delete confirmation dialog
+  const openDeleteDialog = (payment: Payment) => {
+    setPaymentToDelete(payment);
+    setIsDeleteDialogOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -195,6 +259,21 @@ const PaymentsManagementPage = () => {
                 Order ID: {payment.orderId}
               </Text>
             </HStack>
+
+            {/* Delete button for superAdmin */}
+            {isSuperAdmin && (
+              <HStack justify="end" pt={2}>
+                <IconButton
+                  aria-label="Delete payment"
+                  icon={<FiTrash2 />}
+                  size="sm"
+                  colorScheme="red"
+                  variant="outline"
+                  onClick={() => openDeleteDialog(payment)}
+                  isLoading={isDeleting}
+                />
+              </HStack>
+            )}
           </VStack>
         </VStack>
       </CardBody>
@@ -229,6 +308,11 @@ const PaymentsManagementPage = () => {
           <Heading color="blue.500" size="lg">
             Payments Management
           </Heading>
+          {isSuperAdmin && (
+            <Text fontSize="sm" color="green.500" fontWeight="medium">
+              SuperAdmin Mode - Delete permissions enabled
+            </Text>
+          )}
         </Flex>
 
         {/* Stats cards */}
@@ -328,6 +412,9 @@ const PaymentsManagementPage = () => {
                     </HStack>
                   </Th>
                   <Th color="blue.500">Order ID</Th>
+                  {isSuperAdmin && (
+                    <Th color="blue.500">Actions</Th>
+                  )}
                 </Tr>
               </Thead>
               <Tbody>
@@ -403,11 +490,24 @@ const PaymentsManagementPage = () => {
                           {payment.orderId}
                         </Text>
                       </Td>
+                      {isSuperAdmin && (
+                        <Td>
+                          <IconButton
+                            aria-label="Delete payment"
+                            icon={<FiTrash2 />}
+                            size="sm"
+                            colorScheme="red"
+                            variant="outline"
+                            onClick={() => openDeleteDialog(payment)}
+                            isLoading={isDeleting}
+                          />
+                        </Td>
+                      )}
                     </Tr>
                   ))
                 ) : (
                   <Tr>
-                    <Td colSpan={7} textAlign="center" py={8}>
+                    <Td colSpan={isSuperAdmin ? 8 : 7} textAlign="center" py={8}>
                       <Text color={secondaryTextColor}>No payments found.</Text>
                     </Td>
                   </Tr>
@@ -417,6 +517,52 @@ const PaymentsManagementPage = () => {
           </Box>
         )}
       </Box>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        isOpen={isDeleteDialogOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => {
+          setIsDeleteDialogOpen(false);
+          setPaymentToDelete(null);
+        }}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Payment
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete this payment? This action cannot be undone.
+              <Box mt={2} p={3} bg="gray.50" borderRadius="md">
+                <Text fontWeight="medium">Payment Details:</Text>
+                <Text>Order ID: {paymentToDelete?.orderId}</Text>
+                <Text>Amount: {paymentToDelete ? formatCurrency(paymentToDelete.amount) : ''}</Text>
+                <Text>User: {paymentToDelete?.user?.name || 'Unknown'}</Text>
+                <Text>Status: {paymentToDelete?.status}</Text>
+              </Box>
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setPaymentToDelete(null);
+              }}>
+                Cancel
+              </Button>
+              <Button 
+                colorScheme="red" 
+                onClick={handleDeletePayment} 
+                ml={3}
+                isLoading={isDeleting}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };
