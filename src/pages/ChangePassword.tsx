@@ -29,6 +29,7 @@ import {
   IconButton,
   FormErrorMessage,
   FormHelperText,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import useAuth from "../hooks/useAuth";
 
@@ -37,22 +38,29 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const toast = useToast();
   
+  // Color mode values
+  const bgColor = useColorModeValue("white", "gray.900");
+  const formBgColor = useColorModeValue("gray.50", "gray.800");
+  const headerBgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  
   if (!isAuthenticated) {
     return (
-      <Box minH="100vh" bg="gray.50" py={8}>
+      <Box minH="100vh" bg={bgColor} py={8}>
         <Container maxW="md">
           <Stack spacing={8} align="center">
-            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+            <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
                 boxSize="80px"
                 objectFit="contain"
               />
-              <Heading mb={4} color="gray.700">Authentication Required</Heading>
+              <Heading mb={4} color={textColor}>Authentication Required</Heading>
             </Stack>
-            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center">
-              <Text mb={6}>Please log in to change your password.</Text>
+            <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center" border="1px" borderColor={borderColor}>
+              <Text mb={6} color={textColor}>Please log in to change your password.</Text>
               <Button as="a" href="/auth" colorScheme="blue" size="lg" w="full">
                 Go to Login
               </Button>
@@ -75,20 +83,20 @@ const ChangePassword = () => {
 
   if (!user) {
     return (
-      <Box minH="100vh" bg="gray.50" py={8}>
+      <Box minH="100vh" bg={bgColor} py={8}>
         <Container maxW="md">
           <Stack spacing={8} align="center">
-            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+            <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
                 boxSize="80px"
                 objectFit="contain"
               />
-              <Heading mb={4} color="gray.700">Invalid Token</Heading>
+              <Heading mb={4} color={textColor}>Invalid Token</Heading>
             </Stack>
-            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center">
-              <Text mb={6}>Please log in again.</Text>
+            <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center" border="1px" borderColor={borderColor}>
+              <Text mb={6} color={textColor}>Please log in again.</Text>
               <Button as="a" href="/auth" colorScheme="blue" size="lg" w="full">
                 Go to Login
               </Button>
@@ -177,22 +185,22 @@ const ChangePassword = () => {
   };
 
   return (
-    <Box minH="100vh" bg="gray.50" py={8}>
+    <Box minH="100vh" bg={bgColor} py={8}>
       <Container maxW="md">
         <Stack spacing={8} align="center">
-          <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+          <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
             <Image
               src="/songBankLogo.png"
               alt="SongLibrary Logo"
               boxSize="80px"
               objectFit="contain"
             />
-            <Heading fontSize="2xl" textAlign="center" color="gray.700">
+            <Heading fontSize="2xl" textAlign="center" color={textColor}>
               Change your password
             </Heading>
           </Stack>
 
-          <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full">
+          <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
             {errMsg && (
               <Box
                 bg="red.50"
@@ -215,7 +223,7 @@ const ChangePassword = () => {
                   isRequired
                   isInvalid={old_password ? !validOldPassword : false}
                 >
-                  <FormLabel>Current Password</FormLabel>
+                  <FormLabel color={textColor}>Current Password</FormLabel>
                   <InputGroup size="lg">
                     <Input
                       type={showOldPassword ? "text" : "password"}
@@ -224,6 +232,10 @@ const ChangePassword = () => {
                       placeholder="Enter current password"
                       onFocus={() => setOldPasswordFocus(true)}
                       onBlur={() => setOldPasswordFocus(false)}
+                      bg="white"
+                      borderColor={borderColor}
+                      _hover={{ borderColor: "blue.300" }}
+                      _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                     />
                     <InputRightElement>
                       <IconButton
@@ -260,7 +272,7 @@ const ChangePassword = () => {
                   isRequired
                   isInvalid={password ? !validPassword : false}
                 >
-                  <FormLabel>New Password</FormLabel>
+                  <FormLabel color={textColor}>New Password</FormLabel>
                   <InputGroup size="lg">
                     <Input
                       type={showPassword ? "text" : "password"}
@@ -269,6 +281,10 @@ const ChangePassword = () => {
                       placeholder="Enter new password"
                       onFocus={() => setPasswordFocus(true)}
                       onBlur={() => setPasswordFocus(false)}
+                      bg="white"
+                      borderColor={borderColor}
+                      _hover={{ borderColor: "blue.300" }}
+                      _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                     />
                     <InputRightElement>
                       <IconButton
@@ -306,7 +322,7 @@ const ChangePassword = () => {
                   isRequired
                   isInvalid={matchPassword ? !validMatch : false}
                 >
-                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormLabel color={textColor}>Confirm New Password</FormLabel>
                   <InputGroup size="lg">
                     <Input
                       type={showConfirmPassword ? "text" : "password"}
@@ -315,6 +331,10 @@ const ChangePassword = () => {
                       placeholder="Confirm new password"
                       onFocus={() => setMatchFocus(true)}
                       onBlur={() => setMatchFocus(false)}
+                      bg="white"
+                      borderColor={borderColor}
+                      _hover={{ borderColor: "blue.300" }}
+                      _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                     />
                     <InputRightElement>
                       <IconButton

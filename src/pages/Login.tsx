@@ -27,6 +27,7 @@ import {
   Divider,
   Box,
   Container,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
 const Login = () => {
@@ -49,6 +50,13 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const authApi = new APIClient<AuthResponse, AuthCredentials>("/api/auth");
+
+  // Color mode values
+  const bgColor = useColorModeValue("white", "gray.900");
+  const formBgColor = useColorModeValue("gray.50", "gray.800");
+  const headerBgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   useEffect(() => {
     userRef.current?.focus();
@@ -152,22 +160,22 @@ const Login = () => {
 
   return (
     <GoogleOAuthProvider clientId={clientId || ""}>
-      <Box minH="100vh" bg="gray.50" py={8}>
+      <Box minH="100vh" bg={bgColor} py={8}>
         <Container maxW="md">
           <Stack spacing={8} align="center">
-            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+            <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
                 boxSize="80px"
                 objectFit="contain"
               />
-              <Heading fontSize="2xl" textAlign="center" color="gray.700">
+              <Heading fontSize="2xl" textAlign="center" color={textColor}>
                 Sign in to your account
               </Heading>
             </Stack>
             
-            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full">
+            <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               {errMsg && (
                 <Box
                   bg="red.50"
@@ -186,23 +194,31 @@ const Login = () => {
               <form onSubmit={handleSubmit}>
                 <Stack spacing={6}>
                   <FormControl id="email" isRequired>
-                    <FormLabel>Email address</FormLabel>
+                    <FormLabel color={textColor}>Email address</FormLabel>
                     <Input 
                       type="email" 
                       value={user}
                       onChange={(e) => setUser(e.target.value)}
                       ref={userRef}
                       size="lg"
+                      bg="white"
+                      borderColor={borderColor}
+                      _hover={{ borderColor: "blue.300" }}
+                      _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                     />
                   </FormControl>
                   
                   <FormControl id="password" isRequired>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel color={textColor}>Password</FormLabel>
                     <InputGroup size="lg">
                       <Input 
                         type={showPassword ? "text" : "password"}
                         value={pwd}
                         onChange={(e) => setPwd(e.target.value)}
+                        bg="white"
+                        borderColor={borderColor}
+                        _hover={{ borderColor: "blue.300" }}
+                        _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                       />
                       <InputRightElement>
                         <IconButton
@@ -218,7 +234,7 @@ const Login = () => {
 
                   <Stack spacing={6}>
                     <Flex justify="space-between" align="center">
-                      <Text color="blue.500">
+                      <Text color="blue.400">
                         <Link to="/reset-password">Forgot password?</Link>
                       </Text>
                     </Flex>
@@ -236,10 +252,10 @@ const Login = () => {
                 </Stack>
               </form>
 
-              <Divider my={6} />
+              <Divider my={6} borderColor={borderColor} />
 
               <Stack spacing={4}>
-                <Text textAlign="center" color="gray.600">
+                <Text textAlign="center" color={textColor}>
                   Or sign in with:
                 </Text>
                 <GoogleLogin
@@ -249,10 +265,10 @@ const Login = () => {
                 />
               </Stack>
 
-              <Text textAlign="center" color="gray.600" mt={6}>
+              <Text textAlign="center" color={textColor} mt={6}>
                 Need an Account?{" "}
                 <Link to="/register">
-                  <Text as="span" color="blue.500">
+                  <Text as="span" color="blue.400">
                     Sign Up
                   </Text>
                 </Link>

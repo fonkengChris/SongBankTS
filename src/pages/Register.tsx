@@ -45,6 +45,7 @@ import {
   FormErrorMessage,
   FormHelperText,
   Container,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import useAuth from "../hooks/useAuth";
 
@@ -59,6 +60,13 @@ const Register = () => {
 
   const navigate = useNavigate();
   const toast = useToast();
+
+  // Color mode values
+  const bgColor = useColorModeValue("white", "gray.900");
+  const formBgColor = useColorModeValue("gray.50", "gray.800");
+  const headerBgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   //defining ref hooks
   const nameRef = useRef<HTMLInputElement | null>(null);
@@ -247,22 +255,22 @@ const Register = () => {
     <GoogleOAuthProvider
       clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID || ""}
     >
-      <Box minH="100vh" bg="gray.50" py={8}>
+      <Box minH="100vh" bg={bgColor} py={8}>
         <Container maxW="md">
           <Stack spacing={8} align="center">
-            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+            <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
                 boxSize="80px"
                 objectFit="contain"
               />
-              <Heading fontSize="2xl" textAlign="center" color="gray.700">
+              <Heading fontSize="2xl" textAlign="center" color={textColor}>
                 Create your account
               </Heading>
             </Stack>
 
-            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full">
+            <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               {errMsg && (
                 <Box
                   bg="red.50"
@@ -285,7 +293,7 @@ const Register = () => {
                     isRequired
                     isInvalid={name ? !validName : false}
                   >
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel color={textColor}>Full Name</FormLabel>
                     <Input
                       type="text"
                       value={name}
@@ -295,6 +303,10 @@ const Register = () => {
                       onBlur={() => setNameFocus(false)}
                       placeholder="Enter full name..."
                       size="lg"
+                      bg="white"
+                      borderColor={borderColor}
+                      _hover={{ borderColor: "blue.300" }}
+                      _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                     />
                     {nameFocus && name && !validName && (
                       <FormHelperText>
@@ -314,7 +326,7 @@ const Register = () => {
                     isRequired
                     isInvalid={email ? !validEmail : false}
                   >
-                    <FormLabel>Email address</FormLabel>
+                    <FormLabel color={textColor}>Email address</FormLabel>
                     <Input
                       type="email"
                       value={email}
@@ -324,6 +336,10 @@ const Register = () => {
                       onBlur={() => setEmailFocus(false)}
                       placeholder="Enter email address..."
                       size="lg"
+                      bg="white"
+                      borderColor={borderColor}
+                      _hover={{ borderColor: "blue.300" }}
+                      _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                     />
                     {emailFocus && email && !validEmail && (
                       <FormHelperText>
@@ -339,7 +355,7 @@ const Register = () => {
                   </FormControl>
 
                   <FormControl id="country" isRequired>
-                    <FormLabel>Country</FormLabel>
+                    <FormLabel color={textColor}>Country</FormLabel>
                     <Select
                       placeholder="Select Country"
                       value={country}
@@ -347,6 +363,10 @@ const Register = () => {
                       onFocus={() => setCountryFocus(true)}
                       onBlur={() => setCountryFocus(false)}
                       size="lg"
+                      bg="white"
+                      borderColor={borderColor}
+                      _hover={{ borderColor: "blue.300" }}
+                      _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                     >
                       {countries.map((country) => (
                         <option value={country.iso} key={country.iso}>
@@ -361,7 +381,7 @@ const Register = () => {
                     isRequired
                     isInvalid={password ? !validPassword : false}
                   >
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel color={textColor}>Password</FormLabel>
                     <InputGroup size="lg">
                       <Input
                         type={showPassword ? "text" : "password"}
@@ -370,6 +390,10 @@ const Register = () => {
                         onFocus={() => setPasswordFocus(true)}
                         onBlur={() => setPasswordFocus(false)}
                         placeholder="Enter password"
+                        bg="white"
+                        borderColor={borderColor}
+                        _hover={{ borderColor: "blue.300" }}
+                        _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                       />
                       <InputRightElement>
                         <IconButton
@@ -407,13 +431,17 @@ const Register = () => {
                     isRequired
                     isInvalid={matchPassword ? !validMatch : false}
                   >
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel color={textColor}>Confirm Password</FormLabel>
                     <InputGroup size="lg">
                       <Input
                         type={showConfirmPassword ? "text" : "password"}
                         value={matchPassword}
                         onChange={(e) => setMatchPassword(e.target.value)}
                         placeholder="Confirm password"
+                        bg="white"
+                        borderColor={borderColor}
+                        _hover={{ borderColor: "blue.300" }}
+                        _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
                       />
                       <InputRightElement>
                         <IconButton
@@ -449,10 +477,11 @@ const Register = () => {
                         setAcceptedTerms(e.target.checked);
                         setTermsError(false);
                       }}
+                      colorScheme="blue"
                     >
                       I agree to the{" "}
                       <Link to="/terms" target="_blank">
-                        <Text as="span" color="blue.500">
+                        <Text as="span" color="blue.400">
                           Terms and Conditions
                         </Text>
                       </Link>
@@ -479,10 +508,10 @@ const Register = () => {
                 </Stack>
               </form>
 
-              <Divider my={6} />
+              <Divider my={6} borderColor={borderColor} />
 
               <Stack spacing={4}>
-                <Text textAlign="center" color="gray.600">
+                <Text textAlign="center" color={textColor}>
                   Or create account with:
                 </Text>
                 {googleLoaded && (
@@ -498,10 +527,10 @@ const Register = () => {
                 )}
               </Stack>
 
-              <Text textAlign="center" color="gray.600" mt={6}>
+              <Text textAlign="center" color={textColor} mt={6}>
                 Already have an account?{" "}
                 <Link to="/auth">
-                  <Text as="span" color="blue.500">
+                  <Text as="span" color="blue.400">
                     Sign In
                   </Text>
                 </Link>

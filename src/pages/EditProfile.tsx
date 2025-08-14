@@ -12,6 +12,7 @@ import {
   Text,
   Stack,
   Image,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import jwtDecode from "jwt-decode";
@@ -34,22 +35,29 @@ const EditProfile = () => {
   const [country, setCountry] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
+  // Color mode values
+  const bgColor = useColorModeValue("white", "gray.900");
+  const formBgColor = useColorModeValue("gray.50", "gray.800");
+  const headerBgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+
   if (!isAuthenticated) {
     return (
-      <Box minH="100vh" bg="gray.50" py={8}>
+      <Box minH="100vh" bg={bgColor} py={8}>
         <Container maxW="md">
           <Stack spacing={8} align="center">
-            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+            <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
                 boxSize="80px"
                 objectFit="contain"
               />
-              <Heading color="gray.700">Authentication Required</Heading>
+              <Heading color={textColor}>Authentication Required</Heading>
             </Stack>
-            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center">
-              <Text mb={6}>Please log in to edit your profile.</Text>
+            <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center" border="1px" borderColor={borderColor}>
+              <Text mb={6} color={textColor}>Please log in to edit your profile.</Text>
               <Button as={Link} to="/auth" colorScheme="blue" size="lg" w="full">
                 Go to Login
               </Button>
@@ -116,24 +124,24 @@ const EditProfile = () => {
     return <Text color="whiteAlpha.900">No customer profile found.</Text>;
 
   return (
-    <Box minH="100vh" bg="gray.50" py={8}>
+    <Box minH="100vh" bg={bgColor} py={8}>
       <Container maxW="md">
         <Stack spacing={8} align="center">
-          <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+          <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
             <Image
               src="/songBankLogo.png"
               alt="SongLibrary Logo"
               boxSize="80px"
               objectFit="contain"
             />
-            <Heading size="lg" color="gray.700">
+            <Heading size="lg" color={textColor}>
               Edit Profile
             </Heading>
           </Stack>
 
-          <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full">
+          <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
             {errMsg && (
-              <Text color="red.500" mb={4} textAlign="center">
+              <Text color="red.400" mb={4} textAlign="center">
                 {errMsg}
               </Text>
             )}
@@ -141,14 +149,14 @@ const EditProfile = () => {
             <form onSubmit={handleSubmit}>
               <VStack spacing={6}>
                 <FormControl>
-                  <FormLabel fontWeight="bold" color="gray.700">
+                  <FormLabel fontWeight="bold" color={textColor}>
                     Country
                   </FormLabel>
                   <Box
-                    bg="gray.50"
+                    bg="white"
                     borderRadius="md"
                     borderWidth="1px"
-                    borderColor="gray.300"
+                    borderColor={borderColor}
                     _hover={{ borderColor: "blue.300" }}
                   >
                     <CountrySelector
@@ -162,7 +170,7 @@ const EditProfile = () => {
                   <Button
                     onClick={() => navigate(`/users/${customer._id}`)}
                     variant="outline"
-                    color="gray.700"
+                    color={textColor}
                     _hover={{ bg: "gray.100" }}
                     flex={1}
                     size="lg"
