@@ -26,8 +26,8 @@ import {
   useToast,
   Divider,
   Box,
+  Container,
 } from "@chakra-ui/react";
-import backgroundImage from "../assets/background_image.jpg";
 
 const Login = () => {
   const { isAuthenticated } = useAuth();
@@ -152,116 +152,115 @@ const Login = () => {
 
   return (
     <GoogleOAuthProvider clientId={clientId || ""}>
-      <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
-        <Flex p={8} flex={1} align={'center'} justify={'center'}>
-          <Stack spacing={6} w={'full'} maxW={'md'}>
-            <Stack spacing={4} align="center" mb={4} p={6} bg="gray.50" borderRadius="lg" border="1px" borderColor="gray.200">
+      <Box minH="100vh" bg="gray.50" py={8}>
+        <Container maxW="md">
+          <Stack spacing={8} align="center">
+            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
                 boxSize="80px"
                 objectFit="contain"
               />
-              <Heading fontSize={'2xl'} textAlign="center" color="gray.700">Sign in to your account</Heading>
+              <Heading fontSize="2xl" textAlign="center" color="gray.700">
+                Sign in to your account
+              </Heading>
             </Stack>
             
-            {errMsg && (
-              <Box
-                bg="red.50"
-                border="1px"
-                borderColor="red.200"
-                borderRadius="md"
-                p={3}
-                color="red.600"
-                fontSize="sm"
-              >
-                {errMsg}
-              </Box>
-            )}
+            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full">
+              {errMsg && (
+                <Box
+                  bg="red.50"
+                  border="1px"
+                  borderColor="red.200"
+                  borderRadius="md"
+                  p={3}
+                  color="red.600"
+                  fontSize="sm"
+                  mb={6}
+                >
+                  {errMsg}
+                </Box>
+              )}
 
-            <form onSubmit={handleSubmit}>
-              <Stack spacing={4}>
-                <FormControl id="email" isRequired>
-                  <FormLabel>Email address</FormLabel>
-                  <Input 
-                    type="email" 
-                    value={user}
-                    onChange={(e) => setUser(e.target.value)}
-                    ref={userRef}
-                  />
-                </FormControl>
-                
-                <FormControl id="password" isRequired>
-                  <FormLabel>Password</FormLabel>
-                  <InputGroup>
-                    <Input 
-                      type={showPassword ? "text" : "password"}
-                      value={pwd}
-                      onChange={(e) => setPwd(e.target.value)}
-                    />
-                    <InputRightElement>
-                      <IconButton
-                        aria-label={showPassword ? "Hide password" : "Show password"}
-                        icon={<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />}
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowPassword(!showPassword)}
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                </FormControl>
-
+              <form onSubmit={handleSubmit}>
                 <Stack spacing={6}>
-                  <Flex justify="space-between" align="center">
-                    <Text color={'blue.500'}>
-                      <Link to="/reset-password">Forgot password?</Link>
-                    </Text>
-                  </Flex>
+                  <FormControl id="email" isRequired>
+                    <FormLabel>Email address</FormLabel>
+                    <Input 
+                      type="email" 
+                      value={user}
+                      onChange={(e) => setUser(e.target.value)}
+                      ref={userRef}
+                      size="lg"
+                    />
+                  </FormControl>
                   
-                  <Button 
-                    colorScheme={'red'} 
-                    variant={'solid'}
-                    type="submit"
-                    size="lg"
-                  >
-                    Sign in
-                  </Button>
+                  <FormControl id="password" isRequired>
+                    <FormLabel>Password</FormLabel>
+                    <InputGroup size="lg">
+                      <Input 
+                        type={showPassword ? "text" : "password"}
+                        value={pwd}
+                        onChange={(e) => setPwd(e.target.value)}
+                      />
+                      <InputRightElement>
+                        <IconButton
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                          icon={<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />}
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                  </FormControl>
+
+                  <Stack spacing={6}>
+                    <Flex justify="space-between" align="center">
+                      <Text color="blue.500">
+                        <Link to="/reset-password">Forgot password?</Link>
+                      </Text>
+                    </Flex>
+                    
+                    <Button 
+                      colorScheme="red" 
+                      variant="solid"
+                      type="submit"
+                      size="lg"
+                      w="full"
+                    >
+                      Sign in
+                    </Button>
+                  </Stack>
                 </Stack>
-              </Stack>
-            </form>
+              </form>
 
-            <Divider />
+              <Divider my={6} />
 
-            <Stack spacing={4}>
-              <Text textAlign="center" color="gray.600">
-                Or sign in with:
-              </Text>
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => setErrMsg("Google Login Failed")}
-                width="100%"
-              />
-            </Stack>
-
-            <Text textAlign="center" color="gray.600">
-              Need an Account?{" "}
-              <Link to="/register">
-                <Text as="span" color="blue.500">
-                  Sign Up
+              <Stack spacing={4}>
+                <Text textAlign="center" color="gray.600">
+                  Or sign in with:
                 </Text>
-              </Link>
-            </Text>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setErrMsg("Google Login Failed")}
+                  width="100%"
+                />
+              </Stack>
+
+              <Text textAlign="center" color="gray.600" mt={6}>
+                Need an Account?{" "}
+                <Link to="/register">
+                  <Text as="span" color="blue.500">
+                    Sign Up
+                  </Text>
+                </Link>
+              </Text>
+            </Box>
           </Stack>
-        </Flex>
-        
-        <Flex flex={1} display={{ base: 'none', md: 'flex' }}>
-          <Image
-            alt={'Login Image'}
-            objectFit={'cover'}
-            src={backgroundImage}
-          />
-        </Flex>
-      </Stack>
+        </Container>
+      </Box>
     </GoogleOAuthProvider>
   );
 };

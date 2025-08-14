@@ -44,8 +44,8 @@ import {
   Checkbox,
   FormErrorMessage,
   FormHelperText,
+  Container,
 } from "@chakra-ui/react";
-import backgroundImage from "../assets/background_image.jpg";
 import useAuth from "../hooks/useAuth";
 
 const userApiClient = new APIClient<UserResponse, UserPayload>(USERS_ENDPOINT);
@@ -247,268 +247,269 @@ const Register = () => {
     <GoogleOAuthProvider
       clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID || ""}
     >
-      <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
-        <Flex p={8} flex={1} align={"center"} justify={"center"}>
-          <Stack spacing={6} w={"full"} maxW={"md"}>
-            <Stack spacing={4} align="center" mb={4} p={6} bg="gray.50" borderRadius="lg" border="1px" borderColor="gray.200">
+      <Box minH="100vh" bg="gray.50" py={8}>
+        <Container maxW="md">
+          <Stack spacing={8} align="center">
+            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
                 boxSize="80px"
                 objectFit="contain"
               />
-              <Heading fontSize={"2xl"} textAlign="center" color="gray.700">Create your account</Heading>
+              <Heading fontSize="2xl" textAlign="center" color="gray.700">
+                Create your account
+              </Heading>
             </Stack>
 
-            {errMsg && (
-              <Box
-                bg="red.50"
-                border="1px"
-                borderColor="red.200"
-                borderRadius="md"
-                p={3}
-                color="red.600"
-                fontSize="sm"
-              >
-                {errMsg}
-              </Box>
-            )}
-
-            <form onSubmit={handleSubmit}>
-              <Stack spacing={4}>
-                <FormControl
-                  id="name"
-                  isRequired
-                  isInvalid={name ? !validName : false}
+            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full">
+              {errMsg && (
+                <Box
+                  bg="red.50"
+                  border="1px"
+                  borderColor="red.200"
+                  borderRadius="md"
+                  p={3}
+                  color="red.600"
+                  fontSize="sm"
+                  mb={6}
                 >
-                  <FormLabel>Full Name</FormLabel>
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    ref={nameRef}
-                    onFocus={() => setNameFocus(true)}
-                    onBlur={() => setNameFocus(false)}
-                    placeholder="Enter full name..."
-                  />
-                  {nameFocus && name && !validName && (
-                    <FormHelperText>
-                      <FontAwesomeIcon icon={faInfoCircle} /> 3 to 50
-                      characters. Letters, spaces, underscores, hyphens allowed.
-                    </FormHelperText>
-                  )}
-                  {name && !validName && (
-                    <FormErrorMessage>
-                      <FontAwesomeIcon icon={faTimes} /> Invalid name format
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-
-                <FormControl
-                  id="email"
-                  isRequired
-                  isInvalid={email ? !validEmail : false}
-                >
-                  <FormLabel>Email address</FormLabel>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    ref={emailRef}
-                    onFocus={() => setEmailFocus(true)}
-                    onBlur={() => setEmailFocus(false)}
-                    placeholder="Enter email address..."
-                  />
-                  {emailFocus && email && !validEmail && (
-                    <FormHelperText>
-                      <FontAwesomeIcon icon={faInfoCircle} /> Must be a valid
-                      email address format.
-                    </FormHelperText>
-                  )}
-                  {email && !validEmail && (
-                    <FormErrorMessage>
-                      <FontAwesomeIcon icon={faTimes} /> Invalid email format
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-
-                <FormControl id="country" isRequired>
-                  <FormLabel>Country</FormLabel>
-                  <Select
-                    placeholder="Select Country"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    onFocus={() => setCountryFocus(true)}
-                    onBlur={() => setCountryFocus(false)}
-                  >
-                    {countries.map((country) => (
-                      <option value={country.iso} key={country.iso}>
-                        {country.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <FormControl
-                  id="password"
-                  isRequired
-                  isInvalid={password ? !validPassword : false}
-                >
-                  <FormLabel>Password</FormLabel>
-                  <InputGroup>
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onFocus={() => setPasswordFocus(true)}
-                      onBlur={() => setPasswordFocus(false)}
-                      placeholder="Enter password"
-                    />
-                    <InputRightElement>
-                      <IconButton
-                        aria-label={
-                          showPassword ? "Hide password" : "Show password"
-                        }
-                        icon={
-                          <FontAwesomeIcon
-                            icon={showPassword ? faEyeSlash : faEye}
-                          />
-                        }
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowPassword(!showPassword)}
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                  {passwordFocus && password && !validPassword && (
-                    <FormHelperText>
-                      <FontAwesomeIcon icon={faInfoCircle} /> 8 to 24
-                      characters. Must include uppercase and lowercase letters,
-                      a number and a special character.
-                    </FormHelperText>
-                  )}
-                  {password && !validPassword && (
-                    <FormErrorMessage>
-                      <FontAwesomeIcon icon={faTimes} /> Password doesn't meet
-                      requirements
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-
-                <FormControl
-                  id="confirmPassword"
-                  isRequired
-                  isInvalid={matchPassword ? !validMatch : false}
-                >
-                  <FormLabel>Confirm Password</FormLabel>
-                  <InputGroup>
-                    <Input
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={matchPassword}
-                      onChange={(e) => setMatchPassword(e.target.value)}
-                      placeholder="Confirm password"
-                    />
-                    <InputRightElement>
-                      <IconButton
-                        aria-label={
-                          showConfirmPassword
-                            ? "Hide password"
-                            : "Show password"
-                        }
-                        icon={
-                          <FontAwesomeIcon
-                            icon={showConfirmPassword ? faEyeSlash : faEye}
-                          />
-                        }
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                  {matchPassword && !validMatch && (
-                    <FormErrorMessage>
-                      <FontAwesomeIcon icon={faTimes} /> Passwords don't match
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-
-                <FormControl isInvalid={termsError}>
-                  <Checkbox
-                    isChecked={acceptedTerms}
-                    onChange={(e) => {
-                      setAcceptedTerms(e.target.checked);
-                      setTermsError(false);
-                    }}
-                  >
-                    I agree to the{" "}
-                    <Link to="/terms" target="_blank">
-                      <Text as="span" color="blue.500">
-                        Terms and Conditions
-                      </Text>
-                    </Link>
-                  </Checkbox>
-                  {termsError && (
-                    <FormErrorMessage>
-                      You must accept the Terms and Conditions to continue
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-
-                <Button
-                  colorScheme={"red"}
-                  variant={"solid"}
-                  type="submit"
-                  size="lg"
-                  isLoading={loading}
-                  loadingText="Signing Up..."
-                  isDisabled={!isFormValid()}
-                >
-                  Create Account
-                </Button>
-              </Stack>
-            </form>
-
-            <Divider />
-
-            <Stack spacing={4}>
-              <Text textAlign="center" color="gray.600">
-                Or create account with:
-              </Text>
-              {googleLoaded && (
-                <GoogleLogin
-                  text="signup_with"
-                  shape="rectangular"
-                  theme="outline"
-                  size="large"
-                  width="100%"
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setErrMsg("Google Sign Up Failed")}
-                />
+                  {errMsg}
+                </Box>
               )}
-            </Stack>
 
-            <Text textAlign="center" color="gray.600">
-              Already have an account?{" "}
-              <Link to="/auth">
-                <Text as="span" color="blue.500">
-                  Sign In
+              <form onSubmit={handleSubmit}>
+                <Stack spacing={6}>
+                  <FormControl
+                    id="name"
+                    isRequired
+                    isInvalid={name ? !validName : false}
+                  >
+                    <FormLabel>Full Name</FormLabel>
+                    <Input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      ref={nameRef}
+                      onFocus={() => setNameFocus(true)}
+                      onBlur={() => setNameFocus(false)}
+                      placeholder="Enter full name..."
+                      size="lg"
+                    />
+                    {nameFocus && name && !validName && (
+                      <FormHelperText>
+                        <FontAwesomeIcon icon={faInfoCircle} /> 3 to 50
+                        characters. Letters, spaces, underscores, hyphens allowed.
+                      </FormHelperText>
+                    )}
+                    {name && !validName && (
+                      <FormErrorMessage>
+                        <FontAwesomeIcon icon={faTimes} /> Invalid name format
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+
+                  <FormControl
+                    id="email"
+                    isRequired
+                    isInvalid={email ? !validEmail : false}
+                  >
+                    <FormLabel>Email address</FormLabel>
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      ref={emailRef}
+                      onFocus={() => setEmailFocus(true)}
+                      onBlur={() => setEmailFocus(false)}
+                      placeholder="Enter email address..."
+                      size="lg"
+                    />
+                    {emailFocus && email && !validEmail && (
+                      <FormHelperText>
+                        <FontAwesomeIcon icon={faInfoCircle} /> Must be a valid
+                        email address format.
+                      </FormHelperText>
+                    )}
+                    {email && !validEmail && (
+                      <FormErrorMessage>
+                        <FontAwesomeIcon icon={faTimes} /> Invalid email format
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+
+                  <FormControl id="country" isRequired>
+                    <FormLabel>Country</FormLabel>
+                    <Select
+                      placeholder="Select Country"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      onFocus={() => setCountryFocus(true)}
+                      onBlur={() => setCountryFocus(false)}
+                      size="lg"
+                    >
+                      {countries.map((country) => (
+                        <option value={country.iso} key={country.iso}>
+                          {country.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    id="password"
+                    isRequired
+                    isInvalid={password ? !validPassword : false}
+                  >
+                    <FormLabel>Password</FormLabel>
+                    <InputGroup size="lg">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => setPasswordFocus(true)}
+                        onBlur={() => setPasswordFocus(false)}
+                        placeholder="Enter password"
+                      />
+                      <InputRightElement>
+                        <IconButton
+                          aria-label={
+                            showPassword ? "Hide password" : "Show password"
+                          }
+                          icon={
+                            <FontAwesomeIcon
+                              icon={showPassword ? faEyeSlash : faEye}
+                            />
+                          }
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                    {passwordFocus && password && !validPassword && (
+                      <FormHelperText>
+                        <FontAwesomeIcon icon={faInfoCircle} /> 8 to 24
+                        characters. Must include uppercase and lowercase letters,
+                        a number and a special character.
+                      </FormHelperText>
+                    )}
+                    {password && !validPassword && (
+                      <FormErrorMessage>
+                        <FontAwesomeIcon icon={faTimes} /> Password doesn't meet
+                        requirements
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+
+                  <FormControl
+                    id="confirmPassword"
+                    isRequired
+                    isInvalid={matchPassword ? !validMatch : false}
+                  >
+                    <FormLabel>Confirm Password</FormLabel>
+                    <InputGroup size="lg">
+                      <Input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={matchPassword}
+                        onChange={(e) => setMatchPassword(e.target.value)}
+                        placeholder="Confirm password"
+                      />
+                      <InputRightElement>
+                        <IconButton
+                          aria-label={
+                            showConfirmPassword
+                              ? "Hide password"
+                              : "Show password"
+                          }
+                          icon={
+                            <FontAwesomeIcon
+                              icon={showConfirmPassword ? faEyeSlash : faEye}
+                            />
+                          }
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                    {matchPassword && !validMatch && (
+                      <FormErrorMessage>
+                        <FontAwesomeIcon icon={faTimes} /> Passwords don't match
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+
+                  <FormControl isInvalid={termsError}>
+                    <Checkbox
+                      isChecked={acceptedTerms}
+                      onChange={(e) => {
+                        setAcceptedTerms(e.target.checked);
+                        setTermsError(false);
+                      }}
+                    >
+                      I agree to the{" "}
+                      <Link to="/terms" target="_blank">
+                        <Text as="span" color="blue.500">
+                          Terms and Conditions
+                        </Text>
+                      </Link>
+                    </Checkbox>
+                    {termsError && (
+                      <FormErrorMessage>
+                        You must accept the Terms and Conditions to continue
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+
+                  <Button
+                    colorScheme="red"
+                    variant="solid"
+                    type="submit"
+                    size="lg"
+                    isLoading={loading}
+                    loadingText="Signing Up..."
+                    isDisabled={!isFormValid()}
+                    w="full"
+                  >
+                    Create Account
+                  </Button>
+                </Stack>
+              </form>
+
+              <Divider my={6} />
+
+              <Stack spacing={4}>
+                <Text textAlign="center" color="gray.600">
+                  Or create account with:
                 </Text>
-              </Link>
-            </Text>
-          </Stack>
-        </Flex>
+                {googleLoaded && (
+                  <GoogleLogin
+                    text="signup_with"
+                    shape="rectangular"
+                    theme="outline"
+                    size="large"
+                    width="100%"
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => setErrMsg("Google Sign Up Failed")}
+                  />
+                )}
+              </Stack>
 
-        <Flex flex={1} display={{ base: "none", md: "flex" }}>
-          <Image
-            alt={"Registration Image"}
-            objectFit={"cover"}
-            src={backgroundImage}
-          />
-        </Flex>
-      </Stack>
+              <Text textAlign="center" color="gray.600" mt={6}>
+                Already have an account?{" "}
+                <Link to="/auth">
+                  <Text as="span" color="blue.500">
+                    Sign In
+                  </Text>
+                </Link>
+              </Text>
+            </Box>
+          </Stack>
+        </Container>
+      </Box>
     </GoogleOAuthProvider>
   );
 };

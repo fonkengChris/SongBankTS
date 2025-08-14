@@ -10,6 +10,8 @@ import {
   Button,
   HStack,
   Text,
+  Stack,
+  Image,
 } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import jwtDecode from "jwt-decode";
@@ -20,7 +22,6 @@ import APIClient from "../services/api-client";
 import Customer from "../entities/Customer";
 import CountrySelector from "../components/CountrySelector";
 import { CustomerUpdateFormData } from "../types/forms";
-import backgroundImage from "../assets/background_image.jpg";
 import useAuth from "../hooks/useAuth";
 
 const customerApiClient = new APIClient<Customer, CustomerUpdateFormData>(
@@ -35,15 +36,27 @@ const EditProfile = () => {
 
   if (!isAuthenticated) {
     return (
-      <Container maxW="container.md" py={8}>
-        <VStack spacing={6}>
-          <Heading>Authentication Required</Heading>
-          <Text>Please log in to edit your profile.</Text>
-          <Button as={Link} to="/auth" colorScheme="blue">
-            Go to Login
-          </Button>
-        </VStack>
-      </Container>
+      <Box minH="100vh" bg="gray.50" py={8}>
+        <Container maxW="md">
+          <Stack spacing={8} align="center">
+            <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+              <Image
+                src="/songBankLogo.png"
+                alt="SongLibrary Logo"
+                boxSize="80px"
+                objectFit="contain"
+              />
+              <Heading color="gray.700">Authentication Required</Heading>
+            </Stack>
+            <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center">
+              <Text mb={6}>Please log in to edit your profile.</Text>
+              <Button as={Link} to="/auth" colorScheme="blue" size="lg" w="full">
+                Go to Login
+              </Button>
+            </Box>
+          </Stack>
+        </Container>
+      </Box>
     );
   }
 
@@ -103,72 +116,74 @@ const EditProfile = () => {
     return <Text color="whiteAlpha.900">No customer profile found.</Text>;
 
   return (
-    <Box minH="100vh" py={8}>
-      <Container maxW="1200px">
-        <Flex
-          bgImage={`url(${backgroundImage})`}
-          bgSize="cover"
-          bgPosition="center"
-          borderRadius="20px"
-          p={8}
-          direction="column"
-          maxW="600px"
-          mx="auto"
-          boxShadow="xl"
-        >
-          <Heading size="lg" color="whiteAlpha.900" mb={8}>
-            Edit Profile
-          </Heading>
+    <Box minH="100vh" bg="gray.50" py={8}>
+      <Container maxW="md">
+        <Stack spacing={8} align="center">
+          <Stack spacing={4} align="center" p={8} bg="white" borderRadius="xl" boxShadow="xl" w="full">
+            <Image
+              src="/songBankLogo.png"
+              alt="SongLibrary Logo"
+              boxSize="80px"
+              objectFit="contain"
+            />
+            <Heading size="lg" color="gray.700">
+              Edit Profile
+            </Heading>
+          </Stack>
 
-          {errMsg && (
-            <Text color="red.300" mb={4}>
-              {errMsg}
-            </Text>
-          )}
+          <Box bg="white" p={8} borderRadius="xl" boxShadow="xl" w="full">
+            {errMsg && (
+              <Text color="red.500" mb={4} textAlign="center">
+                {errMsg}
+              </Text>
+            )}
 
-          <form onSubmit={handleSubmit}>
-            <VStack spacing={6}>
-              <FormControl>
-                <FormLabel color="whiteAlpha.900" fontWeight="bold">
-                  Country
-                </FormLabel>
-                <Box
-                  bg="whiteAlpha.100"
-                  borderRadius="md"
-                  borderWidth="1px"
-                  borderColor="whiteAlpha.300"
-                  _hover={{ borderColor: "cyan.300" }}
-                >
-                  <CountrySelector
-                    selectedCountry={country}
-                    onSelect={(countryCode) => setCountry(countryCode)}
-                  />
-                </Box>
-              </FormControl>
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={6}>
+                <FormControl>
+                  <FormLabel fontWeight="bold" color="gray.700">
+                    Country
+                  </FormLabel>
+                  <Box
+                    bg="gray.50"
+                    borderRadius="md"
+                    borderWidth="1px"
+                    borderColor="gray.300"
+                    _hover={{ borderColor: "blue.300" }}
+                  >
+                    <CountrySelector
+                      selectedCountry={country}
+                      onSelect={(countryCode) => setCountry(countryCode)}
+                    />
+                  </Box>
+                </FormControl>
 
-              <HStack spacing={4} width="100%" pt={4}>
-                <Button
-                  onClick={() => navigate(`/users/${customer._id}`)}
-                  variant="outline"
-                  color="whiteAlpha.900"
-                  _hover={{ bg: "whiteAlpha.100" }}
-                  flex={1}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  bg="cyan.600"
-                  color="whiteAlpha.900"
-                  _hover={{ bg: "cyan.700" }}
-                  flex={1}
-                >
-                  Update Profile
-                </Button>
-              </HStack>
-            </VStack>
-          </form>
-        </Flex>
+                <HStack spacing={4} width="100%" pt={4}>
+                  <Button
+                    onClick={() => navigate(`/users/${customer._id}`)}
+                    variant="outline"
+                    color="gray.700"
+                    _hover={{ bg: "gray.100" }}
+                    flex={1}
+                    size="lg"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    bg="blue.600"
+                    color="white"
+                    _hover={{ bg: "blue.700" }}
+                    flex={1}
+                    size="lg"
+                  >
+                    Update Profile
+                  </Button>
+                </HStack>
+              </VStack>
+            </form>
+          </Box>
+        </Stack>
       </Container>
     </Box>
   );
