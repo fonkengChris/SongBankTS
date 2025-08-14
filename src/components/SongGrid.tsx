@@ -1,5 +1,6 @@
 import { SimpleGrid, Text, Box, Spinner, VStack } from "@chakra-ui/react";
 import useSongs from "../hooks/useSongs";
+import usePurchases from "../hooks/usePurchases";
 import SongCard from "./SongCard";
 import PremiumSongCard from "./PremiumSongCard";
 import SongCardSkeleton from "./SongCardSkeleton";
@@ -7,6 +8,7 @@ import SongCardContainer from "./SongCardContainer";
 import { useEffect, useRef } from "react";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
 import Song from "../entities/Song";
+import { hasUserPurchased } from "../utils/purchase-utils";
 
 const SongGrid = () => {
   const loadMoreRef = useRef(null);
@@ -20,6 +22,8 @@ const SongGrid = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useSongs();
+
+  const { data: purchases, isLoading: isLoadingPurchases } = usePurchases();
 
   // Create base song object
   const dummySong: Partial<Song> = {
@@ -58,6 +62,21 @@ const SongGrid = () => {
 
   if (error) return <Text color="red">{error.message}</Text>;
 
+  // Helper function to determine which card to show
+  const shouldShowPremiumCard = (song: Song, mediaFileId: string) => {
+    // If the song has a price, check if user has purchased it
+    if (song.price && song.price > 0) {
+      // If purchases are still loading, show premium card to be safe
+      if (isLoadingPurchases) {
+        return true;
+      }
+      // Check if user has purchased this specific media file
+      return !hasUserPurchased(mediaFileId, purchases || []);
+    }
+    // Free songs always show as regular cards
+    return false;
+  };
+
   return (
     <VStack spacing={6} width="100%">
       <SimpleGrid
@@ -77,7 +96,7 @@ const SongGrid = () => {
           page.songs?.map((song) =>
             song.mediaFiles.map((mediaFile) => (
               <SongCardContainer key={`${pageIndex}-${mediaFile._id}`}>
-                {song.price ? (
+                {shouldShowPremiumCard(song, mediaFile._id) ? (
                   <PremiumSongCard song={song} mediaFile={mediaFile} />
                 ) : (
                   <SongCard song={song} mediaFile={mediaFile} />

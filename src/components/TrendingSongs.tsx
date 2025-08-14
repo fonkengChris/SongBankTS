@@ -18,6 +18,8 @@ import SongMedia from "../entities/SongMedia";
 import CriticScore from "./CriticScore";
 import SongCard from "./SongCard";
 import PremiumSongCard from "./PremiumSongCard";
+import usePurchases from "../hooks/usePurchases";
+import { hasUserPurchased } from "../utils/purchase-utils";
 
 interface TrendingSong {
   song: Song;
@@ -27,6 +29,7 @@ interface TrendingSong {
 const TrendingSongs = () => {
   const [trendingSongs, setTrendingSongs] = useState<TrendingSong[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { data: purchases, isLoading: isLoadingPurchases } = usePurchases();
 
   useEffect(() => {
     const fetchTrendingSongs = async () => {
@@ -55,13 +58,23 @@ const TrendingSongs = () => {
     fetchTrendingSongs();
   }, []);
 
-  // Helper function to render appropriate card based on price
+  // Helper function to render appropriate card based on price and purchase status
   const renderSongCard = ({ song, mediaFile }: TrendingSong) => {
-    const isPremium = song.price && song.price > 0;
-    
-    if (isPremium) {
-      return <PremiumSongCard song={song} mediaFile={mediaFile} />;
+    // If the song has a price, check if user has purchased it
+    if (song.price && song.price > 0) {
+      // If purchases are still loading, show premium card to be safe
+      if (isLoadingPurchases) {
+        return <PremiumSongCard song={song} mediaFile={mediaFile} />;
+      }
+      // Check if user has purchased this specific media file
+      const hasPurchased = hasUserPurchased(mediaFile._id, purchases || []);
+      if (hasPurchased) {
+        return <SongCard song={song} mediaFile={mediaFile} />;
+      } else {
+        return <PremiumSongCard song={song} mediaFile={mediaFile} />;
+      }
     } else {
+      // Free songs always show as regular cards
       return <SongCard song={song} mediaFile={mediaFile} />;
     }
   };
@@ -131,7 +144,6 @@ const TrendingSongs = () => {
             },
             "&::-webkit-scrollbar-track": {
               background: "#2D3748",
-              borderRadius: "4px",
             },
             "&::-webkit-scrollbar-thumb": {
               background: "#4A5568",

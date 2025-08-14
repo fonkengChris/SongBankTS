@@ -24,6 +24,9 @@ interface Props {
 }
 
 const SongCard = ({ song, mediaFile }: Props) => {
+  // Check if this song was originally premium but is now accessible
+  const isPurchasedPremium = song.price && song.price > 0;
+
   return (
     <Card
       height="100%"
@@ -152,12 +155,12 @@ const SongCard = ({ song, mediaFile }: Props) => {
               </Badge>
             )}
             <Text
-              color="green.400"
+              color={isPurchasedPremium ? "purple.400" : "green.400"}
               fontWeight="700"
               fontSize={{ base: "md", md: "lg" }}
               letterSpacing="0.01em"
             >
-              Free
+              {isPurchasedPremium ? "Purchased" : "Free"}
             </Text>
           </HStack>
         </HStack>

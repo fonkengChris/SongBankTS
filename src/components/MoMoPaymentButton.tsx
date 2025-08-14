@@ -19,6 +19,7 @@ import {
   AlertDescription,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../services/api-client";
 import paymentService from "../services/payment-service";
 
@@ -38,6 +39,7 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
   const [referenceId, setReferenceId] = useState<string | null>(null);
   const [statusCheckInterval, setStatusCheckInterval] = useState<NodeJS.Timeout | null>(null);
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   // Format phone number for Cameroon (MTN)
   const formatPhoneNumber = (number: string) => {
@@ -89,6 +91,9 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
           clearInterval(statusCheckInterval);
           setStatusCheckInterval(null);
         }
+        
+        // Invalidate purchases query to refresh the UI
+        queryClient.invalidateQueries({ queryKey: ["purchases"] });
         
         toast({
           title: "Payment Successful!",
@@ -173,6 +178,9 @@ const MoMoPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Prop
           });
 
           console.log("Payment record created successfully (DEV mode)");
+          
+          // Invalidate purchases query to refresh the UI
+          queryClient.invalidateQueries({ queryKey: ["purchases"] });
           
           if (onSuccess) onSuccess();
           toast({

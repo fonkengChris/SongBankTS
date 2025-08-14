@@ -1,5 +1,6 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { Box, useToast } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import paymentService from "../services/payment-service";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 const PayPalPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Props) => {
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   return (
     <Box width="100%" minH="200px">
@@ -57,6 +59,9 @@ const PayPalPaymentButton = ({ amount, description, mediaFileId, onSuccess }: Pr
                 });
 
                   console.log("Payment record created successfully");
+                  
+                  // Invalidate purchases query to refresh the UI
+                  queryClient.invalidateQueries({ queryKey: ["purchases"] });
                   
                   if (onSuccess) onSuccess();
                 } catch (paymentError) {
