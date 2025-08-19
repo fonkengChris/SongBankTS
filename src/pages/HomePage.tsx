@@ -1,4 +1,4 @@
-import { Box, Heading, Text, VStack, Button } from "@chakra-ui/react";
+import { Box, Heading, Text, VStack, Button, Image, useBreakpointValue } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
@@ -6,24 +6,43 @@ import useAuth from "../hooks/useAuth";
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
 
+  // Responsive logo size
+  const logoSize = useBreakpointValue({ 
+    base: "200px", 
+    sm: "240px", 
+    md: "280px", 
+    lg: "320px" 
+  });
+
   return (
     <Box minH="100vh" display="flex" flexDirection="column">
       <Box flex="1" p={8}>
-        <VStack spacing={8} align="stretch">
+        <VStack spacing={8} align="center">
+          {/* Logo Section */}
+          <VStack spacing={6} align="center" mb={4}>
+            <Image
+              src="/songBankLogo.png"
+              alt="SheetMusicLibrary Logo"
+              boxSize={logoSize}
+              objectFit="contain"
+              fallbackSrc="https://via.placeholder.com/320x320?text=Logo"
+            />
+          </VStack>
+
           <Heading
             as="h1"
             fontSize={{ base: "clamp(2rem, 8vw, 4rem)", md: "clamp(2.5rem, 6vw, 5rem)", lg: "clamp(3rem, 5vw, 6rem)" }}
             mb={6}
             fontWeight="800"
             letterSpacing="-0.03em"
-            lineHeight="1.1"
+            lineHeight="1.2"
             textAlign="center"
-            whiteSpace="nowrap"
-            overflow="hidden"
-            textOverflow="ellipsis"
+            maxW="100%"
+            px={4}
           >
             Welcome to SheetMusicLibrary
           </Heading>
+          
           <Text
             fontSize="xl"
             color="gray.400"
@@ -44,7 +63,7 @@ const HomePage = () => {
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="justify"
+            textAlign="center"
           >
             At SheetMusicLibrary, we believe that music should be easy to find,
             share, and play. Our platform is designed for{" "}
@@ -62,7 +81,7 @@ const HomePage = () => {
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="justify"
+            textAlign="center"
           >
             Whether you're looking for{" "}
             <strong>
@@ -82,7 +101,7 @@ const HomePage = () => {
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="justify"
+            textAlign="center"
           >
             We are inspired by platforms like{" "}
             <strong>IMSLP.org and Hymnary.org</strong>, but we focus on making
@@ -106,10 +125,10 @@ const HomePage = () => {
             color="gray.300"
             maxW="800px"
             mx="auto"
-            textAlign="justify"
+            textAlign="center"
           >
             We also aim to make copyrighted songs available for African
-            audiences by including
+            audiences by including{" "}
             <strong> locally accessible payment platforms</strong> for easy
             purchases.
           </Text>

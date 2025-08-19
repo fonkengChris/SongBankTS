@@ -12,16 +12,28 @@ import {
   Flex,
   useToast,
   useColorModeValue,
+  useBreakpointValue,
+  Text,
+  Card,
+  CardBody,
+  SimpleGrid,
+  HStack,
+  VStack,
+  Badge,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useCustomers from "../hooks/useCustomers";
 import Customer from "../entities/Customer";
 import APIClient from "../services/api-client";
+import { FiEdit, FiTrash2, FiUser } from "react-icons/fi";
 
 const CustomersManagementPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const apiClient = new APIClient<Customer>("/api/customers");
   const toast = useToast();
+
+  // Responsive breakpoints
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   // Color mode values for consistent styling
   const bgColor = useColorModeValue("white", "gray.800");
@@ -30,6 +42,7 @@ const CustomersManagementPage = () => {
   const headerBgColor = useColorModeValue("gray.50", "gray.700");
   const headerTextColor = useColorModeValue("blue.500", "blue.300");
   const tableRowHoverBg = useColorModeValue("gray.50", "gray.700");
+  const secondaryTextColor = useColorModeValue("gray.600", "gray.300");
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -75,6 +88,50 @@ const CustomersManagementPage = () => {
     }
   }
 
+  // Mobile card component
+  const CustomerCard = ({ customer }: { customer: Customer }) => (
+    <Card shadow="sm" border="1px" borderColor={borderColor} bg={bgColor}>
+      <CardBody>
+        <VStack align="stretch" spacing={4}>
+          <HStack justify="space-between">
+            <HStack spacing={3}>
+              <FiUser size={20} color="#3182CE" />
+              <VStack align="start" spacing={1}>
+                <Text fontWeight="bold" fontSize="lg" color="blue.500">
+                  {customer.user ? customer.user.name : "No Name Available"}
+                </Text>
+                <Badge colorScheme="blue" variant="subtle">
+                  {customer.country || "N/A"}
+                </Badge>
+              </VStack>
+            </HStack>
+          </HStack>
+
+          <HStack spacing={2}>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              leftIcon={<FiEdit />}
+              as={RouterLink}
+              to={`/admin/customers/edit/${customer._id}`}
+              flex={1}
+            >
+              Edit
+            </Button>
+            <Button
+              colorScheme="red"
+              size="sm"
+              leftIcon={<FiTrash2 />}
+              onClick={() => handleDelete(customer._id!)}
+            >
+              Delete
+            </Button>
+          </HStack>
+        </VStack>
+      </CardBody>
+    </Card>
+  );
+
   return (
     <Box p={6}>
       <Flex justifyContent="space-between" alignItems="center" mb={6}>
@@ -101,59 +158,77 @@ const CustomersManagementPage = () => {
         border="1px solid"
         borderColor={borderColor}
       >
-        <Table variant="simple">
-          <Thead>
-            <Tr bg={headerBgColor}>
-              <Th color={headerTextColor} fontWeight="semibold" py={4}>Name</Th>
-              <Th color={headerTextColor} fontWeight="semibold" py={4}>Country</Th>
-              <Th color={headerTextColor} fontWeight="semibold" py={4} width="200px">Actions</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {customers?.length > 0 ? (
-              customers.map((customer) => (
-                <Tr 
-                  key={customer._id}
-                  _hover={{ bg: tableRowHoverBg }}
-                  transition="background-color 0.2s"
-                >
-                  <Td fontWeight="medium" color="blue.500" py={4}>
-                    {customer.user ? customer.user.name : "No Name Available"}
-                  </Td>
-                  <Td color={textColor} py={4}>{customer.country || "N/A"}</Td>
-                  <Td py={4}>
-                    <Button
-                      as={RouterLink}
-                      to={`/admin/customers/edit/${customer._id}`}
-                      colorScheme="teal"
-                      size="sm"
-                      mr={2}
-                      _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
-                      transition="all 0.2s"
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      colorScheme="red"
-                      size="sm"
-                      onClick={() => handleDelete(customer._id!)}
-                      _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
-                      transition="all 0.2s"
-                    >
-                      Delete
-                    </Button>
+        {isMobile ? (
+          // Mobile layout with cards
+          <Box p={4}>
+            <SimpleGrid columns={1} spacing={4}>
+              {customers && customers.length > 0 ? (
+                customers.map((customer) => (
+                  <CustomerCard key={customer._id} customer={customer} />
+                ))
+              ) : (
+                <Box textAlign="center" py={8}>
+                  <Text color={secondaryTextColor}>No customers found.</Text>
+                </Box>
+              )}
+            </SimpleGrid>
+          </Box>
+        ) : (
+          // Desktop/Tablet layout with table
+          <Table variant="simple">
+            <Thead>
+              <Tr bg={headerBgColor}>
+                <Th color={headerTextColor} fontWeight="semibold" py={4}>Name</Th>
+                <Th color={headerTextColor} fontWeight="semibold" py={4}>Country</Th>
+                <Th color={headerTextColor} fontWeight="semibold" py={4} width="200px">Actions</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {customers?.length > 0 ? (
+                customers.map((customer) => (
+                  <Tr 
+                    key={customer._id}
+                    _hover={{ bg: tableRowHoverBg }}
+                    transition="background-color 0.2s"
+                  >
+                    <Td fontWeight="medium" color="blue.500" py={4}>
+                      {customer.user ? customer.user.name : "No Name Available"}
+                    </Td>
+                    <Td color={textColor} py={4}>{customer.country || "N/A"}</Td>
+                    <Td py={4}>
+                      <Button
+                        as={RouterLink}
+                        to={`/admin/customers/edit/${customer._id}`}
+                        colorScheme="teal"
+                        size="sm"
+                        mr={2}
+                        _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
+                        transition="all 0.2s"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        colorScheme="red"
+                        size="sm"
+                        onClick={() => handleDelete(customer._id!)}
+                        _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
+                        transition="all 0.2s"
+                      >
+                        Delete
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))
+              ) : (
+                <Tr>
+                  <Td colSpan={4} textAlign="center" py={12} color="gray.500">
+                    No customers found.
                   </Td>
                 </Tr>
-              ))
-            ) : (
-              <Tr>
-                <Td colSpan={4} textAlign="center" py={12} color="gray.500">
-                  No customers found.
-                </Td>
-              </Tr>
-            )}
-          </Tbody>
-        </Table>
+              )}
+            </Tbody>
+          </Table>
+        )}
       </Box>
     </Box>
   );

@@ -36,6 +36,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -83,24 +84,36 @@ const Settings = () => {
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const cardBgColor = useColorModeValue("white", "gray.800");
 
+  // Responsive values
+  const containerMaxW = useBreakpointValue({ base: "100%", md: "4xl" });
+  const headerPadding = useBreakpointValue({ base: 4, md: 8 });
+  const tabPanelPadding = useBreakpointValue({ base: 4, md: 8 });
+  const logoSize = useBreakpointValue({ base: "120px", md: "160px" });
+  const headingSize = useBreakpointValue({ base: "2xl", md: "3xl" });
+  const buttonSize = useBreakpointValue({ base: "md", md: "lg" });
+  const inputSize = useBreakpointValue({ base: "md", md: "lg" });
+  const spacing = useBreakpointValue({ base: 4, md: 8 });
+  const stackSpacing = useBreakpointValue({ base: 4, md: 6 });
+  const formSpacing = useBreakpointValue({ base: 4, md: 6 });
+
   // Authentication check
   if (!isAuthenticated) {
     return (
-      <Box minH="100vh" bg={bgColor} py={8}>
-        <Container maxW="md">
-          <Stack spacing={8} align="center">
-            <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
+      <Box minH="100vh" bg={bgColor} py={spacing}>
+        <Container maxW="md" px={4}>
+          <Stack spacing={spacing} align="center">
+            <Stack spacing={4} align="center" p={headerPadding} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="160px"
+                boxSize={logoSize}
                 objectFit="contain"
               />
-              <Heading color={textColor}>Authentication Required</Heading>
+              <Heading color={textColor} size="lg">Authentication Required</Heading>
             </Stack>
-            <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center" border="1px" borderColor={borderColor}>
+            <Box bg={formBgColor} p={headerPadding} borderRadius="xl" boxShadow="xl" w="full" textAlign="center" border="1px" borderColor={borderColor}>
               <Text mb={6} color={textColor}>Please log in to access your settings.</Text>
-              <Button as="a" href="/auth" colorScheme="blue" size="lg" w="full">
+              <Button as="a" href="/auth" colorScheme="blue" size={buttonSize} w="full">
                 Go to Login
               </Button>
             </Box>
@@ -122,21 +135,21 @@ const Settings = () => {
 
   if (!user) {
     return (
-      <Box minH="100vh" bg={bgColor} py={8}>
-        <Container maxW="md">
-          <Stack spacing={8} align="center">
-            <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
+      <Box minH="100vh" bg={bgColor} py={spacing}>
+        <Container maxW="md" px={4}>
+          <Stack spacing={spacing} align="center">
+            <Stack spacing={4} align="center" p={headerPadding} bg={headerBgColor} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="160px"
+                boxSize={logoSize}
                 objectFit="contain"
               />
-              <Heading color={textColor}>Invalid Token</Heading>
+              <Heading color={textColor} size="lg">Invalid Token</Heading>
             </Stack>
-            <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" textAlign="center" border="1px" borderColor={borderColor}>
+            <Box bg={formBgColor} p={headerPadding} borderRadius="xl" boxShadow="xl" w="full" textAlign="center" border="1px" borderColor={borderColor}>
               <Text mb={6} color={textColor}>Please log in again.</Text>
-              <Button as="a" href="/auth" colorScheme="blue" size="lg" w="full">
+              <Button as="a" href="/auth" colorScheme="blue" size={buttonSize} w="full">
                 Go to Login
               </Button>
             </Box>
@@ -318,19 +331,19 @@ const Settings = () => {
   }
 
   return (
-    <Box minH="100vh" bg={bgColor} py={8}>
-      <Container maxW="4xl">
-        <VStack spacing={8} align="stretch">
+    <Box minH="100vh" bg={bgColor} py={spacing}>
+      <Container maxW={containerMaxW} px={4}>
+        <VStack spacing={spacing} align="stretch">
           {/* Header */}
-          <Stack spacing={4} align="center" p={8} bg={headerBgColor} borderRadius="xl" boxShadow="xl" border="1px" borderColor={borderColor}>
+          <Stack spacing={4} align="center" p={headerPadding} bg={headerBgColor} borderRadius="xl" boxShadow="xl" border="1px" borderColor={borderColor}>
             <Image
               src="/songBankLogo.png"
               alt="SongLibrary Logo"
-              boxSize="160px"
+              boxSize={logoSize}
               objectFit="contain"
             />
-            <Heading fontSize="3xl" color={textColor}>Settings</Heading>
-            <Text color={textColor} textAlign="center">
+            <Heading fontSize={headingSize} color={textColor}>Settings</Heading>
+            <Text color={textColor} textAlign="center" px={2}>
               Manage your account settings and preferences
             </Text>
           </Stack>
@@ -338,111 +351,172 @@ const Settings = () => {
           {/* Main Settings Content */}
           <Box bg={cardBgColor} borderRadius="xl" boxShadow="xl" border="1px" borderColor={borderColor} overflow="hidden">
             <Tabs index={activeTab} onChange={setActiveTab} variant="enclosed" colorScheme="blue">
-              <TabList bg={formBgColor} px={6} pt={6}>
-                <Tab color={useColorModeValue("gray.800", "gray.200")}>
-                  <Icon as={FaUserIcon} mr={2} />
-                  Profile
-                </Tab>
-                <Tab color={useColorModeValue("gray.800", "gray.200")}>
-                  <Icon as={FaKeyIcon} mr={2} />
-                  Password
-                </Tab>
-                <Tab color={useColorModeValue("gray.800", "gray.200")}>
-                  <Icon as={FaCogIcon} mr={2} />
-                  Preferences
-                </Tab>
-                <Tab color={useColorModeValue("gray.800", "gray.200")}>
-                  <Icon as={FaShieldAltIcon} mr={2} />
-                  Security
-                </Tab>
-              </TabList>
+              {/* Scroll hint for mobile */}
+              <Box 
+                display={{ base: "block", md: "none" }} 
+                textAlign="center" 
+                py={2} 
+                px={4} 
+                bg={useColorModeValue("blue.50", "blue.900")} 
+                color={useColorModeValue("blue.600", "blue.200")}
+                fontSize="xs"
+                borderBottom="1px"
+                borderColor={borderColor}
+              >
+                ← Scroll to see all tabs →
+              </Box>
+              <Box overflowX="auto" css={{
+                '&::-webkit-scrollbar': {
+                  height: '8px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: useColorModeValue('gray.300', 'gray.600'),
+                  borderRadius: '4px',
+                },
+                '&::-webkit-scrollbar-thumb:hover': {
+                  background: useColorModeValue('gray.400', 'gray.500'),
+                },
+              }}>
+                <TabList bg={formBgColor} px={{ base: 2, md: 6 }} pt={6} minW="max-content">
+                  <Tab 
+                    color={useColorModeValue("gray.800", "gray.200")} 
+                    minW={{ base: "100px", sm: "120px", md: "140px" }} 
+                    fontSize={{ base: "xs", sm: "sm", md: "md" }}
+                    px={{ base: 1, sm: 2, md: 4 }}
+                    py={{ base: 2, md: 3 }}
+                    whiteSpace="nowrap"
+                  >
+                    <Icon as={FaUserIcon} mr={{ base: 1, sm: 1, md: 2 }} />
+                    Profile
+                  </Tab>
+                  <Tab 
+                    color={useColorModeValue("gray.800", "gray.200")} 
+                    minW={{ base: "100px", sm: "120px", md: "140px" }} 
+                    fontSize={{ base: "xs", sm: "sm", md: "md" }}
+                    px={{ base: 1, sm: 2, md: 4 }}
+                    py={{ base: 2, md: 3 }}
+                    whiteSpace="nowrap"
+                  >
+                    <Icon as={FaKeyIcon} mr={{ base: 1, sm: 1, md: 2 }} />
+                    Password
+                  </Tab>
+                  <Tab 
+                    color={useColorModeValue("gray.800", "gray.200")} 
+                    minW={{ base: "100px", sm: "120px", md: "140px" }} 
+                    fontSize={{ base: "xs", sm: "sm", md: "md" }}
+                    px={{ base: 1, sm: 2, md: 4 }}
+                    py={{ base: 2, md: 3 }}
+                    whiteSpace="nowrap"
+                  >
+                    <Icon as={FaCogIcon} mr={{ base: 1, sm: 1, md: 2 }} />
+                    Preferences
+                  </Tab>
+                  <Tab 
+                    color={useColorModeValue("gray.800", "gray.200")} 
+                    minW={{ base: "100px", sm: "120px", md: "140px" }} 
+                    fontSize={{ base: "xs", sm: "sm", md: "md" }}
+                    px={{ base: 1, sm: 2, md: 4 }}
+                    py={{ base: 2, md: 3 }}
+                    whiteSpace="nowrap"
+                  >
+                    <Icon as={FaShieldAltIcon} mr={{ base: 1, sm: 1, md: 2 }} />
+                    Security
+                  </Tab>
+                </TabList>
+              </Box>
 
               <TabPanels>
                 {/* Profile Tab */}
-                <TabPanel p={8}>
-                  <VStack spacing={6} align="stretch">
+                <TabPanel p={tabPanelPadding}>
+                  <VStack spacing={stackSpacing} align="stretch">
                     <Box>
                       <Heading size="md" color={textColor} mb={2}>Profile Information</Heading>
                       <Text color={textColor} fontSize="sm">Update your personal information and contact details</Text>
                     </Box>
 
                     <form onSubmit={handleProfileSubmit}>
-                      <VStack spacing={6}>
-                                                 <FormControl>
-                           <FormLabel fontWeight="bold" color={textColor}>
-                             Full Name
-                           </FormLabel>
-                           <Input
-                             value={user.name || ""}
-                             isReadOnly
-                             bg={useColorModeValue("gray.100", "gray.700")}
-                             borderColor={borderColor}
-                             color={textColor}
-                           />
-                           <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
-                             Name changes must be made by an administrator
-                           </FormHelperText>
-                         </FormControl>
+                      <VStack spacing={formSpacing}>
+                        <FormControl>
+                          <FormLabel fontWeight="bold" color={textColor}>
+                            Full Name
+                          </FormLabel>
+                          <Input
+                            value={user.name || ""}
+                            isReadOnly
+                            bg={useColorModeValue("gray.100", "gray.700")}
+                            borderColor={borderColor}
+                            color={textColor}
+                            size={inputSize}
+                          />
+                          <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
+                            Name changes must be made by an administrator
+                          </FormHelperText>
+                        </FormControl>
 
-                         <FormControl>
-                           <FormLabel fontWeight="bold" color={textColor}>
-                             Email Address
-                           </FormLabel>
-                           <Input
-                             value={user.email || ""}
-                             isReadOnly
-                             bg={useColorModeValue("gray.100", "gray.700")}
-                             borderColor={borderColor}
-                             color={textColor}
-                           />
-                           <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
-                             Email changes must be made by an administrator
-                           </FormHelperText>
-                         </FormControl>
+                        <FormControl>
+                          <FormLabel fontWeight="bold" color={textColor}>
+                            Email Address
+                          </FormLabel>
+                          <Input
+                            value={user.email || ""}
+                            isReadOnly
+                            bg={useColorModeValue("gray.100", "gray.700")}
+                            borderColor={borderColor}
+                            color={textColor}
+                            size={inputSize}
+                          />
+                          <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
+                            Email changes must be made by an administrator
+                          </FormHelperText>
+                        </FormControl>
 
-                         <FormControl>
-                           <FormLabel fontWeight="bold" color={textColor}>
-                             Role
-                           </FormLabel>
-                           <Input
-                             value={user.role?.replace('_', ' ') || ""}
-                             isReadOnly
-                             bg={useColorModeValue("gray.100", "gray.700")}
-                             borderColor={borderColor}
-                             textTransform="capitalize"
-                             color={textColor}
-                           />
-                           <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
-                             Role changes must be made by an administrator
-                           </FormHelperText>
-                         </FormControl>
+                        <FormControl>
+                          <FormLabel fontWeight="bold" color={textColor}>
+                            Role
+                          </FormLabel>
+                          <Input
+                            value={user.role?.replace('_', ' ') || ""}
+                            isReadOnly
+                            bg={useColorModeValue("gray.100", "gray.700")}
+                            borderColor={borderColor}
+                            textTransform="capitalize"
+                            color={textColor}
+                            size={inputSize}
+                          />
+                          <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
+                            Role changes must be made by an administrator
+                          </FormHelperText>
+                        </FormControl>
 
-                         <FormControl>
-                           <FormLabel fontWeight="bold" color={textColor}>
-                             Country
-                           </FormLabel>
-                           <Box
-                             bg={useColorModeValue("white", "gray.700")}
-                             borderRadius="md"
-                             borderWidth="1px"
-                             borderColor={borderColor}
-                             _hover={{ borderColor: "blue.300" }}
-                           >
-                             <CountrySelector
-                               selectedCountry={country}
-                               onSelect={(countryCode) => setCountry(countryCode)}
-                             />
-                           </Box>
-                         </FormControl>
+                        <FormControl>
+                          <FormLabel fontWeight="bold" color={textColor}>
+                            Country
+                          </FormLabel>
+                          <Box
+                            bg={useColorModeValue("white", "gray.700")}
+                            borderRadius="md"
+                            borderWidth="1px"
+                            borderColor={borderColor}
+                            _hover={{ borderColor: "blue.300" }}
+                          >
+                            <CountrySelector
+                              selectedCountry={country}
+                              onSelect={(countryCode) => setCountry(countryCode)}
+                            />
+                          </Box>
+                        </FormControl>
 
-                        <HStack spacing={4} width="100%" pt={4}>
+                        <VStack spacing={4} width="100%" pt={4}>
                           <Button
                             onClick={() => navigate(`/users/${user._id}`)}
                             variant="outline"
                             color={textColor}
                             _hover={{ bg: "gray.100" }}
-                            flex={1}
-                            size="lg"
+                            w="full"
+                            size={buttonSize}
                           >
                             Cancel
                           </Button>
@@ -451,22 +525,22 @@ const Settings = () => {
                             bg="blue.600"
                             color="white"
                             _hover={{ bg: "blue.700" }}
-                            flex={1}
-                            size="lg"
+                            w="full"
+                            size={buttonSize}
                             isLoading={isUpdatingProfile}
                             loadingText="Updating..."
                           >
                             Update Profile
                           </Button>
-                        </HStack>
+                        </VStack>
                       </VStack>
                     </form>
                   </VStack>
                 </TabPanel>
 
                 {/* Password Tab */}
-                <TabPanel p={8}>
-                  <VStack spacing={6} align="stretch">
+                <TabPanel p={tabPanelPadding}>
+                  <VStack spacing={stackSpacing} align="stretch">
                     <Box>
                       <Heading size="md" color={textColor} mb={2}>Change Password</Heading>
                       <Text color={textColor} fontSize="sm">Update your password to keep your account secure</Text>
@@ -481,26 +555,26 @@ const Settings = () => {
                     )}
 
                     <form onSubmit={handlePasswordSubmit}>
-                      <VStack spacing={6}>
+                      <VStack spacing={formSpacing}>
                         <FormControl
                           isRequired
                           isInvalid={oldPassword ? !validOldPassword : false}
                         >
                           <FormLabel color={textColor}>Current Password</FormLabel>
-                          <InputGroup size="lg">
-                                                         <Input
-                               type={showOldPassword ? "text" : "password"}
-                               value={oldPassword}
-                               onChange={(e) => setOldPassword(e.target.value)}
-                               placeholder="Enter current password"
-                               onFocus={() => setOldPasswordFocus(true)}
-                               onBlur={() => setOldPasswordFocus(false)}
-                               bg={useColorModeValue("white", "gray.700")}
-                               borderColor={borderColor}
-                               _hover={{ borderColor: "blue.300" }}
-                               _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
-                               color={textColor}
-                             />
+                          <InputGroup size={inputSize}>
+                            <Input
+                              type={showOldPassword ? "text" : "password"}
+                              value={oldPassword}
+                              onChange={(e) => setOldPassword(e.target.value)}
+                              placeholder="Enter current password"
+                              onFocus={() => setOldPasswordFocus(true)}
+                              onBlur={() => setOldPasswordFocus(false)}
+                              bg={useColorModeValue("white", "gray.700")}
+                              borderColor={borderColor}
+                              _hover={{ borderColor: "blue.300" }}
+                              _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
+                              color={textColor}
+                            />
                             <InputRightElement>
                               <IconButton
                                 aria-label={showOldPassword ? "Hide password" : "Show password"}
@@ -529,20 +603,20 @@ const Settings = () => {
                           isInvalid={password ? !validPassword : false}
                         >
                           <FormLabel color={textColor}>New Password</FormLabel>
-                          <InputGroup size="lg">
-                                                         <Input
-                               type={showPassword ? "text" : "password"}
-                               value={password}
-                               onChange={(e) => setPassword(e.target.value)}
-                               placeholder="Enter new password"
-                               onFocus={() => setPasswordFocus(true)}
-                               onBlur={() => setPasswordFocus(false)}
-                               bg={useColorModeValue("white", "gray.700")}
-                               borderColor={borderColor}
-                               _hover={{ borderColor: "blue.300" }}
-                               _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
-                               color={textColor}
-                             />
+                          <InputGroup size={inputSize}>
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              placeholder="Enter new password"
+                              onFocus={() => setPasswordFocus(true)}
+                              onBlur={() => setPasswordFocus(false)}
+                              bg={useColorModeValue("white", "gray.700")}
+                              borderColor={borderColor}
+                              _hover={{ borderColor: "blue.300" }}
+                              _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
+                              color={textColor}
+                            />
                             <InputRightElement>
                               <IconButton
                                 aria-label={showPassword ? "Hide password" : "Show password"}
@@ -571,20 +645,20 @@ const Settings = () => {
                           isInvalid={matchPassword ? !validMatch : false}
                         >
                           <FormLabel color={textColor}>Confirm New Password</FormLabel>
-                          <InputGroup size="lg">
-                                                         <Input
-                               type={showConfirmPassword ? "text" : "password"}
-                               value={matchPassword}
-                               onChange={(e) => setMatchPassword(e.target.value)}
-                               placeholder="Confirm new password"
-                               onFocus={() => setMatchFocus(true)}
-                               onBlur={() => setMatchFocus(false)}
-                               bg={useColorModeValue("white", "gray.700")}
-                               borderColor={borderColor}
-                               _hover={{ borderColor: "blue.300" }}
-                               _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
-                               color={textColor}
-                             />
+                          <InputGroup size={inputSize}>
+                            <Input
+                              type={showConfirmPassword ? "text" : "password"}
+                              value={matchPassword}
+                              onChange={(e) => setMatchPassword(e.target.value)}
+                              placeholder="Confirm new password"
+                              onFocus={() => setMatchFocus(true)}
+                              onBlur={() => setMatchFocus(false)}
+                              bg={useColorModeValue("white", "gray.700")}
+                              borderColor={borderColor}
+                              _hover={{ borderColor: "blue.300" }}
+                              _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px blue.500" }}
+                              color={textColor}
+                            />
                             <InputRightElement>
                               <IconButton
                                 aria-label={showConfirmPassword ? "Hide password" : "Show password"}
@@ -617,13 +691,13 @@ const Settings = () => {
                           </Box>
                         </Alert>
 
-                        <HStack spacing={4} width="100%" pt={4}>
+                        <VStack spacing={4} width="100%" pt={4}>
                           <Button
                             onClick={() => navigate(`/users/${user._id}`)}
                             variant="outline"
                             color={textColor}
-                            flex={1}
-                            size="lg"
+                            w="full"
+                            size={buttonSize}
                           >
                             Cancel
                           </Button>
@@ -631,22 +705,22 @@ const Settings = () => {
                             colorScheme="red"
                             variant="solid"
                             type="submit"
-                            flex={1}
-                            size="lg"
+                            w="full"
+                            size={buttonSize}
                             isLoading={isUpdatingPassword}
                             loadingText="Changing Password..."
                           >
                             Change Password
                           </Button>
-                        </HStack>
+                        </VStack>
                       </VStack>
                     </form>
                   </VStack>
                 </TabPanel>
 
                 {/* Preferences Tab */}
-                <TabPanel p={8}>
-                  <VStack spacing={6} align="stretch">
+                <TabPanel p={tabPanelPadding}>
+                  <VStack spacing={stackSpacing} align="stretch">
                     <Box>
                       <Heading size="md" color={textColor} mb={2}>Preferences</Heading>
                       <Text color={textColor} fontSize="sm">Customize your application experience</Text>
@@ -687,25 +761,23 @@ const Settings = () => {
                       </CardHeader>
                       <CardBody>
                         <VStack spacing={4} align="stretch">
-                                                     
-
-                           <FormControl>
-                             <FormLabel fontSize="sm" fontWeight="medium" color={textColor}>
-                               Theme
-                             </FormLabel>
-                             <Box
-                               bg={useColorModeValue("white", "gray.700")}
-                               p={4}
-                               borderRadius="md"
-                               borderWidth="1px"
-                               borderColor={borderColor}
-                             >
-                               <ColorModeSwitch />
-                             </Box>
-                             <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
-                               Toggle between light and dark themes. Dark mode is the default.
-                             </FormHelperText>
-                           </FormControl>
+                          <FormControl>
+                            <FormLabel fontSize="sm" fontWeight="medium" color={textColor}>
+                              Theme
+                            </FormLabel>
+                            <Box
+                              bg={useColorModeValue("white", "gray.700")}
+                              p={4}
+                              borderRadius="md"
+                              borderWidth="1px"
+                              borderColor={borderColor}
+                            >
+                              <ColorModeSwitch />
+                            </Box>
+                            <FormHelperText color={useColorModeValue("gray.600", "gray.400")}>
+                              Toggle between light and dark themes. Dark mode is the default.
+                            </FormHelperText>
+                          </FormControl>
                         </VStack>
                       </CardBody>
                     </Card>
@@ -713,8 +785,8 @@ const Settings = () => {
                 </TabPanel>
 
                 {/* Security Tab */}
-                <TabPanel p={8}>
-                  <VStack spacing={6} align="stretch">
+                <TabPanel p={tabPanelPadding}>
+                  <VStack spacing={stackSpacing} align="stretch">
                     <Box>
                       <Heading size="md" color={textColor} mb={2}>Security Settings</Heading>
                       <Text color={textColor} fontSize="sm">Manage your account security and privacy</Text>
@@ -730,7 +802,7 @@ const Settings = () => {
                       </Box>
                     </Alert>
 
-                                        <Card>
+                    <Card>
                       <CardHeader>
                         <Heading size="sm" color={textColor}>Current Login Session</Heading>
                       </CardHeader>
@@ -791,13 +863,14 @@ const Settings = () => {
                           <Button
                             colorScheme="red"
                             variant="outline"
-                            size="lg"
+                            size={buttonSize}
                             onClick={() => {
                               if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
                                 handleDeleteAccount();
                               }
                             }}
                             _hover={{ bg: "red.50", borderColor: "red.400" }}
+                            w="full"
                           >
                             Delete Account
                           </Button>

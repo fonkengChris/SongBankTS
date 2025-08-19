@@ -169,6 +169,23 @@ const UsersManagementPage = () => {
 
       {/* Content */}
       <Box bg={cardBg} shadow="sm" borderRadius="lg" overflow="hidden" border="1px" borderColor={borderColor}>
+        {isMobile ? (
+          // Mobile layout with cards
+          <Box p={4}>
+            <SimpleGrid columns={1} spacing={4}>
+              {users && users.length > 0 ? (
+                users.map((user) => (
+                  <UserCard key={user._id} user={user} />
+                ))
+              ) : (
+                <Box textAlign="center" py={8}>
+                  <Text color={secondaryTextColor}>No users found.</Text>
+                </Box>
+              )}
+            </SimpleGrid>
+          </Box>
+        ) : (
+          // Desktop/Tablet layout with table
           <Box overflowX="auto">
             <Table variant="simple">
               <Thead>
@@ -229,6 +246,7 @@ const UsersManagementPage = () => {
               </Tbody>
             </Table>
           </Box>
+        )}
       </Box>
 
       {/* Delete Confirmation Dialog */}
