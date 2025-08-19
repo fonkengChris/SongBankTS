@@ -93,7 +93,7 @@ const Settings = () => {
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="80px"
+                boxSize="160px"
                 objectFit="contain"
               />
               <Heading color={textColor}>Authentication Required</Heading>
@@ -129,7 +129,7 @@ const Settings = () => {
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="80px"
+                boxSize="160px"
                 objectFit="contain"
               />
               <Heading color={textColor}>Invalid Token</Heading>
@@ -326,7 +326,7 @@ const Settings = () => {
             <Image
               src="/songBankLogo.png"
               alt="SongLibrary Logo"
-              boxSize="80px"
+              boxSize="160px"
               objectFit="contain"
             />
             <Heading fontSize="3xl" color={textColor}>Settings</Heading>

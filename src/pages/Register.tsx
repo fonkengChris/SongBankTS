@@ -262,12 +262,10 @@ const Register = () => {
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="80px"
+                boxSize="240px"
                 objectFit="contain"
               />
-              <Heading fontSize="2xl" textAlign="center" color={textColor}>
-                Create your account
-              </Heading>
+             
             </Stack>
 
             <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
@@ -288,6 +286,9 @@ const Register = () => {
 
               <form onSubmit={handleSubmit}>
                 <Stack spacing={6}>
+                  <Heading fontSize="2xl" textAlign="center" color={textColor}>
+                    Create an account
+                  </Heading>
                   <FormControl
                     id="name"
                     isRequired

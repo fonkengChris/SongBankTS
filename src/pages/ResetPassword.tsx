@@ -23,7 +23,6 @@ import {
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import backgroundImage from "../assets/background_image.jpg";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -229,13 +228,7 @@ const ResetPassword = () => {
         </Stack>
       </Flex>
       
-      <Flex flex={1} display={{ base: 'none', md: 'flex' }}>
-        <Image
-          alt={'Reset Password Image'}
-          objectFit={'cover'}
-          src={backgroundImage}
-        />
-      </Flex>
+
     </Stack>
   );
 };

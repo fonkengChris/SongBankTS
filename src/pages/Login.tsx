@@ -167,12 +167,10 @@ const Login = () => {
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="80px"
+                boxSize="240px"
                 objectFit="contain"
               />
-              <Heading fontSize="2xl" textAlign="center" color={textColor}>
-                Sign in to your account
-              </Heading>
+              
             </Stack>
             
             <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
@@ -193,6 +191,9 @@ const Login = () => {
 
               <form onSubmit={handleSubmit}>
                 <Stack spacing={6}>
+                <Heading fontSize="2xl" textAlign="center" color={textColor}>
+                Sign in to your account
+              </Heading>
                   <FormControl id="email" isRequired>
                     <FormLabel color={textColor}>Email address</FormLabel>
                     <Input 

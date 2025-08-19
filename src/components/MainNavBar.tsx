@@ -303,7 +303,7 @@ const MainNavBar = ({ user }: Props) => {
         <Link to="/songs/">
           <Image
             src={logo}
-            boxSize="60px"
+            boxSize="100px"
             marginRight={3}
             transition="transform 0.2s ease"
             _hover={{ transform: "scale(1.05)" }}

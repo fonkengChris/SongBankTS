@@ -51,7 +51,7 @@ const EditProfile = () => {
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="80px"
+                boxSize="160px"
                 objectFit="contain"
               />
               <Heading color={textColor}>Authentication Required</Heading>
@@ -131,7 +131,7 @@ const EditProfile = () => {
             <Image
               src="/songBankLogo.png"
               alt="SongLibrary Logo"
-              boxSize="80px"
+              boxSize="160px"
               objectFit="contain"
             />
             <Heading size="lg" color={textColor}>

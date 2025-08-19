@@ -54,7 +54,7 @@ const ChangePassword = () => {
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="80px"
+                boxSize="160px"
                 objectFit="contain"
               />
               <Heading mb={4} color={textColor}>Authentication Required</Heading>
@@ -90,7 +90,7 @@ const ChangePassword = () => {
               <Image
                 src="/songBankLogo.png"
                 alt="SongLibrary Logo"
-                boxSize="80px"
+                boxSize="160px"
                 objectFit="contain"
               />
               <Heading mb={4} color={textColor}>Invalid Token</Heading>
@@ -192,7 +192,7 @@ const ChangePassword = () => {
             <Image
               src="/songBankLogo.png"
               alt="SongLibrary Logo"
-              boxSize="80px"
+              boxSize="160px"
               objectFit="contain"
             />
             <Heading fontSize="2xl" textAlign="center" color={textColor}>
