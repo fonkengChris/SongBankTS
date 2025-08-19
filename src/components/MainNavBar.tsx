@@ -15,6 +15,7 @@ import {
   Text,
   Box,
   useDisclosure,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "/songBankLogo.png";
@@ -29,9 +30,16 @@ interface Props {
 const MainNavBar = ({ user }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // Theme-aware colors
+  const navBg = useColorModeValue("white", "gray.900");
+  const navBorderColor = useColorModeValue("gray.200", "gray.700");
+  const buttonColor = useColorModeValue("gray.700", "gray.300");
+  const buttonHoverBg = useColorModeValue("blue.50", "blue.500");
+  const buttonHoverColor = useColorModeValue("blue.700", "white");
+
   const ListOfActions = [
     { value: "users/" + user?._id, label: "User Profile" },
-    { value: "/change_password/", label: "Change Password" },
+    { value: "/settings", label: "Settings" },
   ];
 
   const navigate = useNavigate();
@@ -56,10 +64,10 @@ const MainNavBar = ({ user }: Props) => {
           <Button
             colorScheme="blue"
             variant="ghost"
-            color="gray.300"
+            color={buttonColor}
             _hover={{
-              bg: "blue.500",
-              color: "white",
+              bg: buttonHoverBg,
+              color: buttonHoverColor,
               transform: "translateY(-1px)",
             }}
             _active={{ bg: "blue.600" }}
@@ -77,10 +85,10 @@ const MainNavBar = ({ user }: Props) => {
           <Button
             colorScheme="blue"
             variant="ghost"
-            color="gray.300"
+            color={buttonColor}
             _hover={{
-              bg: "blue.500",
-              color: "white",
+              bg: buttonHoverBg,
+              color: buttonHoverColor,
               transform: "translateY(-1px)",
             }}
             _active={{ bg: "blue.600" }}
@@ -98,10 +106,10 @@ const MainNavBar = ({ user }: Props) => {
           <Button
             colorScheme="blue"
             variant="ghost"
-            color="gray.300"
+            color={buttonColor}
             _hover={{
-              bg: "blue.500",
-              color: "white",
+              bg: buttonHoverBg,
+              color: buttonHoverColor,
               transform: "translateY(-1px)",
             }}
             _active={{ bg: "blue.600" }}
@@ -119,10 +127,10 @@ const MainNavBar = ({ user }: Props) => {
           <Button
             colorScheme="blue"
             variant="ghost"
-            color="gray.300"
+            color={buttonColor}
             _hover={{
-              bg: "blue.500",
-              color: "white",
+              bg: buttonHoverBg,
+              color: buttonHoverColor,
               transform: "translateY(-1px)",
             }}
             _active={{ bg: "blue.600" }}
@@ -140,10 +148,10 @@ const MainNavBar = ({ user }: Props) => {
           <Button
             colorScheme="blue"
             variant="ghost"
-            color="gray.300"
+            color={buttonColor}
             _hover={{
-              bg: "blue.500",
-              color: "white",
+              bg: buttonHoverBg,
+              color: buttonHoverColor,
               transform: "translateY(-1px)",
             }}
             _active={{ bg: "blue.600" }}
@@ -161,10 +169,10 @@ const MainNavBar = ({ user }: Props) => {
           <Button
             colorScheme="blue"
             variant="ghost"
-            color="gray.300"
+            color={buttonColor}
             _hover={{
-              bg: "blue.500",
-              color: "white",
+              bg: buttonHoverBg,
+              color: buttonHoverColor,
               transform: "translateY(-1px)",
             }}
             _active={{ bg: "blue.600" }}
@@ -182,10 +190,10 @@ const MainNavBar = ({ user }: Props) => {
           <Button
             colorScheme="blue"
             variant="ghost"
-            color="gray.300"
+            color={buttonColor}
             _hover={{
-              bg: "blue.500",
-              color: "white",
+              bg: buttonHoverBg,
+              color: buttonHoverColor,
               transform: "translateY(-1px)",
             }}
             _active={{ bg: "blue.600" }}
@@ -204,10 +212,10 @@ const MainNavBar = ({ user }: Props) => {
             <Button
               colorScheme="purple"
               variant="ghost"
-              color="gray.300"
+              color={buttonColor}
               _hover={{
-                bg: "purple.500",
-                color: "white",
+                bg: "purple.100",
+                color: "purple.700",
                 transform: "translateY(-1px)",
               }}
               _active={{ bg: "purple.600" }}
@@ -285,9 +293,9 @@ const MainNavBar = ({ user }: Props) => {
       alignItems="center"
       justifyContent="space-between"
       gap={4}
-      bg="gray.900"
+      bg={navBg}
       borderBottom="1px solid"
-      borderColor="gray.700"
+      borderColor={navBorderColor}
       boxShadow="0 2px 8px rgba(0, 0, 0, 0.1)"
     >
       {/* Logo and Title Section */}
@@ -333,15 +341,15 @@ const MainNavBar = ({ user }: Props) => {
               aria-label="Options"
               icon={<HamburgerIcon />}
               variant="outline"
-              borderColor="gray.600"
-              color="gray.300"
+              borderColor={useColorModeValue("gray.300", "gray.600")}
+              color={buttonColor}
               _hover={{
-                bg: "gray.700",
-                borderColor: "gray.500",
+                bg: useColorModeValue("gray.100", "gray.700"),
+                borderColor: useColorModeValue("gray.400", "gray.500"),
               }}
               onClick={onOpen}
             />
-            <MenuList bg="gray.800" borderColor="gray.600">
+            <MenuList bg={useColorModeValue("white", "gray.800")} borderColor={useColorModeValue("gray.200", "gray.600")}>
               <NavLinks />
               {!user?._id && <AuthButtons />}
             </MenuList>
@@ -358,7 +366,7 @@ const MainNavBar = ({ user }: Props) => {
                 as="h2"
                 size={{ base: "sm", lg: "md" }}
                 fontWeight="600"
-                color="gray.300"
+                color={buttonColor}
                 letterSpacing="0.01em"
               >
                 Welcome: {getFirstName(user.name)}
@@ -376,27 +384,27 @@ const MainNavBar = ({ user }: Props) => {
                   _hover={{ transform: "scale(1.05)" }}
                 />
               </MenuButton>
-              <MenuList bg="gray.800" borderColor="gray.600">
-                {ListOfActions.map((action) => (
-                  <MenuItem
-                    key={action.value}
-                    _hover={{ bg: "gray.700" }}
-                    color="gray.300"
-                    fontWeight="500"
-                    onClick={() => handleNavigation(action.value)}
-                  >
-                    {action.label}
-                  </MenuItem>
-                ))}
+                          <MenuList bg={useColorModeValue("white", "gray.800")} borderColor={useColorModeValue("gray.200", "gray.600")}>
+              {ListOfActions.map((action) => (
                 <MenuItem
-                  onClick={handleLogout}
-                  _hover={{ bg: "red.600" }}
-                  color="red.400"
+                  key={action.value}
+                  _hover={{ bg: useColorModeValue("gray.100", "gray.700") }}
+                  color={buttonColor}
                   fontWeight="500"
+                  onClick={() => handleNavigation(action.value)}
                 >
-                  <Text>Logout</Text>
+                  {action.label}
                 </MenuItem>
-              </MenuList>
+              ))}
+              <MenuItem
+                onClick={handleLogout}
+                _hover={{ bg: "red.600" }}
+                color="red.400"
+                fontWeight="500"
+              >
+                <Text>Logout</Text>
+              </MenuItem>
+            </MenuList>
             </Menu>
           </Flex>
         )}

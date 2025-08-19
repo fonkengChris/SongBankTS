@@ -4,24 +4,32 @@ import {
   Stack,
   Text,
   Link,
+  Button,
   useColorModeValue,
   SimpleGrid,
   Flex,
   Divider,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const Footer = () => {
   const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
   const footerBg = useColorModeValue("gray.50", "gray.900");
   const borderColor = useColorModeValue("gray.200", "gray.700");
-  const textColor = useColorModeValue("gray.600", "gray.400");
-  const linkColor = useColorModeValue("gray.600", "gray.400");
-  const linkHoverColor = useColorModeValue("gray.800", "gray.200");
+  const textColor = useColorModeValue("gray.800", "gray.300");
+  // Force dark colors with !important for better visibility in light mode
+  const linkColor = useColorModeValue("gray.900", "gray.200");
+  const linkHoverColor = useColorModeValue("blue.700", "blue.300");
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -41,114 +49,155 @@ const Footer = () => {
             spacing={{ base: 6, md: 8 }}
             justifyItems={{ base: "center", md: "center" }}
           >
-            <Link
-              href={"/"}
+            <Button
+              onClick={() => handleNavigation("/")}
+              variant="ghost"
               color={linkColor}
               _hover={{
                 color: linkHoverColor,
                 textDecoration: "none",
                 transform: "translateY(-1px)",
+                bg: "transparent",
               }}
               fontSize={{ base: "md", md: "lg" }}
               fontWeight="600"
               letterSpacing="0.01em"
               transition="all 0.2s ease"
+              bg="transparent"
+              p={0}
+              minW="auto"
+              h="auto"
             >
               Home
-            </Link>
-            <Link
-              href={"/contact"}
+            </Button>
+            <Button
+              onClick={() => handleNavigation("/contact")}
+              variant="ghost"
               color={linkColor}
               _hover={{
                 color: linkHoverColor,
                 textDecoration: "none",
                 transform: "translateY(-1px)",
+                bg: "transparent",
               }}
               fontSize={{ base: "md", md: "lg" }}
               fontWeight="600"
               letterSpacing="0.01em"
               transition="all 0.2s ease"
+              bg="transparent"
+              p={0}
+              minW="auto"
+              h="auto"
             >
               Contact
-            </Link>
-            <Link
-              href={"/upload"}
+            </Button>
+            <Button
+              onClick={() => handleNavigation("/upload")}
+              variant="ghost"
               color={linkColor}
               _hover={{
                 color: linkHoverColor,
                 textDecoration: "none",
                 transform: "translateY(-1px)",
+                bg: "transparent",
               }}
               fontSize={{ base: "md", md: "lg" }}
               fontWeight="600"
               letterSpacing="0.01em"
               transition="all 0.2s ease"
+              bg="transparent"
+              p={0}
+              minW="auto"
+              h="auto"
             >
               Upload
-            </Link>
-            <Link
-              href={"/about"}
+            </Button>
+            <Button
+              onClick={() => handleNavigation("/about")}
+              variant="ghost"
               color={linkColor}
               _hover={{
                 color: linkHoverColor,
                 textDecoration: "none",
                 transform: "translateY(-1px)",
+                bg: "transparent",
               }}
               fontSize={{ base: "md", md: "lg" }}
               fontWeight="600"
               letterSpacing="0.01em"
               transition="all 0.2s ease"
+              bg="transparent"
+              p={0}
+              minW="auto"
+              h="auto"
             >
               About
-            </Link>
-            <Link
-              href={"/songs"}
+            </Button>
+            <Button
+              onClick={() => handleNavigation("/songs")}
+              variant="ghost"
               color={linkColor}
               _hover={{
                 color: linkHoverColor,
                 textDecoration: "none",
                 transform: "translateY(-1px)",
+                bg: "transparent",
               }}
               fontSize={{ base: "md", md: "lg" }}
               fontWeight="600"
               letterSpacing="0.01em"
               transition="all 0.2s ease"
+              bg="transparent"
+              p={0}
+              minW="auto"
+              h="auto"
             >
               Songs
-            </Link>
+            </Button>
             {!isAuthenticated ? (
-              <Link
-                href={"/auth"}
+              <Button
+                onClick={() => handleNavigation("/auth")}
+                variant="ghost"
                 color={linkColor}
                 _hover={{
                   color: linkHoverColor,
                   textDecoration: "none",
                   transform: "translateY(-1px)",
+                  bg: "transparent",
                 }}
                 fontSize={{ base: "md", md: "lg" }}
                 fontWeight="600"
                 letterSpacing="0.01em"
                 transition="all 0.2s ease"
+                bg="transparent"
+                p={0}
+                minW="auto"
+                h="auto"
               >
                 Login
-              </Link>
+              </Button>
             ) : (
-              <Link
+              <Button
                 onClick={handleLogout}
+                variant="ghost"
                 color={linkColor}
                 _hover={{
                   color: linkHoverColor,
                   textDecoration: "none",
                   transform: "translateY(-1px)",
+                  bg: "transparent",
                 }}
                 fontSize={{ base: "md", md: "lg" }}
                 fontWeight="600"
                 letterSpacing="0.01em"
                 transition="all 0.2s ease"
-                cursor="pointer"
+                bg="transparent"
+                p={0}
+                minW="auto"
+                h="auto"
               >
                 Logout
-              </Link>
+              </Button>
             )}
           </SimpleGrid>
 
@@ -175,51 +224,69 @@ const Footer = () => {
               gap={{ base: 2, sm: 6 }}
               mt={{ base: 4, md: 0 }}
             >
-              <Link
-                href={"/terms"}
+              <Button
+                onClick={() => handleNavigation("/terms")}
+                variant="ghost"
                 color={linkColor}
                 _hover={{
                   color: linkHoverColor,
                   textDecoration: "none",
                   transform: "translateY(-1px)",
+                  bg: "transparent",
                 }}
                 fontSize={{ base: "sm", md: "md" }}
                 fontWeight="500"
                 letterSpacing="0.01em"
                 transition="all 0.2s ease"
+                bg="transparent"
+                p={0}
+                minW="auto"
+                h="auto"
               >
                 Terms of Service
-              </Link>
-              <Link
-                href={"/privacy"}
+              </Button>
+              <Button
+                onClick={() => handleNavigation("/privacy")}
+                variant="ghost"
                 color={linkColor}
                 _hover={{
                   color: linkHoverColor,
                   textDecoration: "none",
                   transform: "translateY(-1px)",
+                  bg: "transparent",
                 }}
                 fontSize={{ base: "sm", md: "md" }}
                 fontWeight="500"
                 letterSpacing="0.01em"
                 transition="all 0.2s ease"
+                bg="transparent"
+                p={0}
+                minW="auto"
+                h="auto"
               >
                 Privacy Policy
-              </Link>
-              <Link
-                href={"/copyright"}
+              </Button>
+              <Button
+                onClick={() => handleNavigation("/copyright")}
+                variant="ghost"
                 color={linkColor}
                 _hover={{
                   color: linkHoverColor,
                   textDecoration: "none",
                   transform: "translateY(-1px)",
+                  bg: "transparent",
                 }}
                 fontSize={{ base: "sm", md: "md" }}
                 fontWeight="500"
                 letterSpacing="0.01em"
                 transition="all 0.2s ease"
+                bg="transparent"
+                p={0}
+                minW="auto"
+                h="auto"
               >
                 Copyright
-              </Link>
+              </Button>
             </Flex>
           </Flex>
 

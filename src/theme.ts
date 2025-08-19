@@ -67,8 +67,8 @@ const theme = extendTheme({
   styles: {
     global: (props: any) => ({
       body: {
-        bg: "#000000",
-        color: "white",
+        bg: props.colorMode === "dark" ? "#000000" : "#ffffff",
+        color: props.colorMode === "dark" ? "white" : "gray.800",
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontSize: "16px",
         lineHeight: "1.6",
@@ -78,7 +78,7 @@ const theme = extendTheme({
         MozOsxFontSmoothing: "grayscale",
       },
       html: {
-        bg: "#000000",
+        bg: props.colorMode === "dark" ? "#000000" : "#ffffff",
       },
       "*": {
         transition: "none !important",
@@ -88,22 +88,26 @@ const theme = extendTheme({
         fontWeight: "700",
         lineHeight: "1.2",
         letterSpacing: "-0.02em",
+        color: props.colorMode === "dark" ? "white" : "gray.800",
       },
       h2: {
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "600",
         lineHeight: "1.3",
         letterSpacing: "-0.01em",
+        color: props.colorMode === "dark" ? "white" : "gray.800",
       },
       h3: {
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "600",
         lineHeight: "1.4",
+        color: props.colorMode === "dark" ? "white" : "gray.800",
       },
       p: {
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "400",
         lineHeight: "1.6",
+        color: props.colorMode === "dark" ? "white" : "gray.800",
       },
     }),
   },
@@ -137,17 +141,18 @@ const theme = extendTheme({
   components: {
     Box: {
       baseStyle: (props: any) => ({
-        bg: "#000000",
+        bg: props.colorMode === "dark" ? "#000000" : "#ffffff",
       }),
     },
     Heading: {
-      baseStyle: {
+      baseStyle: (props: any) => ({
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "700",
         letterSpacing: "-0.02em",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
-      },
+        color: props.colorMode === "dark" ? "white" : "gray.800",
+      }),
       variants: {
         h1: {
           fontSize: { base: "2xl", md: "4xl", lg: "5xl" },
@@ -170,13 +175,14 @@ const theme = extendTheme({
       },
     },
     Text: {
-      baseStyle: {
+      baseStyle: (props: any) => ({
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "400",
         lineHeight: "1.6",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
-      },
+        color: props.colorMode === "dark" ? "white" : "gray.800",
+      }),
       variants: {
         body: {
           fontSize: "md",
@@ -195,37 +201,67 @@ const theme = extendTheme({
       },
     },
     Button: {
-      baseStyle: {
+      baseStyle: (props: any) => ({
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "600",
         letterSpacing: "0.01em",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
-      },
+        color: props.colorMode === "dark" ? "white" : "gray.800",
+      }),
     },
     Input: {
-      baseStyle: {
+      baseStyle: (props: any) => ({
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "400",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
-      },
+        color: props.colorMode === "dark" ? "white" : "gray.800",
+        bg: props.colorMode === "dark" ? "gray.700" : "white",
+        borderColor: props.colorMode === "dark" ? "gray.600" : "gray.300",
+      }),
     },
     Textarea: {
-      baseStyle: {
+      baseStyle: (props: any) => ({
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "400",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
-      },
+        color: props.colorMode === "dark" ? "white" : "gray.800",
+        bg: props.colorMode === "dark" ? "gray.700" : "white",
+        borderColor: props.colorMode === "dark" ? "gray.600" : "gray.300",
+      }),
     },
     Link: {
-      baseStyle: {
+      baseStyle: (props: any) => ({
         fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
         fontWeight: "500",
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
-      },
+        color: props.colorMode === "dark" ? "blue.300" : "blue.600",
+      }),
+    },
+    Tab: {
+      baseStyle: (props: any) => ({
+        fontFamily: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`,
+        fontWeight: "600",
+        color: props.colorMode === "dark" ? "gray.200" : "gray.800",
+        _selected: {
+          color: props.colorMode === "dark" ? "blue.300" : "blue.600",
+          borderColor: props.colorMode === "dark" ? "blue.300" : "blue.600",
+          fontWeight: "700",
+        },
+        _hover: {
+          color: props.colorMode === "dark" ? "white" : "gray.900",
+        },
+      }),
+    },
+    Tabs: {
+      baseStyle: (props: any) => ({
+        tablist: {
+          borderColor: props.colorMode === "dark" ? "gray.600" : "gray.300",
+        },
+      }),
     },
   },
 });

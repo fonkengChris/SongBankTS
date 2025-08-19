@@ -137,6 +137,21 @@ const EditProfile = () => {
             <Heading size="lg" color={textColor}>
               Edit Profile
             </Heading>
+            <Text fontSize="sm" color="gray.500" textAlign="center">
+              This page will be deprecated. Please use the{" "}
+              <Button
+                variant="link"
+                color="blue.500"
+                onClick={() => navigate("/settings")}
+                p={0}
+                h="auto"
+                minH="auto"
+                fontSize="sm"
+              >
+                Settings page
+              </Button>{" "}
+              for a better experience.
+            </Text>
           </Stack>
 
           <Box bg={formBgColor} p={8} borderRadius="xl" boxShadow="xl" w="full" border="1px" borderColor={borderColor}>
@@ -188,6 +203,23 @@ const EditProfile = () => {
                     Update Profile
                   </Button>
                 </HStack>
+                
+                <Box textAlign="center" pt={4}>
+                  <Text fontSize="sm" color="gray.500">
+                    Or go to the{" "}
+                    <Button
+                      variant="link"
+                      color="blue.500"
+                      onClick={() => navigate("/settings")}
+                      p={0}
+                      h="auto"
+                      minH="auto"
+                    >
+                      Settings page
+                    </Button>{" "}
+                    to manage all your preferences
+                  </Text>
+                </Box>
               </VStack>
             </form>
           </Box>

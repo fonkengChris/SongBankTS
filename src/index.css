@@ -22,6 +22,7 @@ body {
   font-weight: 400;
   line-height: 1.6;
   letter-spacing: normal;
+  /* Colors will be handled by Chakra UI theme */
 }
 
 .App {

@@ -9,7 +9,7 @@ import SongDetailPage from "./pages/SongDetailPage";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import ChangePassword from "./pages/ChangePassword";
-import EditProfile from "./pages/EditProfile";
+import Settings from "./pages/Settings";
 import Contact from "./pages/Contact";
 import UploadSong from "./pages/UploadSong";
 import AdminPage from "./pages/AdminPage";
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       { path: "upload", element: <UploadSong /> },
       { path: "change_password", element: <ChangePassword /> },
       { path: "users/:id", element: <UserProfile /> },
-      { path: "edit_profile", element: <EditProfile /> },
+      { path: "settings", element: <Settings /> },
       { path: "songs", element: <SongsPage /> },
       { path: "tutorials", element: <TutorialPage /> },
       { path: "/media_files/:id", element: <SongDetailPage /> },

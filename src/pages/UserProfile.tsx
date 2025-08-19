@@ -152,7 +152,7 @@ const UserProfile = () => {
 
               <Button
                 as={Link}
-                to="/edit_profile"
+                to="/settings"
                 leftIcon={<Icon as={FaEdit} />}
                 colorScheme="blue"
                 variant="solid"
@@ -160,7 +160,7 @@ const UserProfile = () => {
                 width="80%"
                 _hover={{ bg: "cyan.600" }}
               >
-                Edit Profile
+                Settings
               </Button>
             </VStack>
 
