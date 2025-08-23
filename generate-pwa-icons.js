@@ -1,61 +1,29 @@
 import fs from "fs";
+import path from "path";
 
-// Create a simple music note icon for SongLibrary using SVG
-function createSVGIcon(size) {
-  const scale = size / 512; // Base size for scaling
-  const strokeWidth = Math.max(2, 8 * scale);
-  const noteSize = 120 * scale;
-
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
-      </linearGradient>
-    </defs>
+// Function to create a copy of songBankLogo.png with different names for PWA
+function copyLogoAsIcon(iconName, sourceLogo = "songBankLogo.png") {
+  const sourcePath = path.join("public", sourceLogo);
+  const targetPath = path.join("public", iconName);
+  
+  try {
+    // Check if source logo exists
+    if (!fs.existsSync(sourcePath)) {
+      console.warn(`Warning: ${sourceLogo} not found in public directory`);
+      return false;
+    }
     
-    <!-- Background -->
-    <rect width="${size}" height="${size}" fill="url(#bg)" rx="${20 * scale}"/>
-    
-    <!-- Music note -->
-    <g transform="translate(${size / 2}, ${size / 2})">
-      <!-- Note head 1 -->
-      <ellipse cx="${-noteSize / 3}" cy="${noteSize / 4}" rx="${
-    noteSize / 6
-  }" ry="${noteSize / 8}" fill="#ffffff"/>
-      
-      <!-- Stem -->
-      <rect x="${-noteSize / 6 - strokeWidth / 2}" y="${
-    noteSize / 4
-  }" width="${strokeWidth}" height="${noteSize * 0.75}" fill="#ffffff"/>
-      
-      <!-- Note head 2 -->
-      <ellipse cx="${noteSize / 3}" cy="${-noteSize / 3}" rx="${
-    noteSize / 6
-  }" ry="${noteSize / 8}" fill="#ffffff"/>
-      
-      <!-- Staff lines -->
-      <g stroke="#4a90e2" stroke-width="${Math.max(1, 2 * scale)}" fill="none">
-        ${[0, 1, 2, 3, 4]
-          .map((i) => {
-            const y = ((i - 2) * noteSize) / 8;
-            return `<line x1="${-noteSize}" y1="${y}" x2="${noteSize}" y2="${y}"/>`;
-          })
-          .join("")}
-      </g>
-    </g>
-  </svg>`;
+    // Copy the logo file
+    fs.copyFileSync(sourcePath, targetPath);
+    console.log(`Generated ${iconName} from ${sourceLogo}`);
+    return true;
+  } catch (error) {
+    console.error(`Error generating ${iconName}:`, error.message);
+    return false;
+  }
 }
 
-// Create PNG-like icons using SVG (for simplicity)
-function createPNGIcon(size) {
-  const svg = createSVGIcon(size);
-  // For now, we'll create SVG files with PNG names
-  // In a real implementation, you'd convert SVG to PNG
-  return svg;
-}
-
-// Generate all required icons
+// Generate all required PWA icons from songBankLogo.png
 const icons = [
   { name: "pwa-192x192.png", size: 192 },
   { name: "pwa-512x512.png", size: 512 },
@@ -64,21 +32,30 @@ const icons = [
   { name: "favicon-16x16.png", size: 16 },
 ];
 
-console.log("Generating PWA icons...");
+console.log("Generating PWA icons from songBankLogo.png...");
 
 // Ensure public directory exists
 if (!fs.existsSync("public")) {
   fs.mkdirSync("public");
 }
 
+// Check if songBankLogo.png exists
+const logoPath = path.join("public", "songBankLogo.png");
+if (!fs.existsSync(logoPath)) {
+  console.error("Error: songBankLogo.png not found in public directory");
+  console.log("Please ensure songBankLogo.png is present in the public folder");
+  process.exit(1);
+}
+
+// Generate all icons by copying songBankLogo.png
+let successCount = 0;
 icons.forEach((icon) => {
-  const svgContent = createPNGIcon(icon.size);
-  // For now, save as SVG with PNG extension (will work for most PWA purposes)
-  fs.writeFileSync(`public/${icon.name}`, svgContent);
-  console.log(`Generated ${icon.name}`);
+  if (copyLogoAsIcon(icon.name)) {
+    successCount++;
+  }
 });
 
-// Create a proper masked icon SVG
+// Create a proper masked icon SVG for PWA maskable icons
 const maskedIcon = `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <mask id="mask">
@@ -93,15 +70,16 @@ const maskedIcon = `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http:
 fs.writeFileSync("public/masked-icon.svg", maskedIcon);
 console.log("Generated masked-icon.svg");
 
-// Create a favicon.ico equivalent (SVG)
-const favicon = createSVGIcon(32);
-fs.writeFileSync("public/favicon.ico", favicon);
-console.log("Generated favicon.ico");
+// Create a favicon.ico equivalent by copying songBankLogo.png
+if (copyLogoAsIcon("favicon.ico")) {
+  successCount++;
+}
 
-console.log("All PWA icons generated successfully!");
-console.log(
-  "Note: Icons are generated as SVG files with PNG extensions for simplicity."
-);
-console.log(
-  "For production, consider converting these to actual PNG files using an image processing tool."
-);
+console.log(`\nPWA icon generation complete!`);
+console.log(`Successfully generated ${successCount} out of ${icons.length + 1} icons from songBankLogo.png`);
+console.log(`\nNote: All icons are now based on your songBankLogo.png file.`);
+console.log(`For optimal PWA experience, consider creating properly sized versions of your logo:`);
+console.log(`- 192x192 for standard PWA icons`);
+console.log(`- 512x512 for high-resolution displays`);
+console.log(`- 180x180 for Apple devices`);
+console.log(`- 32x32 and 16x16 for favicons`);
