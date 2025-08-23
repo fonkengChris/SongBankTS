@@ -6,29 +6,17 @@ import {
   HStack,
   Text,
   Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  AspectRatio,
   Badge,
   Flex,
   Icon,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { FaClock } from "react-icons/fa";
+import { FaClock, FaExternalLinkAlt, FaYoutube } from "react-icons/fa";
 import VideoGrid from "../components/VideoGrid";
 import useVideos from "../hooks/useVideos";
 import Video from "../entities/Video";
-import SmartVideoPlayer from "../components/SmartVideoPlayer";
 
 const TutorialPage = () => {
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const videoQuery = {};
 
   const {
@@ -43,8 +31,10 @@ const TutorialPage = () => {
   const videos = data?.pages.flatMap((page) => page.videos) || [];
 
   const handleVideoClick = (video: Video) => {
-    setSelectedVideo(video);
-    onOpen();
+    // Open YouTube link in new tab
+    if (video.url) {
+      window.open(video.url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const formatDuration = (seconds?: number) => {
@@ -65,8 +55,8 @@ const TutorialPage = () => {
     }
   };
 
-  const handleVideoError = (error: string) => {
-    console.error("Video playback error:", error);
+  const isYouTubeUrl = (url: string) => {
+    return url.includes('youtube.com') || url.includes('youtu.be');
   };
 
   return (
@@ -78,7 +68,7 @@ const TutorialPage = () => {
           </Heading>
           <Text fontSize="lg" color="gray.500">
             Learn how to use SheetMusicLibrary effectively with our step-by-step
-            MP4 video guides
+            YouTube video guides
           </Text>
         </Box>
 
@@ -103,56 +93,6 @@ const TutorialPage = () => {
             </Button>
           </Box>
         )}
-
-        {/* Video Modal */}
-        <Modal isOpen={isOpen} onClose={onClose} size="xl">
-          <ModalOverlay />
-          <ModalContent bg="gray.800" color="white">
-            <ModalHeader>{selectedVideo?.title}</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody pb={6}>
-              {selectedVideo && (
-                <VStack spacing={4} align="stretch">
-                  <SmartVideoPlayer
-                    videoId={selectedVideo._id}
-                    videoUrl={selectedVideo.url}
-                    title={selectedVideo.title}
-                    thumbnailUrl={selectedVideo.thumbnailUrl}
-                    onError={handleVideoError}
-                  />
-
-                  <VStack align="start" spacing={3}>
-                    <Text fontSize="lg" fontWeight="semibold">
-                      {selectedVideo.description}
-                    </Text>
-
-                    <HStack spacing={2} wrap="wrap">
-                      <Badge colorScheme={getLevelColor(selectedVideo.level)}>
-                        {selectedVideo.level.charAt(0).toUpperCase() +
-                          selectedVideo.level.slice(1)}
-                      </Badge>
-                    </HStack>
-
-                    {selectedVideo.duration && (
-                    <HStack spacing={4} color="gray.500" fontSize="sm">
-                        <Flex align="center" gap={1}>
-                          <Icon as={FaClock} boxSize={3} />
-                          <Text>{formatDuration(selectedVideo.duration)}</Text>
-                        </Flex>
-                    </HStack>
-                    )}
-
-                    {selectedVideo.createdAt && (
-                      <Text color="gray.400" fontSize="sm">
-                        Created: {new Date(selectedVideo.createdAt).toLocaleDateString()}
-                        </Text>
-                    )}
-                  </VStack>
-                </VStack>
-              )}
-            </ModalBody>
-          </ModalContent>
-        </Modal>
       </VStack>
     </Container>
   );

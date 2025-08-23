@@ -6,7 +6,7 @@ interface Video {
   title: string;
   description: string;
   level: "regular" | "admin";
-  url: string;
+  url: string; // YouTube URL (e.g., https://youtube.com/watch?v=...)
   thumbnailUrl?: string;
   duration?: number; // in seconds
   createdAt?: string;

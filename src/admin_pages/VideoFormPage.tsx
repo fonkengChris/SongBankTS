@@ -272,11 +272,11 @@ const VideoFormPage = () => {
                 </HStack>
 
                 <FormControl isRequired isInvalid={!!errors.url}>
-                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Video URL</FormLabel>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>YouTube URL</FormLabel>
                   <Input
                     value={formData.url}
                     onChange={(e) => handleInputChange("url", e.target.value)}
-                    placeholder="Enter video URL"
+                    placeholder="Enter YouTube video URL (e.g., https://youtube.com/watch?v=...)"
                     bg={inputBg}
                     color={inputColor}
                     borderColor={inputBorderColor}
