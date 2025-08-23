@@ -13,7 +13,7 @@ import {
   Flex,
   Center,
 } from "@chakra-ui/react";
-import { FaYoutube, FaClock, FaVideo, FaExternalLinkAlt } from "react-icons/fa";
+import { FaYoutube, FaClock, FaVideo, FaPlay } from "react-icons/fa";
 import Video from "../entities/Video";
 import { useState } from "react";
 
@@ -94,7 +94,7 @@ const VideoCard = ({ video, onClick }: Props) => {
           borderRadius="full"
           p={3}
         >
-          <Icon as={FaYoutube} color="white" boxSize={6} />
+          <Icon as={FaPlay} color="white" boxSize={6} />
         </Box>
         {video.duration && (
           <Badge
@@ -147,8 +147,8 @@ const VideoCard = ({ video, onClick }: Props) => {
             {isYouTubeUrl(video.url) && (
               <Badge colorScheme="red" variant="outline">
                 <HStack spacing={1}>
-                  <Icon as={FaExternalLinkAlt} boxSize={3} />
-                  <Text>External Link</Text>
+                  <Icon as={FaYoutube} boxSize={3} />
+                  <Text>YouTube Tutorial</Text>
                 </HStack>
               </Badge>
             )}
@@ -173,7 +173,7 @@ const VideoCard = ({ video, onClick }: Props) => {
           {isYouTubeUrl(video.url) && (
             <Flex align="center" gap={1} color="red.500">
               <Icon as={FaYoutube} boxSize={3} />
-              <Text>Click to watch on YouTube</Text>
+              <Text>Click to watch tutorial</Text>
             </Flex>
           )}
         </HStack>
