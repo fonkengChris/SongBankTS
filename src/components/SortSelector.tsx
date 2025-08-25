@@ -23,8 +23,8 @@ const SortSelector = () => {
       <MenuButton
         as={Button}
         rightIcon={<BsChevronDown />}
-        minH={{ base: "48px", md: "56px" }}
-        height={{ base: "48px", md: "56px" }}
+        minH={{ base: "40px", md: "48px" }}
+        height={{ base: "40px", md: "48px" }}
         display="inline-flex"
         alignItems="center"
         justifyContent="space-between"

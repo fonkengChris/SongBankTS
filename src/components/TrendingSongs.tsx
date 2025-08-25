@@ -34,7 +34,7 @@ const TrendingSongs = () => {
   useEffect(() => {
     const fetchTrendingSongs = async () => {
       try {
-        const response = await fetch("/api/songs/trending?limit=5");
+        const response = await fetch("/api/songs/trending?limit=10");
         const data = await response.json();
         
         if (Array.isArray(data)) {
@@ -46,7 +46,7 @@ const TrendingSongs = () => {
               });
             }
           });
-          setTrendingSongs(trendingData.slice(0, 5));
+          setTrendingSongs(trendingData);
         }
       } catch (error) {
         console.error("Error fetching trending songs:", error);
@@ -82,13 +82,16 @@ const TrendingSongs = () => {
   if (isLoading) {
     return (
       <Box
-        paddingY={{ base: 6, md: 8 }}
-        paddingX={{ base: 4, md: 6, lg: 8 }}
+        paddingY={{ base: 4, md: 6, lg: 8 }}
+        paddingX={{ base: 3, md: 4, lg: 5 }}
         bg="gray.800"
         borderRadius="xl"
         border="1px solid"
         borderColor="gray.700"
-        mb={6}
+        mb={5}
+        maxW="100%"
+        overflow="hidden"
+        boxSizing="border-box"
       >
         <Heading
           fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
@@ -112,13 +115,16 @@ const TrendingSongs = () => {
 
   return (
     <Box
-      paddingY={{ base: 6, md: 8 }}
-      paddingX={{ base: 4, md: 6, lg: 8 }}
+      paddingY={{ base: 4, md: 6, lg: 8 }}
+      paddingX={{ base: 3, md: 4, lg: 5 }}
       bg="gray.800"
       borderRadius="xl"
       border="1px solid"
       borderColor="gray.700"
-      mb={6}
+      mb={5}
+      maxW="100%"
+      overflow="hidden"
+      boxSizing="border-box"
     >
       <Heading
         fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
@@ -132,48 +138,37 @@ const TrendingSongs = () => {
         🔥 Trending Songs
       </Heading>
 
-      {/* Large screens - Horizontal scrollable layout */}
+      {/* Large screens - Grid layout */}
       <Show above="md">
-        <HStack
+        <SimpleGrid
+          columns={4}
           spacing={4}
-          overflowX="auto"
-          paddingBottom={2}
-          css={{
-            "&::-webkit-scrollbar": {
-              height: "8px",
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "#2D3748",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#4A5568",
-              borderRadius: "4px",
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              background: "#718096",
-            },
-          }}
+          maxW="100%"
         >
-          {trendingSongs.map((trendingSong) => (
+          {trendingSongs.slice(0, 4).map((trendingSong) => (
             <Box
               key={`${trendingSong.song._id}-${trendingSong.mediaFile._id}`}
-              minW={{ base: "280px", lg: "320px" }}
-              maxW={{ base: "280px", lg: "320px" }}
+              maxW="100%"
             >
               {renderSongCard(trendingSong)}
             </Box>
           ))}
-        </HStack>
+        </SimpleGrid>
       </Show>
 
       {/* Small screens - Grid layout */}
       <Hide above="md">
-        <SimpleGrid
-          columns={{ base: 1, sm: 2 }}
-          spacing={4}
+        <Box
+          display="grid"
+          gridTemplateColumns={{
+            base: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)"
+          }}
+          gap={4}
           maxH="400px"
           overflowY="auto"
           paddingRight={2}
+          maxW="100%"
           css={{
             "&::-webkit-scrollbar": {
               width: "6px",
@@ -198,7 +193,7 @@ const TrendingSongs = () => {
               {renderSongCard(trendingSong)}
             </Box>
           ))}
-        </SimpleGrid>
+        </Box>
       </Hide>
     </Box>
   );

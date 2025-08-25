@@ -20,15 +20,18 @@ const SongHeading = () => {
 
   return (
     <Box
-      paddingTop={{ base: 6, md: 8, lg: 10 }}
-      paddingBottom={{ base: 6, md: 8, lg: 10 }}
-      paddingLeft={{ base: 6, md: 8, lg: 10 }}
-      paddingRight={{ base: 6, md: 8, lg: 10 }}
+      paddingTop={{ base: 4, md: 6, lg: 8 }}
+      paddingBottom={{ base: 4, md: 6, lg: 8 }}
+      paddingLeft={{ base: 3, md: 4, lg: 5 }}
+      paddingRight={{ base: 3, md: 4, lg: 5 }}
       bg="gray.800"
       borderRadius="xl"
       border="1px solid"
       borderColor="gray.700"
-      mb={8}
+      mb={6}
+      maxW="100%"
+      overflow="hidden"
+      boxSizing="border-box"
     >
       <Heading
         textAlign="left"

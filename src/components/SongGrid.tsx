@@ -79,11 +79,18 @@ const SongGrid = () => {
 
   return (
     <VStack spacing={6} width="100%">
-      <SimpleGrid
-        columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
-        spacing={{ base: 4, md: 6 }}
+      <Box
+        display="grid"
+        gridTemplateColumns={{
+          base: "repeat(1, 1fr)",
+          sm: "repeat(2, 1fr)",
+          md: "repeat(3, 1fr)",
+          lg: "repeat(4, 1fr)",
+          xl: "repeat(4, 1fr)"
+        }}
+        gap={{ base: 4, md: 6 }}
         width="100%"
-        minChildWidth={{ base: "280px", sm: "250px", md: "280px", lg: "300px" }}
+        maxW="100%"
       >
         {/* Regular songs */}
         {isLoading &&
@@ -105,7 +112,7 @@ const SongGrid = () => {
             ))
           )
         )}
-      </SimpleGrid>
+      </Box>
 
       <Box ref={loadMoreRef} padding="20px" textAlign="center" width="100%">
         {isFetchingNextPage && (

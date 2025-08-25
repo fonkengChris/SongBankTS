@@ -71,15 +71,45 @@ const BlogPostPage: React.FC = () => {
 
         {/* Featured Image */}
         {post.featuredImage && (
-          <Box>
+          <Box
+            borderRadius="xl"
+            overflow="hidden"
+            boxShadow="lg"
+            position="relative"
+          >
             <Image
               src={post.featuredImage}
               alt={post.title}
-              borderRadius="lg"
+              borderRadius="xl"
               w="100%"
-              maxH="400px"
+              maxH="500px"
               objectFit="cover"
+              transition="transform 0.3s ease"
+              _hover={{ transform: "scale(1.02)" }}
             />
+            {/* Tags overlay on image */}
+            <Box
+              position="absolute"
+              top={4}
+              left={4}
+              zIndex={1}
+            >
+              <HStack spacing={2} flexWrap="wrap">
+                {post.tags.map((tag) => (
+                  <Badge 
+                    key={tag} 
+                    colorScheme="blue" 
+                    size="md"
+                    variant="solid"
+                    opacity="0.9"
+                    px={3}
+                    py={1}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </HStack>
+            </Box>
           </Box>
         )}
 

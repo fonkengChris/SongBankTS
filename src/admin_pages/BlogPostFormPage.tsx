@@ -22,6 +22,7 @@ import {
   InputGroup,
   InputRightElement,
   Text,
+  Image,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../services/api-client";
@@ -328,13 +329,15 @@ const BlogPostFormPage = () => {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>Featured Image URL</FormLabel>
+                  <FormLabel color="blue.500" fontWeight="semibold" mb={2}>
+                    Featured Image URL
+                  </FormLabel>
                   <Input
                     value={formData.featuredImage}
                     onChange={(e) =>
                       setFormData({ ...formData, featuredImage: e.target.value })
                     }
-                    placeholder="Enter image URL (optional)"
+                    placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
                     bg={inputBg}
                     color={inputColor}
                     borderColor={inputBorderColor}
@@ -346,6 +349,47 @@ const BlogPostFormPage = () => {
                     transition="all 0.2s"
                     size="lg"
                   />
+                  <Text fontSize="sm" color="gray.500" mt={2}>
+                    Provide a direct link to an image (JPG, PNG, or WebP). 
+                    Recommended size: 800x400px or larger. Leave empty if no image is needed.
+                  </Text>
+                  
+                  {/* Image Preview */}
+                  {formData.featuredImage && (
+                    <Box mt={4} p={4} borderWidth={1} borderColor="gray.200" borderRadius="md">
+                      <Text fontSize="sm" color="gray.600" mb={2} fontWeight="medium">
+                        Image Preview:
+                      </Text>
+                      <Box
+                        borderWidth={1}
+                        borderColor="gray.300"
+                        borderRadius="md"
+                        overflow="hidden"
+                        maxW="400px"
+                      >
+                        <Image
+                          src={formData.featuredImage}
+                          alt="Preview"
+                          w="100%"
+                          h="200px"
+                          objectFit="cover"
+                          fallback={
+                            <Box
+                              w="100%"
+                              h="200px"
+                              bg="gray.100"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              color="gray.400"
+                            >
+                              <Text fontSize="sm">Invalid image URL</Text>
+                            </Box>
+                          }
+                        />
+                      </Box>
+                    </Box>
+                  )}
                 </FormControl>
 
                 <FormControl isRequired>

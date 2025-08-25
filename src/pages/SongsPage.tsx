@@ -38,18 +38,20 @@ const SongsPage = () => {
         </GridItem>
       </Show>
       <GridItem area="main">
-        <VStack spacing={{ base: 4, md: 6 }} align="stretch">
-          <SongHeading />
+        <VStack spacing={{ base: 4, md: 6 }} align="stretch" paddingX="16px">
+          <Box maxW="100%" overflow="hidden">
+            <SongHeading />
+          </Box>
           
-          <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
+          <Box maxW="100%" overflow="hidden">
             <TrendingSongs />
           </Box>
 
-          <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
+          <Box maxW="100%" overflow="hidden">
             <PopularSongs />
           </Box>
 
-          <Box paddingX={{ base: 4, md: 6, lg: 8 }}>
+          <Box paddingX={{ base: 2, md: 4, lg: 6 }}>
             {/* Large screens (lg and above) */}
             <Hide below="lg">
               <VStack spacing={4} marginBottom={6} align="stretch">

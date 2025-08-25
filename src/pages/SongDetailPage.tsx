@@ -99,44 +99,58 @@ const SongDetailPage = () => {
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
         <GridItem>
           <Heading>{mediaFile.name}</Heading>
-          <Link to={mediaFile.documentFile}>
-            <Img
-              src={mediaFile.previewImage}
-              boxSize="700px"
-              objectFit="cover"
-              alt={`Preview image for ${mediaFile.name}`}
-            />
-          </Link>
+          <Box padding={6} bg="gray.800" borderRadius="md" color="white">
+            <Link to={mediaFile.documentFile}>
+              <Img
+                src={mediaFile.previewImage}
+                boxSize="700px"
+                objectFit="cover"
+                alt={`Preview image for ${mediaFile.name}`}
+              />
+            </Link>
+          </Box>
           <br />
           {mediaFile.audioFile ? (
-            <>
-              <audio controls src={mediaFile.audioFile}>
+            <Box padding={6} bg="gray.800" borderRadius="md" color="white">
+              <audio 
+                controls 
+                src={mediaFile.audioFile} 
+                style={{ 
+                  width: "300px", 
+                  maxWidth: "100%",
+                  height: "40px"
+                }}
+              >
                 Your browser does not support the audio element.
               </audio>
-              <br />
-            </>
+            </Box>
           ) : (
             <Text>No audio available for this song.</Text>
           )}
-          <Heading>Notation</Heading>
-          <Text>
-            {mediaFile.notation?.title ||
-              (mediaFile.notation
-                ? "Notation available"
-                : "No notation available")}
-          </Text>
+          <Box padding={6} mt={4} bg="gray.800" borderRadius="md" color="white">
+            <Heading>Notation</Heading>
+            <Text>
+              {mediaFile.notation?.title ||
+                (mediaFile.notation
+                  ? "Notation available"
+                  : "No notation available")}
+            </Text>
+          </Box>
         </GridItem>
         <GridItem>
-          <Heading mt={6}>Document</Heading>
-          <Text>
-            <a
-              href={mediaFile.documentFile}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Document
-            </a>
-          </Text>
+          <Box padding={8} bg="gray.800" borderRadius="md" color="white">
+            <Heading mt={6}>Document</Heading>
+            <Text>
+              <a
+                href={mediaFile.documentFile}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#63B3ED' }}
+              >
+                View Document
+              </a>
+            </Text>
+          </Box>
         </GridItem>
       </SimpleGrid>
     );
@@ -150,31 +164,41 @@ const SongDetailPage = () => {
         {/* First Column */}
         <GridItem>
           <Heading>{song.title}</Heading>
-          <Link to={documentFile}>
-            <Img
-              src={previewImage}
-              boxSize="700px"
-              objectFit="cover"
-              alt={`Preview image for ${song?.title || "song"}`}
-            />
-          </Link>
+          <Box padding={6} bg="gray.800" borderRadius="md" color="white">
+            <Link to={documentFile}>
+              <Img
+                src={previewImage}
+                boxSize="700px"
+                objectFit="cover"
+                alt={`Preview image for ${song?.title || "song"}`}
+              />
+            </Link>
+          </Box>
           <br />
           {audioFile ? (
-            <>
-              <audio controls src={audioFile}>
+            <Box padding={6} bg="gray.800" borderRadius="md" color="white">
+              <audio 
+                controls 
+                src={audioFile} 
+                style={{ 
+                  width: "300px", 
+                  maxWidth: "100%",
+                  height: "40px"
+                }}
+              >
                 Your browser does not support the audio element.
               </audio>
-              <br />
-            </>
+            </Box>
           ) : (
             <Text>No audio available for this song.</Text>
           )}
 
-          <Heading>Background</Heading>
-
-          <ExpandableText>
-            {song!.description || "No description available."}
-          </ExpandableText>
+          <Box padding={6} mt={4} bg="gray.800" borderRadius="md" color="white">
+            <Heading>Background</Heading>
+            <ExpandableText>
+              {song!.description || "No description available."}
+            </ExpandableText>
+          </Box>
         </GridItem>
 
         {/* Second Column */}
@@ -198,9 +222,15 @@ const SongDetailPage = () => {
               <br />
             </>
           )}
+          
           <Heading mt={6}>Lyrics</Heading>
-          <Text>{song!.lyrics || "No lyrics available."}</Text>
-          <SongAttributes mediaFile={mediaFile!} />
+          <Box padding={6} bg="gray.800" borderRadius="md" color="white">
+            <Text>{song!.lyrics || "No lyrics available."}</Text>
+          </Box>
+          
+          <Box padding={6} bg="gray.800" borderRadius="md" color="white">
+            <SongAttributes mediaFile={mediaFile!} />
+          </Box>
 
           <SimpleGrid columns={2} as="dl" spacing={4}>
             <DefinitionItem term="Likes">
@@ -237,7 +267,7 @@ const SongDetailPage = () => {
       </SimpleGrid>
 
       {/* Comments Section */}
-      <Box>
+      <Box padding={8} bg="gray.800" borderRadius="md" color="white">
         <CommentSection songId={songId!} />
       </Box>
     </VStack>

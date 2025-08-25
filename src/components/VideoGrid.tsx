@@ -19,7 +19,8 @@ const VideoGrid = ({ videos, isLoading, error, onVideoClick }: Props) => {
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
         spacing={6}
-        padding="10px"
+        paddingX={{ base: 4, md: 6, lg: 8 }}
+        paddingY={4}
       >
         {skeletons.map((skeleton) => (
           <VideoCardSkeleton key={skeleton} />
@@ -32,7 +33,8 @@ const VideoGrid = ({ videos, isLoading, error, onVideoClick }: Props) => {
     <SimpleGrid
       columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
       spacing={6}
-      padding="10px"
+      paddingX={{ base: 4, md: 6, lg: 8 }}
+      paddingY={4}
     >
       {videos.map((video) => (
         <VideoCard

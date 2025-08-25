@@ -28,7 +28,7 @@ interface PopularSong {
 }
 
 const PopularSongs = () => {
-  const { data: songs, isLoading, error } = usePopularSongs(5);
+  const { data: songs, isLoading, error } = usePopularSongs(10);
   const { data: purchases, isLoading: isLoadingPurchases } = usePurchases();
   const [popularSongs, setPopularSongs] = useState<PopularSong[]>([]);
 
@@ -42,7 +42,7 @@ const PopularSongs = () => {
           });
         }
       });
-      setPopularSongs(popularData.slice(0, 5));
+      setPopularSongs(popularData);
     }
   }, [songs]);
 
@@ -70,13 +70,16 @@ const PopularSongs = () => {
   if (isLoading) {
     return (
       <Box
-        paddingY={{ base: 6, md: 8 }}
-        paddingX={{ base: 4, md: 6, lg: 8 }}
+        paddingY={{ base: 4, md: 6, lg: 8 }}
+        paddingX={{ base: 3, md: 4, lg: 5 }}
         bg="gray.800"
         borderRadius="xl"
         border="1px solid"
         borderColor="gray.700"
-        mb={6}
+        mb={5}
+        maxW="100%"
+        overflow="hidden"
+        boxSizing="border-box"
       >
         <Heading
           fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
@@ -104,13 +107,16 @@ const PopularSongs = () => {
 
   return (
     <Box
-      paddingY={{ base: 6, md: 8 }}
-      paddingX={{ base: 4, md: 6, lg: 8 }}
+      paddingY={{ base: 4, md: 6, lg: 8 }}
+      paddingX={{ base: 3, md: 4, lg: 5 }}
       bg="gray.800"
       borderRadius="xl"
       border="1px solid"
       borderColor="gray.700"
-      mb={6}
+      mb={5}
+      maxW="100%"
+      overflow="hidden"
+      boxSizing="border-box"
     >
       <Heading
         fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
@@ -124,49 +130,37 @@ const PopularSongs = () => {
         ⭐ Popular Songs
       </Heading>
 
-      {/* Large screens - Horizontal scrollable layout */}
+      {/* Large screens - Grid layout */}
       <Show above="md">
-        <HStack
+        <SimpleGrid
+          columns={4}
           spacing={4}
-          overflowX="auto"
-          paddingBottom={2}
-          css={{
-            "&::-webkit-scrollbar": {
-              height: "8px",
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "#2D3748",
-              borderRadius: "4px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#4A5568",
-              borderRadius: "4px",
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              background: "#718096",
-            },
-          }}
+          maxW="100%"
         >
-          {popularSongs.map((popularSong) => (
+          {popularSongs.slice(0, 4).map((popularSong) => (
             <Box
               key={`${popularSong.song._id}-${popularSong.mediaFile._id}`}
-              minW={{ base: "280px", lg: "320px" }}
-              maxW={{ base: "280px", lg: "320px" }}
+              maxW="100%"
             >
               {renderSongCard(popularSong)}
             </Box>
           ))}
-        </HStack>
+        </SimpleGrid>
       </Show>
 
       {/* Small screens - Grid layout */}
       <Hide above="md">
-        <SimpleGrid
-          columns={{ base: 1, sm: 2 }}
-          spacing={4}
+        <Box
+          display="grid"
+          gridTemplateColumns={{
+            base: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)"
+          }}
+          gap={4}
           maxH="400px"
           overflowY="auto"
           paddingRight={2}
+          maxW="100%"
           css={{
             "&::-webkit-scrollbar": {
               width: "6px",
@@ -191,7 +185,7 @@ const PopularSongs = () => {
               {renderSongCard(popularSong)}
             </Box>
           ))}
-        </SimpleGrid>
+        </Box>
       </Hide>
     </Box>
   );
