@@ -11,6 +11,7 @@ import {
   Badge,
   Wrap,
   WrapItem,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Song from "../entities/Song";
@@ -27,21 +28,32 @@ const SongCard = ({ song, mediaFile }: Props) => {
   // Check if this song was originally premium but is now accessible
   const isPurchasedPremium = song.price && song.price > 0;
 
+  // Theme-aware colors
+  const cardBg = useColorModeValue("white", "gray.800");
+  const cardBorderColor = useColorModeValue("gray.200", "gray.700");
+  const cardHoverBorderColor = useColorModeValue("gray.300", "gray.600");
+  const cardHoverShadow = useColorModeValue("0 12px 40px rgba(0, 0, 0, 0.1)", "0 12px 40px rgba(0, 0, 0, 0.3)");
+  const linkColor = useColorModeValue("blue.600", "blue.400");
+  const linkHoverColor = useColorModeValue("blue.500", "blue.300");
+  const notationColor = useColorModeValue("gray.600", "gray.400");
+  const authorColor = useColorModeValue("gray.700", "gray.500");
+  const borderTopColor = useColorModeValue("gray.200", "gray.600");
+
   return (
     <Card
       height="100%"
       display="flex"
       flexDirection="column"
-      bg="gray.800"
+      bg={cardBg}
       border="1px solid"
-      borderColor="gray.700"
+      borderColor={cardBorderColor}
       borderRadius="xl"
       overflow="hidden"
       transition="all 0.3s ease"
       _hover={{
         transform: "translateY(-4px)",
-        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.3)",
-        borderColor: "gray.600",
+        boxShadow: cardHoverShadow,
+        borderColor: cardHoverBorderColor,
       }}
     >
       <Box position="relative" overflow="hidden">
@@ -68,9 +80,9 @@ const SongCard = ({ song, mediaFile }: Props) => {
             to={"/media_files/" + mediaFile._id}
             fontSize={{ base: "md", md: "lg" }}
             fontWeight="700"
-            color="blue.400"
+            color={linkColor}
             _hover={{
-              color: "blue.300",
+              color: linkHoverColor,
               textDecoration: "none",
               transform: "translateX(2px)",
             }}
@@ -82,7 +94,7 @@ const SongCard = ({ song, mediaFile }: Props) => {
           </ChakraLink>
           <Text
             fontSize={{ base: "sm", md: "md" }}
-            color="gray.400"
+            color={notationColor}
             noOfLines={1}
             fontWeight="500"
             letterSpacing="0.01em"
@@ -92,7 +104,7 @@ const SongCard = ({ song, mediaFile }: Props) => {
           {song.authorName !== "Unknown" && (
             <Text
               fontSize={{ base: "sm", md: "md" }}
-              color="gray.500"
+              color={authorColor}
               noOfLines={1}
               fontWeight="400"
               fontStyle="italic"
@@ -138,7 +150,7 @@ const SongCard = ({ song, mediaFile }: Props) => {
           mt={4}
           pt={4}
           borderTop="1px solid"
-          borderColor="gray.600"
+          borderColor={borderTopColor}
         >
           <CriticScore score={song.metacritic ?? 0} />
           <HStack spacing={2}>

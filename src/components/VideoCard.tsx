@@ -12,6 +12,7 @@ import {
   Icon,
   Flex,
   Center,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FaYoutube, FaClock, FaVideo, FaPlay } from "react-icons/fa";
 import Video from "../entities/Video";
@@ -24,6 +25,14 @@ interface Props {
 
 const VideoCard = ({ video, onClick }: Props) => {
   const [imageError, setImageError] = useState(false);
+
+  // Theme-aware colors
+  const cardBg = useColorModeValue("white", "gray.800");
+  const cardHoverShadow = useColorModeValue("0 10px 25px rgba(0, 0, 0, 0.1)", "0 10px 25px rgba(0, 0, 0, 0.3)");
+  const thumbnailBg = useColorModeValue("gray.200", "gray.700");
+  const thumbnailTextColor = useColorModeValue("gray.600", "gray.400");
+  const titleColor = useColorModeValue("gray.800", "white");
+  const subtextColor = useColorModeValue("gray.600", "gray.400");
 
   const formatDuration = (seconds?: number) => {
     if (!seconds) return "";
@@ -56,10 +65,11 @@ const VideoCard = ({ video, onClick }: Props) => {
       maxW="sm"
       cursor="pointer"
       onClick={onClick}
+      bg={cardBg}
       transition="all 0.2s"
       _hover={{
         transform: "translateY(-4px)",
-        boxShadow: "lg",
+        boxShadow: cardHoverShadow,
       }}
     >
       <Box position="relative">
@@ -76,8 +86,8 @@ const VideoCard = ({ video, onClick }: Props) => {
           <Center
             height="200px"
             width="100%"
-            bg="gray.700"
-            color="gray.400"
+            bg={thumbnailBg}
+            color={thumbnailTextColor}
             flexDirection="column"
             gap={2}
           >
@@ -132,11 +142,11 @@ const VideoCard = ({ video, onClick }: Props) => {
 
       <CardBody>
         <VStack align="start" spacing={2}>
-          <Heading size="md" noOfLines={2}>
+          <Heading size="md" noOfLines={2} color={titleColor}>
             {video.title}
           </Heading>
 
-          <Text fontSize="sm" color="gray.500" noOfLines={2}>
+          <Text fontSize="sm" color={subtextColor} noOfLines={2}>
             {video.description}
           </Text>
 
@@ -155,7 +165,7 @@ const VideoCard = ({ video, onClick }: Props) => {
           </HStack>
 
           {video.createdAt && (
-          <Text fontSize="sm" color="gray.400">
+          <Text fontSize="sm" color={subtextColor}>
               Created: {new Date(video.createdAt).toLocaleDateString()}
           </Text>
           )}
@@ -163,7 +173,7 @@ const VideoCard = ({ video, onClick }: Props) => {
       </CardBody>
 
       <CardFooter pt={0}>
-        <HStack spacing={4} color="gray.500" fontSize="sm">
+        <HStack spacing={4} color={subtextColor} fontSize="sm">
           {video.duration && (
           <Flex align="center" gap={1}>
               <Icon as={FaClock} boxSize={3} />

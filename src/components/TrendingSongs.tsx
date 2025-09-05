@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Show,
   Hide,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -30,6 +31,12 @@ const TrendingSongs = () => {
   const [trendingSongs, setTrendingSongs] = useState<TrendingSong[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { data: purchases, isLoading: isLoadingPurchases } = usePurchases();
+
+  // Theme-aware colors
+  const cardBg = useColorModeValue("white", "gray.800");
+  const cardBorderColor = useColorModeValue("gray.200", "gray.700");
+  const loadingTextColor = useColorModeValue("gray.600", "gray.400");
+  const headingColor = useColorModeValue("gray.800", "white");
 
   useEffect(() => {
     const fetchTrendingSongs = async () => {
@@ -84,10 +91,10 @@ const TrendingSongs = () => {
       <Box
         paddingY={{ base: 4, md: 6, lg: 8 }}
         paddingX={{ base: 3, md: 4, lg: 5 }}
-        bg="gray.800"
+        bg={cardBg}
         borderRadius="xl"
         border="1px solid"
-        borderColor="gray.700"
+        borderColor={cardBorderColor}
         mb={5}
         maxW="100%"
         overflow="hidden"
@@ -96,7 +103,7 @@ const TrendingSongs = () => {
         <Heading
           fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
           fontWeight="700"
-          color="orange.400"
+          color={headingColor}
           mb={4}
           display="flex"
           alignItems="center"
@@ -104,7 +111,7 @@ const TrendingSongs = () => {
         >
           🔥 Trending Songs
         </Heading>
-        <Text color="gray.400">Loading trending songs...</Text>
+        <Text color={loadingTextColor}>Loading trending songs...</Text>
       </Box>
     );
   }
@@ -117,10 +124,10 @@ const TrendingSongs = () => {
     <Box
       paddingY={{ base: 4, md: 6, lg: 8 }}
       paddingX={{ base: 3, md: 4, lg: 5 }}
-      bg="gray.800"
+      bg={cardBg}
       borderRadius="xl"
       border="1px solid"
-      borderColor="gray.700"
+      borderColor={cardBorderColor}
       mb={5}
       maxW="100%"
       overflow="hidden"
@@ -129,7 +136,7 @@ const TrendingSongs = () => {
       <Heading
         fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
         fontWeight="700"
-        color="orange.400"
+        color={headingColor}
         mb={4}
         display="flex"
         alignItems="center"

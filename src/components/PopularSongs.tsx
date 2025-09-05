@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Show,
   Hide,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -31,6 +32,12 @@ const PopularSongs = () => {
   const { data: songs, isLoading, error } = usePopularSongs(10);
   const { data: purchases, isLoading: isLoadingPurchases } = usePurchases();
   const [popularSongs, setPopularSongs] = useState<PopularSong[]>([]);
+
+  // Theme-aware colors
+  const cardBg = useColorModeValue("white", "gray.800");
+  const cardBorderColor = useColorModeValue("gray.200", "gray.700");
+  const loadingTextColor = useColorModeValue("gray.600", "gray.400");
+  const headingColor = useColorModeValue("gray.800", "white");
 
   useEffect(() => {
     if (songs && Array.isArray(songs)) {
@@ -72,10 +79,10 @@ const PopularSongs = () => {
       <Box
         paddingY={{ base: 4, md: 6, lg: 8 }}
         paddingX={{ base: 3, md: 4, lg: 5 }}
-        bg="gray.800"
+        bg={cardBg}
         borderRadius="xl"
         border="1px solid"
-        borderColor="gray.700"
+        borderColor={cardBorderColor}
         mb={5}
         maxW="100%"
         overflow="hidden"
@@ -84,7 +91,7 @@ const PopularSongs = () => {
         <Heading
           fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
           fontWeight="700"
-          color="purple.400"
+          color={headingColor}
           mb={4}
           display="flex"
           alignItems="center"
@@ -92,7 +99,7 @@ const PopularSongs = () => {
         >
           ⭐ Popular Songs
         </Heading>
-        <Text color="gray.400">Loading popular songs...</Text>
+        <Text color={loadingTextColor}>Loading popular songs...</Text>
       </Box>
     );
   }
@@ -109,10 +116,10 @@ const PopularSongs = () => {
     <Box
       paddingY={{ base: 4, md: 6, lg: 8 }}
       paddingX={{ base: 3, md: 4, lg: 5 }}
-      bg="gray.800"
+      bg={cardBg}
       borderRadius="xl"
       border="1px solid"
-      borderColor="gray.700"
+      borderColor={cardBorderColor}
       mb={5}
       maxW="100%"
       overflow="hidden"
@@ -121,7 +128,7 @@ const PopularSongs = () => {
       <Heading
         fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
         fontWeight="700"
-        color="purple.400"
+        color={headingColor}
         mb={4}
         display="flex"
         alignItems="center"

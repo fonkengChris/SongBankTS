@@ -10,6 +10,7 @@ import {
   AlertIcon,
   Badge,
   useBreakpointValue,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import useLikedSongs from "../hooks/useLikedSongs";
@@ -21,11 +22,26 @@ const LikedSongsList = () => {
   // Responsive values for mobile/desktop
   const isMobile = useBreakpointValue({ base: true, md: false });
 
+  // Theme-aware colors
+  const spinnerColor = useColorModeValue("blue.600", "cyan.600");
+  const loadingTextColor = useColorModeValue("gray.600", "whiteAlpha.700");
+  const headingColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const emptyStateIconColor = useColorModeValue("gray.500", "#718096");
+  const emptyStateTextColor = useColorModeValue("gray.600", "whiteAlpha.700");
+  const emptyStateSubtextColor = useColorModeValue("gray.500", "whiteAlpha.500");
+  const linkColor = useColorModeValue("blue.600", "blue.400");
+  const linkHoverColor = useColorModeValue("blue.500", "blue.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const cardBorderColor = useColorModeValue("gray.200", "gray.700");
+  const cardHoverBg = useColorModeValue("gray.50", "gray.700");
+  const textColor = useColorModeValue("gray.700", "gray.300");
+  const subtextColor = useColorModeValue("gray.600", "gray.400");
+
   if (loading) {
     return (
       <Box textAlign="center" py={4}>
-        <Spinner size="lg" color="cyan.600" />
-        <Text mt={2} color="whiteAlpha.700">
+        <Spinner size="lg" color={spinnerColor} />
+        <Text mt={2} color={loadingTextColor}>
           Loading liked songs...
         </Text>
       </Box>
@@ -44,11 +60,11 @@ const LikedSongsList = () => {
   if (!likedSongs || likedSongs.songs.length === 0) {
     return (
       <Box textAlign="center" py={8}>
-        <MdMusicNote size="48px" color="#718096" />
-        <Text mt={2} color="whiteAlpha.700" fontSize="lg">
+        <MdMusicNote size="48px" color={emptyStateIconColor} />
+        <Text mt={2} color={emptyStateTextColor} fontSize="lg">
           No liked songs yet
         </Text>
-        <Text color="whiteAlpha.500" fontSize="sm">
+        <Text color={emptyStateSubtextColor} fontSize="sm">
           Start exploring and liking songs to see them here
         </Text>
       </Box>
@@ -73,11 +89,11 @@ const LikedSongsList = () => {
   if (allMediaFiles.length === 0) {
     return (
       <Box textAlign="center" py={8}>
-        <MdDescription size="48px" color="#718096" />
-        <Text mt={2} color="whiteAlpha.700" fontSize="lg">
+        <MdDescription size="48px" color={emptyStateIconColor} />
+        <Text mt={2} color={emptyStateTextColor} fontSize="lg">
           No media files found
         </Text>
-        <Text color="whiteAlpha.500" fontSize="sm">
+        <Text color={emptyStateSubtextColor} fontSize="sm">
           The liked songs don't have any media files available
         </Text>
       </Box>
@@ -86,7 +102,7 @@ const LikedSongsList = () => {
 
   return (
     <Box>
-      <Heading size="md" color="whiteAlpha.900" mb={4}>
+      <Heading size="md" color={headingColor} mb={4}>
         Liked song files ({allMediaFiles.length})
       </Heading>
 
@@ -100,14 +116,14 @@ const LikedSongsList = () => {
           >
             <Box
               p={3}
-              bg="rgba(255, 255, 255, 0.05)"
+              bg={cardBg}
               borderRadius="md"
               border="1px solid"
-              borderColor="whiteAlpha.200"
+              borderColor={cardBorderColor}
               cursor="pointer"
               _hover={{
-                bg: "rgba(255, 255, 255, 0.1)",
-                borderColor: "cyan.400",
+                bg: cardHoverBg,
+                borderColor: linkColor,
                 transform: "translateY(-1px)",
                 transition: "all 0.2s ease-in-out",
               }}
@@ -117,7 +133,7 @@ const LikedSongsList = () => {
                 // Mobile layout - simplified with truncated names
                 <VStack spacing={2} align="stretch">
                   <Text
-                    color="whiteAlpha.900"
+                    color={textColor}
                     fontWeight="semibold"
                     fontSize="sm"
                     noOfLines={1}
@@ -125,7 +141,7 @@ const LikedSongsList = () => {
                   >
                     {mediaFile.songTitle} - {mediaFile.name}
                   </Text>
-                  <HStack spacing={2} color="whiteAlpha.600" fontSize="xs" flexWrap="wrap">
+                  <HStack spacing={2} color={subtextColor} fontSize="xs" flexWrap="wrap">
                     <HStack spacing={1}>
                       <MdPerson size="12px" />
                       <Text noOfLines={1}>{mediaFile.songAuthor}</Text>
@@ -135,7 +151,7 @@ const LikedSongsList = () => {
                     <Text>•</Text>
                     <Text noOfLines={1}>{mediaFile.songLanguage}</Text>
                   </HStack>
-                  <HStack spacing={2} fontSize="xs" color="whiteAlpha.600">
+                  <HStack spacing={2} fontSize="xs" color={subtextColor}>
                     <Text>{mediaFile.songViews} views</Text>
                     <Badge colorScheme="cyan" variant="subtle" size="sm">
                       {mediaFile.songLikes}
@@ -147,7 +163,7 @@ const LikedSongsList = () => {
                 <HStack justify="space-between" align="center" spacing={3}>
                   <HStack flex={1} spacing={3} minW={0}>
                     <Text
-                      color="whiteAlpha.900"
+                      color={textColor}
                       fontWeight="semibold"
                       fontSize="sm"
                       noOfLines={1}
@@ -155,7 +171,7 @@ const LikedSongsList = () => {
                     >
                       {mediaFile.songTitle} - {mediaFile.name}
                     </Text>
-                    <HStack spacing={1} color="whiteAlpha.600" fontSize="xs">
+                    <HStack spacing={1} color={subtextColor} fontSize="xs">
                       <MdPerson size="12px" />
                       <Text noOfLines={1}>{mediaFile.songAuthor}</Text>
                     </HStack>
@@ -164,7 +180,7 @@ const LikedSongsList = () => {
                   <HStack
                     spacing={2}
                     fontSize="xs"
-                    color="whiteAlpha.600"
+                    color={subtextColor}
                     flexShrink={0}
                   >
                     <Text>{mediaFile.notation?.title || "No notation"}</Text>
@@ -188,9 +204,9 @@ const LikedSongsList = () => {
           <Link
             as={RouterLink}
             to="/songs"
-            color="cyan.400"
+            color={linkColor}
             fontSize="sm"
-            _hover={{ textDecoration: "underline" }}
+            _hover={{ textDecoration: "underline", color: linkHoverColor }}
           >
             View all liked songs →
           </Link>

@@ -1,4 +1,4 @@
-import { Button, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
+import { Button, Menu, MenuButton, MenuItem, MenuList, Text, useColorModeValue } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 import useSongQueryStore from "../Store";
 import useLanguages from "../hooks/useLanguages";
@@ -10,6 +10,17 @@ const LanguageSelector = () => {
   const selectedLanguage = languages?.find((n) => n._id === selectedLanguageId);
 
   const setSelectedLanguage = useSongQueryStore((s) => s.setLanguageId);
+
+  // Theme-aware colors
+  const buttonBg = useColorModeValue("white", "gray.700");
+  const buttonBorderColor = useColorModeValue("gray.300", "gray.600");
+  const buttonTextColor = useColorModeValue("blue.600", "cyan.300");
+  const buttonHoverBg = useColorModeValue("gray.50", "gray.600");
+  const buttonHoverBorderColor = useColorModeValue("gray.400", "gray.500");
+  const buttonActiveBg = useColorModeValue("gray.100", "gray.500");
+  const menuBg = useColorModeValue("white", "gray.800");
+  const menuBorderColor = useColorModeValue("gray.200", "gray.600");
+  const menuItemHoverBg = useColorModeValue("gray.50", "gray.700");
 
   if (error) return null;
   return (
@@ -27,16 +38,16 @@ const LanguageSelector = () => {
         fontWeight="500"
         letterSpacing="0.01em"
         variant="outline"
-        borderColor="gray.600"
-        color="cyan.300"
-        bg="gray.700"
+        borderColor={buttonBorderColor}
+        color={buttonTextColor}
+        bg={buttonBg}
         _hover={{
-          bg: "gray.600",
-          borderColor: "gray.500",
+          bg: buttonHoverBg,
+          borderColor: buttonHoverBorderColor,
           transform: "translateY(-1px)",
         }}
         _active={{
-          bg: "gray.500",
+          bg: buttonActiveBg,
           borderColor: "blue.400",
         }}
         transition="all 0.2s ease"
@@ -54,13 +65,13 @@ const LanguageSelector = () => {
       <MenuList
         maxHeight="300px"
         overflow="auto"
-        bg="gray.800"
-        borderColor="gray.600"
+        bg={menuBg}
+        borderColor={menuBorderColor}
       >
         <MenuItem
           onClick={() => setSelectedLanguage(null)}
-          _hover={{ bg: "gray.700" }}
-          color="cyan.300"
+          _hover={{ bg: menuItemHoverBg }}
+          color={buttonTextColor}
           fontWeight="500"
         >
           All Languages
