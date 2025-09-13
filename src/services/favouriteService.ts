@@ -2,10 +2,10 @@ import APIClient, { axiosInstance } from "./api-client";
 import { Favourite, FavouriteResponse, FavouriteStatus } from "../entities/Favourite";
 
 class FavouriteService {
-  private apiClient: APIClient<Favourite>;
+  private apiClient: APIClient<any>;
 
   constructor() {
-    this.apiClient = new APIClient<Favourite>("/api/favourites");
+    this.apiClient = new APIClient<any>("/api/favourites");
   }
 
   async addFavourite(songId: string) {
@@ -17,7 +17,7 @@ class FavouriteService {
   }
 
   async getFavouriteStatus(songId: string): Promise<FavouriteStatus> {
-    const response = await this.apiClient.get<FavouriteStatus>(songId);
+    const response = await this.apiClient.get(songId);
     return response;
   }
 

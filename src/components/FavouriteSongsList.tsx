@@ -39,7 +39,7 @@ const FavouriteSongsList = () => {
         <Icon as={FaStar} boxSize={12} color="yellow.300" />
         <Text color="red.500">Failed to load favourite songs</Text>
         <Text fontSize="sm" color="gray.600">
-          {error.message}
+          {error instanceof Error ? error.message : 'An error occurred'}
         </Text>
       </VStack>
     );
