@@ -27,7 +27,7 @@ import APIClient from "../services/api-client";
 import { CUSTOMERS_ENDPOINT } from "../data/constants";
 import { CustomerPayload } from "../types/forms";
 import CountrySelector from "../components/CountrySelector";
-import LikedSongsList from "../components/LikedSongsList";
+import FavouriteSongsList from "../components/FavouriteSongsList";
 import useAuth from "../hooks/useAuth";
 
 interface DecodedToken {
@@ -221,7 +221,7 @@ const UserProfile = () => {
             </Box>
           </Flex>
 
-          {/* Liked Songs Section */}
+          {/* Favourite Songs Section */}
           <Box
             bg="rgba(26, 32, 44, 0.95)"
             borderRadius="20px"
@@ -229,7 +229,7 @@ const UserProfile = () => {
             boxShadow="xl"
             w="full"
           >
-            <LikedSongsList />
+            <FavouriteSongsList />
           </Box>
         </VStack>
       </Container>

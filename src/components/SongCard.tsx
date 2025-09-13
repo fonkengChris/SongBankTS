@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import Song from "../entities/Song";
 import SongMedia from "../entities/SongMedia";
 import CriticScore from "./CriticScore";
+import FavouriteButton from "./FavouriteButton";
 import { MEDIA_BASE_URL } from "../data/constants";
 
 interface Props {
@@ -67,6 +68,17 @@ const SongCard = ({ song, mediaFile }: Props) => {
             _hover={{ transform: "scale(1.05)" }}
           />
         </Link>
+        <Box
+          position="absolute"
+          top={3}
+          right={3}
+          bg="whiteAlpha.900"
+          borderRadius="full"
+          p={1}
+          backdropFilter="blur(8px)"
+        >
+          <FavouriteButton songId={song._id} size="sm" showTooltip={false} />
+        </Box>
       </Box>
       <CardBody
         flex={1}

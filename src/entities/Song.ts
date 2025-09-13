@@ -14,6 +14,7 @@ interface Song {
   mediaFiles: SongMedia[];
   views?: number;
   likesCount?: number;
+  favouritesCount?: number;
   metacritic?: number;
   trendingScore?: number;
   price?: number;
